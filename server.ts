@@ -9,7 +9,7 @@ import os from "os";
 import si from "systeminformation";
 import { initDb, saveChatMessage, getChatHistory } from "./server/db";
 import { initAI, routeRequest } from "./server/router";
-import { getOllamaStatus } from "./server/ollama";
+import { getOllamaStatus, getEvaluatedOllamaModels } from "./server/ollama";
 import { registerCompanion, getActiveCompanion, executeDesktopAction } from "./server/desktop";
 
 
@@ -70,6 +70,17 @@ app.get("/api/system", async (req, res) => {
   } catch (err) {
     console.error("System telemetry error:", err);
     res.status(500).json({ error: "Failed to read system telemetry" });
+  }
+});
+
+// Ollama Evaluated Models Scoring API
+app.get("/api/ollama/models", async (req, res) => {
+  try {
+    const result = await getEvaluatedOllamaModels();
+    res.json(result);
+  } catch (err) {
+    console.error("Ollama evaluation error:", err);
+    res.status(500).json({ error: "Failed to evaluate Ollama models" });
   }
 });
 

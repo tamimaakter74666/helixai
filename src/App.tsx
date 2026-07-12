@@ -60,6 +60,7 @@ import VoiceWaveform from "./components/VoiceWaveform";
 import RadarSweep from "./components/RadarSweep";
 import SimulatedTerminal from "./components/Terminal";
 import ComingSoonOSPanel from "./components/ComingSoonOSPanel";
+import OllamaModelManager from "./components/OllamaModelManager";
 import OrchestratorEngine from "./components/OrchestratorEngine";
 import RuViewAnalytics from "./components/RuViewAnalytics";
 import CognitiveEngine from "./components/CognitiveEngine";
@@ -1427,7 +1428,9 @@ export default function App() {
 
         {/* Models Tab */}
         {activeTab === "models" && (
-          <ComingSoonOSPanel title="Models & Hardware Matrix" description="AI Brain Router and GPU allocation controls." />
+          <div className="animate-in fade-in zoom-in duration-300 h-full overflow-y-auto">
+            <OllamaModelManager />
+          </div>
         )}
 
         {/* Memory Tab */}
@@ -1714,7 +1717,7 @@ export default function App() {
 
                   {activeTab === "orchestrator" && <OrchestratorEngine />}
                   {activeTab === "agents" && <CognitiveEngine />}
-                  {activeTab === "models" && <ComingSoonOSPanel title="Models & Hardware Matrix" />}
+                  {activeTab === "models" && <OllamaModelManager />}
                   {activeTab === "memory" && <ComingSoonOSPanel title="Context & Memory Center" />}
                   {activeTab === "knowledge" && <KnowledgeSystem />}
                   {activeTab === "desktop" && <DesktopAgent />}

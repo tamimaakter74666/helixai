@@ -1,7 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
-import { getOllamaStatus } from "./ollama";
+import { getOllamaStatus, getBestOllamaModel, scoreModelForTask } from "./ollama";
+import { saveModelMetric } from "./db";
 
 // Initialize SDks (Lazy)
 let gemini: GoogleGenAI | null = null;
@@ -42,10 +43,284 @@ function cleanErrorMessage(err: any): string {
   return msg.length > 120 ? msg.substring(0, 120) + "..." : msg;
 }
 
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage: string = "Request timed out"): Promise<T> {
+  let timeoutId: any;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(errorMessage));
+    }, timeoutMs);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    clearTimeout(timeoutId);
+  });
+}
+
+async function tryAllOllamaModels(
+  systemPrompt: string,
+  history: any[],
+  message: string,
+  task: string,
+  preferredModelName: string,
+  timeoutMs: number = 120000
+): Promise<{ success: boolean; modelName: string; textResponse: string; reason: string; latency: number }> {
+  const startTimer = Date.now();
+  const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
+  const url = `${ollamaHost}/api/chat`;
+
+  const ollamaMessages = [
+    { role: "system", content: systemPrompt },
+    ...history.map(h => ({ role: h.role, content: h.content })),
+    { role: "user", content: message }
+  ];
+
+  // Fetch Ollama status to get list of all models
+  const status = await getOllamaStatus();
+  if (!status.online) {
+    console.warn(`[Ollama Offline]: Cannot proceed with local Ollama models. Host: ${ollamaHost}`);
+    return { success: false, modelName: preferredModelName, textResponse: "", reason: "Ollama host is offline", latency: 0 };
+  }
+
+  // Gather list of models: start with preferredModelName, then alternatives
+  // Alternatives should be sorted by suitability score for the task
+  const allModels = status.models;
+  const scoredModels = allModels.map(m => ({
+    name: m.name,
+    score: scoreModelForTask(m, task)
+  })).sort((a, b) => b.score - a.score);
+
+  // Filter out preferredModelName from alternative list if it's there
+  const preferredModelLower = preferredModelName.toLowerCase();
+  const sortedAlternativeNames = scoredModels
+    .map(m => m.name)
+    .filter(name => name.toLowerCase() !== preferredModelLower);
+
+  // The full sequence of models to attempt
+  const attemptSequence = [preferredModelName, ...sortedAlternativeNames];
+
+  console.log(`[Ollama Routing] Model attempt sequence: ${JSON.stringify(attemptSequence)}`);
+
+  for (let i = 0; i < attemptSequence.length; i++) {
+    const currentModel = attemptSequence[i];
+    
+    // Verify that currentModel is actually an installed model (or if it's the preferred one, we try it regardless)
+    const isInstalled = allModels.some(m => m.name === currentModel || m.model === currentModel || m.name.split(":")[0] === currentModel.split(":")[0]);
+    if (i > 0 && !isInstalled) {
+      console.log(`[Ollama Routing] Skipping uninstalled alternative model: ${currentModel}`);
+      continue;
+    }
+
+    const requestBody = {
+      model: currentModel,
+      messages: ollamaMessages,
+      stream: true,
+      format: "json",
+      keep_alive: "30m"
+    };
+
+    console.log(`[Ollama Attempt ${i + 1}/${attemptSequence.length}]`);
+    console.log(`- Request URL: ${url}`);
+    console.log(`- Selected Model: ${currentModel}`);
+    console.log(`- Timeout Value: ${timeoutMs}ms`);
+    console.log(`- Keep Alive: 30m`);
+    console.log(`- Connection Reuse: Enabled`);
+    console.log(`- Request Body:\n${JSON.stringify(requestBody, null, 2)}`);
+
+    try {
+      const attemptStart = Date.now();
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Connection": "keep-alive"
+        },
+        body: JSON.stringify(requestBody),
+        signal: AbortSignal.timeout(timeoutMs)
+      });
+
+      console.log(`- Response Status: ${res.status} ${res.statusText}`);
+
+      const modelObj = allModels.find(m => m.name === currentModel || m.model === currentModel);
+      const memorySizeGB = modelObj ? (modelObj.size / (1024 ** 3)) : 0;
+
+      if (res.ok) {
+        let textResponse = "";
+        let firstTokenTime = 0;
+        let firstChunkReceived = false;
+
+        let modelLoadTimeMs = 0;
+        let promptEvalTimeMs = 0;
+        let generationTimeMs = 0;
+        let tokenCount = 0;
+
+        const reader = typeof res.body?.getReader === "function" ? res.body.getReader() : null;
+
+        if (reader) {
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            if (!firstChunkReceived) {
+              firstChunkReceived = true;
+              firstTokenTime = Date.now();
+            }
+
+            buffer += decoder.decode(value || new Uint8Array(), { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              if (!line.trim()) continue;
+              try {
+                const chunk = JSON.parse(line);
+                if (chunk.message?.content) {
+                  textResponse += chunk.message.content;
+                }
+                if (chunk.done) {
+                  if (chunk.load_duration !== undefined) {
+                    modelLoadTimeMs = chunk.load_duration / 1000000;
+                  }
+                  if (chunk.prompt_eval_duration !== undefined) {
+                    promptEvalTimeMs = chunk.prompt_eval_duration / 1000000;
+                  }
+                  if (chunk.eval_duration !== undefined) {
+                    generationTimeMs = chunk.eval_duration / 1000000;
+                  }
+                  if (chunk.eval_count !== undefined) {
+                    tokenCount = chunk.eval_count;
+                  }
+                }
+              } catch (e) {
+                // Ignore partial JSON parse errors
+              }
+            }
+          }
+
+          // Read remainder of buffer
+          if (buffer.trim()) {
+            try {
+              const chunk = JSON.parse(buffer);
+              if (chunk.message?.content) {
+                textResponse += chunk.message.content;
+              }
+              if (chunk.done) {
+                if (chunk.load_duration !== undefined) modelLoadTimeMs = chunk.load_duration / 1000000;
+                if (chunk.prompt_eval_duration !== undefined) promptEvalTimeMs = chunk.prompt_eval_duration / 1000000;
+                if (chunk.eval_duration !== undefined) generationTimeMs = chunk.eval_duration / 1000000;
+                if (chunk.eval_count !== undefined) tokenCount = chunk.eval_count;
+              }
+            } catch (e) {
+              // Ignore
+            }
+          }
+        } else {
+          // Fallback if reader stream is unsupported
+          const data = await res.json();
+          textResponse = data.message?.content || "{}";
+          if (data.load_duration !== undefined) modelLoadTimeMs = data.load_duration / 1000000;
+          if (data.prompt_eval_duration !== undefined) promptEvalTimeMs = data.prompt_eval_duration / 1000000;
+          if (data.eval_duration !== undefined) generationTimeMs = data.eval_duration / 1000000;
+          if (data.eval_count !== undefined) tokenCount = data.eval_count;
+        }
+
+        const duration = Date.now() - startTimer;
+        const attemptDuration = Date.now() - attemptStart;
+        const measuredFirstTokenLatency = firstTokenTime > 0 ? (firstTokenTime - attemptStart) : attemptDuration;
+        const measuredGenerationTime = firstTokenTime > 0 ? (Date.now() - firstTokenTime) : 0;
+
+        console.log(`[Ollama Inference Success for '${currentModel}']:`);
+        console.log(`- Model Load Time: ${modelLoadTimeMs.toFixed(2)}ms (reported by Ollama)`);
+        console.log(`- Prompt Eval Time: ${promptEvalTimeMs.toFixed(2)}ms (reported by Ollama)`);
+        console.log(`- First-Token Latency: ${measuredFirstTokenLatency}ms (measured from request start)`);
+        console.log(`- Generation Time: ${generationTimeMs > 0 ? generationTimeMs.toFixed(2) + "ms" : measuredGenerationTime + "ms"}`);
+        console.log(`- Total Request Duration: ${attemptDuration}ms`);
+        console.log(`- Total App Routing Latency: ${duration}ms`);
+        
+        const finalTokens = tokenCount > 0 ? tokenCount : Math.max(1, Math.round(textResponse.length / 4));
+        const speedTps = duration > 0 ? (finalTokens / (duration / 1000)) : 0;
+        
+        // Save metric
+        saveModelMetric({
+          modelName: currentModel,
+          latencyMs: duration,
+          tokens: finalTokens,
+          speedTps,
+          success: true,
+          memorySizeGB
+        });
+
+        let finalReason = `Ollama execution successful with model '${currentModel}'.`;
+        if (currentModel !== preferredModelName) {
+          finalReason = `Primary local model '${preferredModelName}' failed/timed out. Automatically fell back to installed model '${currentModel}'.`;
+        }
+        
+        return {
+          success: true,
+          modelName: currentModel,
+          textResponse,
+          reason: finalReason,
+          latency: duration
+        };
+      } else {
+        const errorText = await res.text().catch(() => "Unknown error");
+        console.warn(`- Request failed with status ${res.status}: ${errorText}`);
+        
+        // Save failed metric
+        const duration = Date.now() - startTimer;
+        saveModelMetric({
+          modelName: currentModel,
+          latencyMs: duration,
+          tokens: 0,
+          speedTps: 0,
+          success: false,
+          memorySizeGB
+        });
+      }
+    } catch (err: any) {
+      const fullErrorMsg = err?.stack || err?.message || String(err);
+      console.error(`- Error during Ollama request:`, fullErrorMsg);
+      
+      // Save failed metric
+      const modelObj = allModels.find(m => m.name === currentModel || m.model === currentModel);
+      const memorySizeGB = modelObj ? (modelObj.size / (1024 ** 3)) : 0;
+      const duration = Date.now() - startTimer;
+      saveModelMetric({
+        modelName: currentModel,
+        latencyMs: duration,
+        tokens: 0,
+        speedTps: 0,
+        success: false,
+        memorySizeGB
+      });
+    }
+  }
+
+  // If all models in the sequence failed
+  const totalDuration = Date.now() - startTimer;
+  return {
+    success: false,
+    modelName: preferredModelName,
+    textResponse: "",
+    reason: `All attempted local Ollama models (${attemptSequence.join(", ")}) failed or timed out.`,
+    latency: totalDuration
+  };
+}
+
 export async function routeRequest(message: string, history: any[], systemPrompt: string, clientLanguage?: string, overrideProvider?: string) {
-  // Simple heuristic router. A real OS would use an LLM or specific intent classification model.
   const msgLower = message.toLowerCase();
   
+  // 1. Task Classification for Capabilities
+  let task = "general";
+  if (msgLower.includes("code") || msgLower.includes("bug") || msgLower.includes("typescript") || msgLower.includes("javascript") || msgLower.includes("function") || msgLower.includes("program") || msgLower.includes("script") || msgLower.includes("compile") || msgLower.includes("error") || msgLower.includes("syntax") || msgLower.includes("rust") || msgLower.includes("python") || msgLower.includes("html") || msgLower.includes("css") || msgLower.includes("develop")) {
+    task = "code";
+  } else if (msgLower.includes("write") || msgLower.includes("essay") || msgLower.includes("poem") || msgLower.includes("story") || msgLower.includes("creative") || msgLower.includes("novel") || msgLower.includes("draft") || msgLower.includes("কবিতা") || msgLower.includes("গল্প") || msgLower.includes("রচনা")) {
+    task = "creative";
+  } else if (msgLower.includes("see") || msgLower.includes("look") || msgLower.includes("analyze") || msgLower.includes("image") || msgLower.includes("photo") || msgLower.includes("picture") || msgLower.includes("ছবি") || msgLower.includes("ভিজ্যুয়াল") || msgLower.includes("vision")) {
+    task = "vision";
+  }
+
   let provider = "gemini";
   let modelName = "gemini-3.1-flash-lite";
   let reason = "Default high-speed universal synthesis.";
@@ -53,8 +328,9 @@ export async function routeRequest(message: string, history: any[], systemPrompt
   if (overrideProvider && overrideProvider !== "auto") {
     provider = overrideProvider;
     if (provider === "ollama") {
-      modelName = "llama3";
-      reason = "User explicitly selected Ollama provider.";
+      const best = await getBestOllamaModel(task, message);
+      modelName = best.modelName;
+      reason = `User selected Ollama. ${best.reason}`;
     } else if (provider === "openai") {
       modelName = "gpt-4o";
       reason = "User explicitly selected OpenAI provider.";
@@ -73,8 +349,9 @@ export async function routeRequest(message: string, history: any[], systemPrompt
       const ollamaStatus = await getOllamaStatus();
       if (ollamaStatus.online) {
         provider = "ollama";
-        modelName = "llama3";
-        reason = "User requested local/private inference and Ollama is online. Routing to Ollama.";
+        const best = await getBestOllamaModel(task, message);
+        modelName = best.modelName;
+        reason = `Auto-routed to local Ollama. ${best.reason}`;
       } else {
         provider = "gemini";
         modelName = "gemini-3.1-flash-lite";
@@ -110,12 +387,20 @@ export async function routeRequest(message: string, history: any[], systemPrompt
   }
   
   if (provider === "gemini" && !gemini) {
-    const isBn = clientLanguage === "bengali";
-    const apiMissingSpeak = isBn ? "এ পি আই কী কনফিগার করা নেই।" : "API keys missing.";
-    return {
-      text: `{ "response": "[Simulated] API key missing for all providers. Please configure GEMINI_API_KEY.", "speakText": "${apiMissingSpeak}", "command": "none", "commandData": {} }`,
-      routing: { selectedAI: "None", reason: "All API keys missing." }
-    };
+    const ollamaStatus = await getOllamaStatus();
+    if (ollamaStatus.online && ollamaStatus.models.length > 0) {
+      provider = "ollama";
+      const best = await getBestOllamaModel(task, message);
+      modelName = best.modelName;
+      reason = `Gemini key missing. Automatically routed to online local Ollama. ${best.reason}`;
+    } else {
+      const isBn = clientLanguage === "bengali";
+      const apiMissingSpeak = isBn ? "এ পি আই কী কনফিগার করা নেই এবং ওলামা অফলাইন।" : "API keys missing and Ollama is offline.";
+      return {
+        text: `{ "response": "[Simulated] Cloud Gemini API key is missing and local Ollama is offline. Please configure GEMINI_API_KEY in Settings or launch Ollama.", "speakText": "${apiMissingSpeak}", "command": "none", "commandData": {} }`,
+        routing: { selectedAI: "None (Offline)", reason: "Gemini API key missing & Ollama offline." }
+      };
+    }
   }
 
   let textResponse = "";
@@ -124,31 +409,26 @@ export async function routeRequest(message: string, history: any[], systemPrompt
 
   try {
     if (provider === "ollama") {
-      const messages = [
-        { role: "system", content: systemPrompt },
-        ...history.map(h => ({ role: h.role, content: h.content })),
-        { role: "user", content: message }
-      ];
-      
-      const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
-      const res = await fetch(`${ollamaHost}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: modelName,
-          messages,
-          stream: false,
-          format: "json"
-        }),
-        signal: AbortSignal.timeout(30000)
-      });
-      
-      if (!res.ok) throw new Error("Ollama connection failed");
-      const data = await res.json();
-      textResponse = data.message?.content || "{}";
-      latency = Date.now() - startTimer;
+      const result = await tryAllOllamaModels(systemPrompt, history, message, task, modelName, 120000);
+      if (result.success) {
+        textResponse = result.textResponse;
+        modelName = result.modelName;
+        reason = result.reason;
+        latency = result.latency;
+      } else {
+        // Cloud Failsafe Fallback: Switch to Gemini if all local options failed
+        if (gemini) {
+          console.warn("All local Ollama models failed or timed out. Engaging Cloud Failsafe Fallback (Gemini)...");
+          provider = "gemini";
+          modelName = "gemini-3.1-flash-lite";
+          reason = `${result.reason} (Engaged Cloud Failsafe to Gemini Core)`;
+        } else {
+          throw new Error(`Local Ollama connection failed and Cloud Gemini API key is missing. Detail: ${result.reason}`);
+        }
+      }
+    }
 
-    } else if (provider === "gemini") {
+    if (provider === "gemini") {
       const contents = history.map(h => ({
         role: h.role === "assistant" ? "model" : "user",
         parts: [{ text: h.content }]
@@ -176,20 +456,28 @@ export async function routeRequest(message: string, history: any[], systemPrompt
       };
 
       try {
-        const res = await gemini!.models.generateContent({
-          model: modelName,
-          ...generateOptions
-        });
+        const res = await withTimeout(
+          gemini!.models.generateContent({
+            model: modelName,
+            ...generateOptions
+          }),
+          8000,
+          "Gemini primary model request timed out"
+        );
         textResponse = res.text || "{}";
       } catch (geminiErr: any) {
         const cleanPrimaryErr = cleanErrorMessage(geminiErr);
         console.warn(`[Gemini router failed with ${modelName}]: ${cleanPrimaryErr}. Trying fallback model...`);
         const fallbackModel = modelName === "gemini-3.1-flash-lite" ? "gemini-3.5-flash" : "gemini-3.1-flash-lite";
         try {
-          const res = await gemini!.models.generateContent({
-            model: fallbackModel,
-            ...generateOptions
-          });
+          const res = await withTimeout(
+            gemini!.models.generateContent({
+              model: fallbackModel,
+              ...generateOptions
+            }),
+            5000,
+            "Gemini fallback model request timed out"
+          );
           textResponse = res.text || "{}";
           modelName = fallbackModel;
           reason += ` (Fallback to ${fallbackModel} due to primary model error)`;
@@ -208,11 +496,15 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         { role: "user", content: message }
       ];
       
-      const res = await openai!.chat.completions.create({
-        model: modelName,
-        messages: messages as any,
-        response_format: { type: "json_object" }
-      });
+      const res = await withTimeout(
+        openai!.chat.completions.create({
+          model: modelName,
+          messages: messages as any,
+          response_format: { type: "json_object" }
+        }),
+        8000,
+        "OpenAI API request timed out"
+      );
       textResponse = res.choices[0].message.content || "{}";
       latency = Date.now() - startTimer;
       
@@ -221,22 +513,52 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         ...history.map(h => ({ role: h.role === "assistant" ? "assistant" : "user", content: h.content })),
         { role: "user", content: message }
       ];
-      const res = await anthropic!.messages.create({
-        model: modelName,
-        system: systemPrompt,
-        messages: messages as any,
-        max_tokens: 1024,
-      });
+      const res = await withTimeout(
+        anthropic!.messages.create({
+          model: modelName,
+          system: systemPrompt,
+          messages: messages as any,
+          max_tokens: 1024,
+        }),
+        8000,
+        "Anthropic API request timed out"
+      );
       textResponse = (res.content[0] as any).text || "{}";
       latency = Date.now() - startTimer;
     }
   } catch (err: any) {
     const cleanErr = cleanErrorMessage(err);
-    console.warn(`[Router Error with ${provider}]: ${cleanErr}. Routing to Local Cognitive Fallback Engine.`);
-    textResponse = generateRuviFallbackResponse(message, history || [], clientLanguage);
-    provider = "Ruvi Local Engine";
-    modelName = "Cognitive-v1-Sim";
-    reason = `Simulated Core Fallback active. (Primary Error: ${cleanErr})`;
+    console.warn(`[Router Error with ${provider}]: ${cleanErr}. Checking local Ollama fallback...`);
+    
+    let ollamaFallbackSuccess = false;
+    
+    if (provider !== "ollama") {
+      try {
+        const best = await getBestOllamaModel(task, message);
+        const fallbackModel = best.modelName;
+        console.log(`[Cloud Failed]: Attempting local Ollama fallback execution with preferred model '${fallbackModel}'...`);
+        
+        const result = await tryAllOllamaModels(systemPrompt, history, message, task, fallbackModel, 120000);
+        if (result.success) {
+          textResponse = result.textResponse;
+          latency = result.latency;
+          provider = "ollama";
+          modelName = result.modelName;
+          reason = `Cloud API failed (${cleanErr}). Successfully fell back to local Ollama model '${result.modelName}'. ${result.reason}`;
+          ollamaFallbackSuccess = true;
+        }
+      } catch (ollamaErr: any) {
+        console.warn("[Ollama Fallback Failed]:", ollamaErr);
+      }
+    }
+    
+    if (!ollamaFallbackSuccess) {
+      console.warn(`Routing to Local Cognitive Fallback Engine.`);
+      textResponse = generateRuviFallbackResponse(message, history || [], clientLanguage);
+      provider = "Ruvi Local Engine";
+      modelName = "Cognitive-v1-Sim";
+      reason = `Simulated Core Fallback active. (Primary Error: ${cleanErr})`;
+    }
   }
 
   return {
