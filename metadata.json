@@ -1,0 +1,12 @@
+{
+  "name": "Ruvi AI",
+  "description": "A highly polished, futuristic, and holographic sci-fi AI assistant featuring a high-fidelity dashboard, dynamic custom themes, responsive voice visualization, and a fully functional multi-agent Messenger Mode layout.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
