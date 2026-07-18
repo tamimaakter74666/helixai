@@ -61,7 +61,7 @@ export default function LMStudioModelManager() {
         setStatus({ online: false, models: [] });
       }
     } catch (err) {
-      console.error("Failed to fetch LM Studio status:", err);
+      console.warn("Failed to fetch LM Studio status (expected during server boot/restarts or if local client is not running):", err);
       setStatus({ online: false, models: [] });
     } finally {
       setLoading(false);

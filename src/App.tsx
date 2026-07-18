@@ -351,7 +351,7 @@ export default function App() {
           }
         }
       } catch (err) {
-        console.error("Failed to initialize LM Studio models:", err);
+        console.warn("Failed to initialize LM Studio models (expected during server boot/restarts or if local client is not running):", err);
       }
     };
     initializeLMStudioModel();

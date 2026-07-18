@@ -23,6 +23,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Ruvi AI Hologram OS Admin Deck",
         "width": 1280,
         "height": 800,

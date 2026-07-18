@@ -235,7 +235,7 @@ export default function SelfLearningEngine({ onUpgradingChange }: SelfLearningEn
       if (metricsRes.ok) setApiMetrics(await metricsRes.json());
       if (queueRes.ok) setQueueList(await queueRes.json());
     } catch (err) {
-      console.error("Failed to fetch Evolution Mode metrics:", err);
+      console.warn("Failed to fetch Evolution Mode metrics (expected during server boot/restarts):", err);
     } finally {
       setIsLoading(false);
     }

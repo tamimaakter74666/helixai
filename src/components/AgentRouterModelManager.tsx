@@ -84,7 +84,7 @@ export default function AgentRouterModelManager() {
         setConfigured(false);
       }
     } catch (err) {
-      console.error("Failed to check AgentRouter status:", err);
+      console.warn("Failed to check AgentRouter status (expected during server boot/restarts):", err);
       setConfigured(false);
     } finally {
       setLoading(false);

@@ -22,7 +22,7 @@ export default function CognitiveMemory() {
       const data = await res.json();
       setMemories(data);
     } catch (e) {
-      console.error(e);
+      console.warn("Failed to fetch memories (expected during server boot/restarts):", e);
     } finally {
       setLoading(false);
     }
@@ -33,7 +33,7 @@ export default function CognitiveMemory() {
       await fetch(`/api/memories/${id}`, { method: "DELETE" });
       setMemories(prev => prev.filter(m => m.id !== id));
     } catch (e) {
-      console.error(e);
+      console.warn("Failed to delete memory:", e);
     }
   };
 
@@ -47,7 +47,7 @@ export default function CognitiveMemory() {
         await fetchMemories();
       }
     } catch (e) {
-      console.error(e);
+      console.warn("Failed to extract cognitive memories:", e);
     } finally {
       setExtracting(false);
     }

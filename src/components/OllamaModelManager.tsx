@@ -119,7 +119,7 @@ export default function OllamaModelManager() {
         setStatus({ online: false, models: [] });
       }
     } catch (err) {
-      console.error("Failed to fetch Ollama models:", err);
+      console.warn("Failed to fetch Ollama models (expected during server boot/restarts or if local client is not running):", err);
       setStatus({ online: false, models: [] });
     } finally {
       setLoading(false);

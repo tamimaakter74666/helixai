@@ -126,7 +126,7 @@ export default function SystemLogDashboard() {
         setLogs(data);
       }
     } catch (e) {
-      console.error("Failed to load logs:", e);
+      console.warn("Failed to load logs (expected during server boot/restarts):", e);
     } finally {
       setLoading(false);
     }
@@ -140,7 +140,7 @@ export default function SystemLogDashboard() {
         setTraces(data);
       }
     } catch (err) {
-      console.error("Failed to fetch traces:", err);
+      console.warn("Failed to fetch traces (expected during server boot/restarts):", err);
     }
   };
 

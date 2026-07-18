@@ -55,18 +55,15 @@ export default function SimulatedTerminal() {
           }
         }
       } catch (err) {
-        console.error("Failed to fetch logs", err);
+        console.warn("Failed to fetch logs (expected during server boot/restarts):", err);
         errorCount++;
       }
     };
 
     fetchLogs();
     const interval = setInterval(() => {
-       // Slow down polling if errors happen
-       if (errorCount < 3) {
-         fetchLogs();
-       }
-    }, 2000);
+       fetchLogs();
+    }, 3000);
 
     return () => {
       isMounted = false;
