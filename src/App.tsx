@@ -124,6 +124,145 @@ export default function App() {
   const [updateProgress, setUpdateProgress] = useState<number>(0);
   const [updateError, setUpdateError] = useState<string>("");
 
+  // System Diagnostics State
+  const [diagnosticLogs, setDiagnosticLogs] = useState<string[]>([]);
+  const [isDiagnosticRunning, setIsDiagnosticRunning] = useState(false);
+
+  const runDiagnostics = async () => {
+    setIsDiagnosticRunning(true);
+    const logs: string[] = [];
+    const addLog = (msg: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      logs.push(`[${timestamp}] ${msg}`);
+      setDiagnosticLogs([...logs]);
+    };
+
+    addLog("Initializing Ruvi OS Diagnostic Suite...");
+    
+    // 1. Key Lookup
+    const gKey = localStorage.getItem("ruvi_gemini_api_key");
+    const oKey = localStorage.getItem("ruvi_openrouter_api_key");
+    const sUrl = localStorage.getItem("ruvi_server_url");
+
+    addLog(`Key lookup: Gemini Key -> ${gKey ? `Found (Length: ${gKey.length}, Masked: ${gKey.slice(0, 6)}...${gKey.slice(-4)})` : "NOT FOUND (Using backend default or missing)"}`);
+    addLog(`Key lookup: AgentRouter Key -> ${oKey ? `Found (Length: ${oKey.length}, Masked: ${oKey.slice(0, 6)}...${oKey.slice(-4)})` : "NOT FOUND"}`);
+    addLog(`Backend URL -> ${sUrl ? `Custom: ${sUrl}` : "Auto-detect (Using default Cloud deployment)"}`);
+
+    // 2. Active Platform
+    const isTauriEnv = (window as any).__TAURI__ !== undefined || 
+                       window.location.protocol.startsWith("tauri") || 
+                       window.location.hostname === "tauri.localhost";
+    addLog(`Platform Runtime: ${isTauriEnv ? "Tauri Desktop Application (.exe)" : "Web Preview Mode"}`);
+    addLog(`Current Origin: ${window.location.origin}`);
+
+    // 3. Test Remote/Local Backend Status and Router Initialization
+    addLog("Verifying Brain Router connection and AgentRouter status...");
+    try {
+      const res = await fetch("/api/agentrouter/status");
+      addLog(`HTTP status: ${res.status} ${res.statusText}`);
+      if (res.ok) {
+        const data = await res.json();
+        addLog(`Provider initialization result: Configured on server -> ${data.configured}`);
+      } else {
+        const text = await res.text();
+        addLog(`Server connection error: Status ${res.status}, Response: ${text.slice(0, 100)}`);
+      }
+    } catch (err: any) {
+      addLog(`HTTP Connection error: ${err?.message || String(err)}`);
+    }
+
+    // 4. Test LM Studio Endpoint & Connection
+    addLog("Testing LM Studio local connection...");
+    const lmAddresses = ["http://127.0.0.1:1234", "http://localhost:1234"];
+    let lmOnline = false;
+    
+    if (isTauriEnv) {
+      addLog("Detecting via Tauri native Rust bridge (Bypassing mixed content)...");
+      for (const addr of lmAddresses) {
+        try {
+          const { invoke } = await import("@tauri-apps/api/core");
+          const textResult = await invoke<string>("fetch_local_http", { url: `${addr}/v1/models` });
+          if (textResult) {
+            const parsed = JSON.parse(textResult);
+            const models = (parsed.data || []).map((m: any) => m.id);
+            addLog(`LM Studio connection SUCCESS at ${addr}. Detected models: ${models.join(", ")}`);
+            lmOnline = true;
+            break;
+          }
+        } catch (err: any) {
+          addLog(`LM Studio connection failed at ${addr}: ${err?.message || String(err)}`);
+        }
+      }
+    } else {
+      addLog("Detecting via direct web browser fetch...");
+      for (const addr of lmAddresses) {
+        try {
+          const r = await fetch(`${addr}/v1/models`, { method: "GET", signal: AbortSignal.timeout(1000) });
+          addLog(`LM Studio connection response: ${r.status} ${r.statusText}`);
+          if (r.ok) {
+            const parsed = await r.json();
+            const models = (parsed.data || []).map((m: any) => m.id);
+            addLog(`LM Studio connection SUCCESS at ${addr}. Detected models: ${models.join(", ")}`);
+            lmOnline = true;
+            break;
+          }
+        } catch (err: any) {
+          addLog(`LM Studio connection failed at ${addr}: ${err?.message || String(err)}. Note: web browsers may block this due to CORS/Mixed Content.`);
+        }
+      }
+    }
+    if (!lmOnline) {
+      addLog("LM Studio: Offline or unreachable.");
+    }
+
+    // 5. Test Ollama Endpoint & Connection
+    addLog("Testing Ollama local connection...");
+    const ollamaAddresses = ["http://127.0.0.1:11434", "http://localhost:11434"];
+    let ollamaOnline = false;
+
+    if (isTauriEnv) {
+      addLog("Detecting via Tauri native Rust bridge (Bypassing mixed content)...");
+      for (const addr of ollamaAddresses) {
+        try {
+          const { invoke } = await import("@tauri-apps/api/core");
+          const textResult = await invoke<string>("fetch_local_http", { url: `${addr}/api/tags` });
+          if (textResult) {
+            const parsed = JSON.parse(textResult);
+            const models = (parsed.models || []).map((m: any) => m.name);
+            addLog(`Ollama connection SUCCESS at ${addr}. Detected models: ${models.join(", ")}`);
+            ollamaOnline = true;
+            break;
+          }
+        } catch (err: any) {
+          addLog(`Ollama connection failed at ${addr}: ${err?.message || String(err)}`);
+        }
+      }
+    } else {
+      addLog("Detecting via direct web browser fetch...");
+      for (const addr of ollamaAddresses) {
+        try {
+          const r = await fetch(`${addr}/api/tags`, { method: "GET", signal: AbortSignal.timeout(1000) });
+          addLog(`Ollama connection response: ${r.status} ${r.statusText}`);
+          if (r.ok) {
+            const parsed = await r.json();
+            const models = (parsed.models || []).map((m: any) => m.name);
+            addLog(`Ollama connection SUCCESS at ${addr}. Detected models: ${models.join(", ")}`);
+            ollamaOnline = true;
+            break;
+          }
+        } catch (err: any) {
+          addLog(`Ollama connection failed at ${addr}: ${err?.message || String(err)}. Note: web browsers may block this due to CORS/Mixed Content.`);
+        }
+      }
+    }
+    if (!ollamaOnline) {
+      addLog("Ollama: Offline or unreachable.");
+    }
+
+    addLog("Diagnostics complete.");
+    setIsDiagnosticRunning(false);
+  };
+
   const isTauri = typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
 
   const checkForUpdates = async (autoInstall = false) => {
@@ -2472,6 +2611,38 @@ export default function App() {
                         className="w-full text-center bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-50 text-slate-300 text-[10px] font-mono py-1.5 rounded-lg transition-all"
                       >
                         {updateStatus === "checking" || updateStatus === "downloading" ? "Processing..." : "Force Check & Install"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* System Diagnostics Block */}
+                <div className="space-y-1.5 border-t border-slate-800 pt-4">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                    <Activity className={`w-3.5 h-3.5 text-amber-400 ${isDiagnosticRunning ? "animate-pulse" : ""}`} />
+                    <span>Ruvi OS System Diagnostics</span>
+                  </label>
+                  
+                  <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2">
+                    <p className="text-[10px] text-slate-400 leading-relaxed font-sans">
+                      Run diagnostics to analyze API key storage, local port connections (Ollama / LM Studio), and remote router response health.
+                    </p>
+                    
+                    {diagnosticLogs.length > 0 && (
+                      <div className="bg-slate-900 border border-slate-850 rounded-xl p-3 max-h-48 overflow-y-auto font-mono text-[9px] text-slate-300 space-y-1">
+                        {diagnosticLogs.map((log, i) => (
+                          <div key={i} className="leading-normal border-b border-slate-950/40 pb-0.5 last:border-0">{log}</div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={runDiagnostics}
+                        disabled={isDiagnosticRunning}
+                        className="w-full text-center bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-50 text-slate-300 text-[10px] font-mono py-1.5 rounded-lg transition-all cursor-pointer"
+                      >
+                        {isDiagnosticRunning ? "Running Diagnostics..." : "Run Connection Diagnostics"}
                       </button>
                     </div>
                   </div>

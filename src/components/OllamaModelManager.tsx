@@ -187,25 +187,57 @@ export default function OllamaModelManager() {
       // 1. Try fetching directly from local desktop port first
       const localAddresses = ["http://127.0.0.1:11434", "http://localhost:11434"];
       let localRes = null;
+      let localData = null;
       
-      for (const addr of localAddresses) {
-        try {
-          const r = await fetch(`${addr}/api/tags`, {
-            method: "GET",
-            signal: AbortSignal.timeout(1000)
-          });
-          if (r.ok) {
-            localRes = r;
-            break;
+      const isTauri = (window as any).__TAURI__ !== undefined || 
+                      window.location.protocol.startsWith("tauri") || 
+                      window.location.hostname === "tauri.localhost";
+
+      if (isTauri) {
+        for (const addr of localAddresses) {
+          try {
+            const { invoke } = await import("@tauri-apps/api/core");
+            const resText = await invoke<string>("fetch_local_http", { url: `${addr}/api/tags` });
+            if (resText) {
+              localData = JSON.parse(resText);
+              break;
+            }
+          } catch (_err) {
+            // ignore and check next
           }
-        } catch (_err) {
-          // ignore and check next
+        }
+      } else {
+        for (const addr of localAddresses) {
+          try {
+            const r = await fetch(`${addr}/api/tags`, {
+              method: "GET",
+              signal: AbortSignal.timeout(1000)
+            });
+            if (r.ok) {
+              localRes = r;
+              break;
+            }
+          } catch (_err) {
+            // ignore and check next
+          }
         }
       }
 
-      if (localRes) {
-        const localData = await localRes.json();
+      if (localData) {
         const evaluatedModels = evaluateOllamaModelsClientSide(localData.models || []);
+        setStatus({
+          online: true,
+          latency: 5,
+          systemRAM: "Local Host Desktop",
+          models: evaluatedModels
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (localRes) {
+        const localDataFetched = await localRes.json();
+        const evaluatedModels = evaluateOllamaModelsClientSide(localDataFetched.models || []);
         setStatus({
           online: true,
           latency: 5,
