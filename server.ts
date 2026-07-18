@@ -23,7 +23,7 @@ import { evolutionManager } from "./server/core/EvolutionManager";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // Custom CORS and dynamic user-provided API Key initialization middleware
 app.use((req, res, next) => {
