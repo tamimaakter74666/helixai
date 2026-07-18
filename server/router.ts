@@ -28,10 +28,11 @@ let openai: OpenAI | null = null;
 let anthropic: Anthropic | null = null;
 let agentrouter: OpenAI | null = null;
 
-export function initAI() {
-  if (process.env.GEMINI_API_KEY) {
+export function initAI(customKeys?: { gemini?: string; agentrouter?: string }) {
+  const geminiKey = customKeys?.gemini || process.env.GEMINI_API_KEY;
+  if (geminiKey) {
     gemini = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
+      apiKey: geminiKey,
       httpOptions: {
         headers: {
           "User-Agent": "aistudio-build"
@@ -45,7 +46,7 @@ export function initAI() {
   if (process.env.ANTHROPIC_API_KEY) {
     anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   }
-  const agentRouterKey = process.env.AGENTROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+  const agentRouterKey = customKeys?.agentrouter || process.env.AGENTROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
   if (agentRouterKey) {
     agentrouter = new OpenAI({
       baseURL: "https://agentrouter.org/v1",

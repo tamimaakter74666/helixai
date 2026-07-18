@@ -42,6 +42,44 @@ export default function LMStudioModelManager() {
   const fetchStatus = async () => {
     setLoading(true);
     try {
+      // 1. Try direct fetch first (desktop offline scan)
+      try {
+        const localRes = await fetch("http://127.0.0.1:1234/v1/models", {
+          method: "GET",
+          signal: AbortSignal.timeout(1500)
+        });
+        if (localRes.ok) {
+          const localData = await localRes.json();
+          const rawModels = localData.data || [];
+          const models = rawModels.map((m: any) => ({
+            name: m.id,
+            owned_by: m.owned_by || "lmstudio",
+            history: null
+          }));
+          setStatus({
+            online: true,
+            latency: 3,
+            models
+          });
+          
+          if (models.length > 0) {
+            const savedModel = localStorage.getItem("ruvi_lmstudio_selected_model");
+            if (savedModel && models.some((m: any) => m.name === savedModel)) {
+              setSelectedModel(savedModel);
+            } else {
+              const firstModel = models[0].name;
+              setSelectedModel(firstModel);
+              localStorage.setItem("ruvi_lmstudio_selected_model", firstModel);
+            }
+          }
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // Direct scan failed, fall back to API proxy
+      }
+
+      // 2. Fall back to API proxy
       const res = await fetch("/api/lmstudio/models");
       if (res.ok) {
         const data = await res.json();
@@ -61,7 +99,7 @@ export default function LMStudioModelManager() {
         setStatus({ online: false, models: [] });
       }
     } catch (err) {
-      console.warn("Failed to fetch LM Studio status (expected during server boot/restarts or if local client is not running):", err);
+      console.warn("Failed to fetch LM Studio status:", err);
       setStatus({ online: false, models: [] });
     } finally {
       setLoading(false);

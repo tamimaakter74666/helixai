@@ -108,9 +108,105 @@ export default function OllamaModelManager() {
     } catch (_e) {}
   };
 
+  const scoreModelForTaskClientSide = (model: any, task: string): number => {
+    const name = (model.name || "").toLowerCase();
+    const details = model.details || {};
+    const family = (details.family || "").toLowerCase();
+    
+    let score = 50;
+    let params = 0;
+    if (details.parameter_size) {
+      const match = details.parameter_size.match(/([\d.]+)/);
+      if (match) params = parseFloat(match[1]);
+    } else if (model.size && typeof model.size === "number") {
+      params = (model.size / (1024 * 1024 * 1024)) * 1.4;
+    }
+
+    if (params > 0) {
+      if (params >= 5 && params <= 11) {
+        score += 25;
+      } else if (params < 5) {
+        score += 10;
+      } else {
+        score -= 20;
+      }
+    }
+
+    if (task === "code") {
+      const codeKeywords = ["coder", "code", "starcoder", "deepseek", "codellama", "qwen2.5-coder", "command-r"];
+      const hasCodeKeyword = codeKeywords.some(kw => name.includes(kw) || family.includes(kw));
+      if (hasCodeKeyword) score += 45;
+      if (name.includes("deepseek") || family.includes("deepseek")) score += 15;
+    } else if (task === "creative") {
+      if (name.includes("llama") || family.includes("llama")) score += 30;
+      if (name.includes("mistral") || family.includes("mistral")) score += 25;
+      if (name.includes("gemma") || family.includes("gemma")) score += 20;
+    } else if (task === "vision") {
+      if (name.includes("vision") || name.includes("llava") || name.includes("moondream")) score += 65;
+    } else {
+      if (name.includes("qwen") || family.includes("qwen")) score += 35;
+      if (name.includes("llama3.1") || name.includes("llama3.2") || name.includes("llama3.3")) score += 25;
+      else if (name.includes("llama")) score += 15;
+      if (name.includes("gemma") || family.includes("gemma")) score += 20;
+      if (name.includes("phi") || family.includes("phi")) score += 10;
+    }
+
+    if (name.includes("latest") || name.includes("instruct")) {
+      score += 5;
+    }
+
+    return Math.round(score);
+  };
+
+  const evaluateOllamaModelsClientSide = (rawModels: any[]): EvaluatedModel[] => {
+    return rawModels.map(model => {
+      const scores = {
+        general: scoreModelForTaskClientSide(model, "general"),
+        code: scoreModelForTaskClientSide(model, "code"),
+        creative: scoreModelForTaskClientSide(model, "creative"),
+        vision: scoreModelForTaskClientSide(model, "vision")
+      };
+
+      return {
+        name: model.name,
+        sizeBytes: model.size,
+        sizeGB: (model.size / (1024 ** 3)).toFixed(2) + " GB",
+        family: model.details?.family || "unknown",
+        parameterSize: model.details?.parameter_size || "unknown",
+        quantization: model.details?.quantization_level || "unknown",
+        format: model.details?.format || "gguf",
+        scores,
+        history: null
+      };
+    });
+  };
+
   const fetchModels = async () => {
     setLoading(true);
     try {
+      // 1. Try fetching directly from local desktop port first
+      try {
+        const localRes = await fetch("http://127.0.0.1:11434/api/tags", {
+          method: "GET",
+          signal: AbortSignal.timeout(1500)
+        });
+        if (localRes.ok) {
+          const localData = await localRes.json();
+          const evaluatedModels = evaluateOllamaModelsClientSide(localData.models || []);
+          setStatus({
+            online: true,
+            latency: 5,
+            systemRAM: "Local Host Desktop",
+            models: evaluatedModels
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // Direct scan failed, fall back to API proxy
+      }
+
+      // 2. Proxy request
       const res = await fetch("/api/ollama/models");
       if (res.ok) {
         const data = await res.json();
@@ -119,7 +215,7 @@ export default function OllamaModelManager() {
         setStatus({ online: false, models: [] });
       }
     } catch (err) {
-      console.warn("Failed to fetch Ollama models (expected during server boot/restarts or if local client is not running):", err);
+      console.warn("Failed to fetch Ollama models:", err);
       setStatus({ online: false, models: [] });
     } finally {
       setLoading(false);

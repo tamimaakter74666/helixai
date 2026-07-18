@@ -25,6 +25,40 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
+// Custom CORS and dynamic user-provided API Key initialization middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-gemini-api-key, x-openrouter-api-key, x-agentrouter-api-key");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  // Inject user API keys dynamically if sent from client (e.g. Tauri app)
+  const customGeminiKey = req.headers["x-gemini-api-key"] as string;
+  const customAgentRouterKey = req.headers["x-openrouter-api-key"] as string || req.headers["x-agentrouter-api-key"] as string;
+
+  if (customGeminiKey) {
+    try {
+      initCoreAI(customGeminiKey);
+    } catch (e) {
+      console.error("Failed to dynamically initialize Core AI key:", e);
+    }
+  }
+  if (customGeminiKey || customAgentRouterKey) {
+    try {
+      initAI({
+        gemini: customGeminiKey,
+        agentrouter: customAgentRouterKey
+      });
+    } catch (e) {
+      console.error("Failed to dynamically initialize Router AI key:", e);
+    }
+  }
+
+  next();
+});
+
 app.use(express.json({ limit: "20mb" }));
 
 // Initialize Subsystems

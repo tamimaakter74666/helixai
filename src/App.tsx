@@ -43,6 +43,8 @@ import {
   RefreshCw,
   Palette,
   Settings2,
+  Key,
+  Globe,
   MessageCircle,
   Search,
   Smile,
@@ -109,6 +111,9 @@ export default function App() {
 
   const [isFloatingOpen, setIsFloatingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [geminiApiKey, setGeminiApiKey] = useState(() => localStorage.getItem("ruvi_gemini_api_key") || "");
+  const [openrouterApiKey, setOpenrouterApiKey] = useState(() => localStorage.getItem("ruvi_openrouter_api_key") || "");
+  const [ruviServerUrl, setRuviServerUrl] = useState(() => localStorage.getItem("ruvi_server_url") || "");
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("core");
@@ -2306,11 +2311,85 @@ export default function App() {
                   <div className="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
                 </label>
               </div>
+
+              {/* API Connection & Keys Setup */}
+              <div className="border-t border-slate-800 pt-4 space-y-4">
+                <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-2">API Keys & Connections</h3>
+                
+                {/* Gemini API Key */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                    <Key className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Google Gemini API Key</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={geminiApiKey}
+                    onChange={(e) => setGeminiApiKey(e.target.value)}
+                    placeholder="Enter GEMINI_API_KEY..."
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                  />
+                  <p className="text-[10px] text-slate-500">Overrides backend default key if specified.</p>
+                </div>
+
+                {/* OpenRouter API Key */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                    <Key className="w-3.5 h-3.5 text-pink-400" />
+                    <span>AgentRouter / OpenRouter API Key</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={openrouterApiKey}
+                    onChange={(e) => setOpenrouterApiKey(e.target.value)}
+                    placeholder="Enter OpenRouter API Key..."
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                  />
+                </div>
+
+                {/* Ruvi Cloud/Local Backend Server URL */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                    <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Backend Server URL</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={ruviServerUrl}
+                    onChange={(e) => setRuviServerUrl(e.target.value)}
+                    placeholder="e.g. http://localhost:3000 (Empty for Auto)"
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                  />
+                  <p className="text-[10px] text-slate-500">
+                    Required for Tauri .exe to route API calls (empty uses default Cloud deployment).
+                  </p>
+                </div>
+              </div>
             </div>
             
             <div className="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-end">
               <button 
-                onClick={() => setIsSettingsOpen(false)}
+                onClick={() => {
+                  localStorage.setItem("ruvi_gemini_api_key", geminiApiKey.trim());
+                  localStorage.setItem("ruvi_openrouter_api_key", openrouterApiKey.trim());
+                  localStorage.setItem("ruvi_server_url", ruviServerUrl.trim());
+                  setIsSettingsOpen(false);
+                  
+                  // Trigger confirmation audio chirp
+                  try {
+                    const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+                    const osc = context.createOscillator();
+                    const gain = context.createGain();
+                    osc.connect(gain);
+                    gain.connect(context.destination);
+                    osc.frequency.setValueAtTime(600, context.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1000, context.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.04, context.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, context.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(context.currentTime + 0.15);
+                  } catch (_e) {}
+                }}
                 className="px-4 py-2 bg-cyan-500 text-slate-950 font-bold font-sans text-sm rounded-lg hover:bg-cyan-400 transition-colors"
               >
                 Apply & Close
