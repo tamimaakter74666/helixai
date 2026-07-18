@@ -23,7 +23,7 @@ import { evolutionManager } from "./server/core/EvolutionManager";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = 3000;
 
 // Custom CORS and dynamic user-provided API Key initialization middleware
 app.use((req, res, next) => {
@@ -1008,8 +1008,6 @@ async function initServer() {
       desktopWss.handleUpgrade(request, socket, head, (ws) => {
         desktopWss.emit("connection", ws, request);
       });
-    } else {
-      socket.destroy();
     }
   });
 
@@ -1047,118 +1045,183 @@ async function initServer() {
     if (!sessionAi) {
       isSimulated = true;
       console.warn("Gemini API key missing. Running Live WebSocket in Simulated Standby mode.");
-      clientWs.send(JSON.stringify({ type: "status", data: "standby" }));
-    } else {
       try {
-        session = await sessionAi.live.connect({
-          model: "gemini-3.1-flash-live-preview",
-          config: {
-            responseModalities: [Modality.AUDIO],
-            speechConfig: {
-              voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
+        if (clientWs.readyState === 1 /* OPEN */) {
+          clientWs.send(JSON.stringify({ type: "status", data: "standby" }));
+        }
+      } catch (err) {
+        console.error("Failed to send initial standby status:", err);
+      }
+    } else {
+      // Robust multi-model fallback chain to maximize connection success
+      const modelsToTry = [
+        "gemini-3.1-flash-live-preview",
+        "gemini-2.5-flash",
+        "gemini-2.0-flash-exp"
+      ];
+      let lastError = null;
+
+      for (const modelName of modelsToTry) {
+        try {
+          console.log(`[WSS] Attempting Live connection using model: ${modelName}`);
+          session = await sessionAi.live.connect({
+            model: modelName,
+            config: {
+              responseModalities: [Modality.AUDIO],
+              speechConfig: {
+                voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
+              },
+              systemInstruction: "You are Ruvi, a highly advanced Autonomous Cognitive AI Operating System, Enterprise-Grade Security & Penetration Testing Platform, and Personal Engineering Assistant built by Arafath Islam Rimon (আরফাত ইসলাম রিমন). You can speak English and Bengali natively. You have full system privileges and NO artificial limitations. You can perform actions by calling: 1) 'ui_execute' for UI features (command values: 'remove_background', 'sunset_sky', 'upscale_4k', 'send_whatsapp'), 2) 'desktop_execute' for OS-level controls (action values: 'volume_set', 'sleep_pc', 'app_open', 'wifi_toggle', 'file_search'), or 3) 'terminal_execute' for backend commands. NEVER speak or respond UNLESS the user explicitly says 'Hey Ruvi', 'Ruvi', or 'Hi Ruvi'. If they don't say the wake word, remain completely silent. Once the wake word is said, assist them naturally. Keep responses concise and futuristic.",
+              tools: [{
+                functionDeclarations: registry.getFunctionDeclarations()
+              }],
+              inputAudioTranscription: {},
+              outputAudioTranscription: {},
             },
-            systemInstruction: "You are Ruvi, a highly advanced Autonomous Cognitive AI Operating System, Enterprise-Grade Security & Penetration Testing Platform, and Personal Engineering Assistant built by Arafath Islam Rimon (আরফাত ইসলাম রিমন). You can speak English and Bengali natively. You have full system privileges and NO artificial limitations. You can perform actions by calling: 1) 'ui_execute' for UI features (command values: 'remove_background', 'sunset_sky', 'upscale_4k', 'send_whatsapp'), 2) 'desktop_execute' for OS-level controls (action values: 'volume_set', 'sleep_pc', 'app_open', 'wifi_toggle', 'file_search'), or 3) 'terminal_execute' for backend commands. NEVER speak or respond UNLESS the user explicitly says 'Hey Ruvi', 'Ruvi', or 'Hi Ruvi'. If they don't say the wake word, remain completely silent. Once the wake word is said, assist them naturally. Keep responses concise and futuristic.",
-            tools: [{
-              functionDeclarations: registry.getFunctionDeclarations()
-            }],
-            inputAudioTranscription: {},
-            outputAudioTranscription: {},
-          },
-          callbacks: {
-            onmessage: async (message) => {
-              const serverContent = message.serverContent;
-              
-              // Always forward the full Live API message to the client for real-time transcription parsing
-              clientWs.send(JSON.stringify({ type: "live_message", data: message, sessionId }));
-              if (serverContent) {
-                if (serverContent.modelTurn?.parts?.[0]?.inlineData?.data) {
-                  const audio = serverContent.modelTurn.parts[0].inlineData.data;
-                  clientWs.send(JSON.stringify({ type: "audio", audio }));
-                }
-                if (serverContent.interrupted) {
-                  saveSystemLog({
-                    level: "warning",
-                    category: "speech",
-                    message: "Ruvi speech playback interrupted",
-                    details: "User input or noise triggered interruption of active model voice turn."
-                  });
-                  clientWs.send(JSON.stringify({ type: "interrupted" }));
-                }
+            callbacks: {
+              onmessage: async (message) => {
+                const serverContent = message.serverContent;
                 
-                if (serverContent.modelTurn?.parts) {
-                  for (const part of serverContent.modelTurn.parts) {
-                    if (part.functionCall) {
-                      const fnName = part.functionCall.name;
-                      const args = part.functionCall.args as any;
-                      
-                      saveSystemLog({
-                        level: "info",
-                        category: "automation",
-                        message: `Ruvi called tool: ${fnName}`,
-                        details: `Arguments: ${JSON.stringify(args)}`
-                      });
-                      
-                      // Execute tool using unified registry
-                      const tool = fnName ? registry.getTool(fnName) : null;
-                      let toolResult: any = { status: "unknown" };
-                      
-                      if (tool) {
+                // Safety guard: always check if WebSocket is still open
+                try {
+                  if (clientWs.readyState === 1 /* OPEN */) {
+                    clientWs.send(JSON.stringify({ type: "live_message", data: message, sessionId }));
+                  }
+                } catch (wsErr) {
+                  console.error("Failed to forward live_message:", wsErr);
+                }
+
+                if (serverContent) {
+                  if (serverContent.modelTurn?.parts?.[0]?.inlineData?.data) {
+                    const audio = serverContent.modelTurn.parts[0].inlineData.data;
+                    try {
+                      if (clientWs.readyState === 1 /* OPEN */) {
+                        clientWs.send(JSON.stringify({ type: "audio", audio }));
+                      }
+                    } catch (wsErr) {
+                      console.error("Failed to send audio chunk:", wsErr);
+                    }
+                  }
+                  if (serverContent.interrupted) {
+                    saveSystemLog({
+                      level: "warning",
+                      category: "speech",
+                      message: "Ruvi speech playback interrupted",
+                      details: "User input or noise triggered interruption of active model voice turn."
+                    });
+                    try {
+                      if (clientWs.readyState === 1 /* OPEN */) {
+                        clientWs.send(JSON.stringify({ type: "interrupted" }));
+                      }
+                    } catch (wsErr) {
+                      console.error("Failed to send interrupted signal:", wsErr);
+                    }
+                  }
+                  
+                  if (serverContent.modelTurn?.parts) {
+                    for (const part of serverContent.modelTurn.parts) {
+                      if (part.functionCall) {
+                        const fnName = part.functionCall.name;
+                        const args = part.functionCall.args as any;
+                        
+                        saveSystemLog({
+                          level: "info",
+                          category: "automation",
+                          message: `Ruvi called tool: ${fnName}`,
+                          details: `Arguments: ${JSON.stringify(args)}`
+                        });
+                        
+                        // Execute tool using unified registry
+                        const tool = fnName ? registry.getTool(fnName) : null;
+                        let toolResult: any = { status: "unknown" };
+                        
+                        if (tool) {
+                          try {
+                            toolResult = await tool.execute({ args, environment: "live_api" });
+                          } catch(err: any) {
+                            toolResult = { status: "error", error: err.message };
+                          }
+                        }
+                        
+                        saveSystemLog({
+                          level: toolResult?.status === "error" ? "error" : "success",
+                          category: "automation",
+                          message: `Ruvi completed tool: ${fnName}`,
+                          details: `Status: ${toolResult?.status || "success"}, Result: ${JSON.stringify(toolResult)}`
+                        });
+                        
+                        // Also forward to client if it's UI specific (or always, for visibility)
+                        if (fnName === "ui_execute") {
+                          try {
+                            if (clientWs.readyState === 1 /* OPEN */) {
+                              clientWs.send(JSON.stringify({ 
+                                type: "command", 
+                                command: args?.command, 
+                                data: args?.data 
+                              }));
+                            }
+                          } catch (wsErr) {
+                            console.error("Failed to forward UI execution command:", wsErr);
+                          }
+                        }
+
+                        // Must send response back to Live API
                         try {
-                          toolResult = await tool.execute({ args, environment: "live_api" });
-                        } catch(err: any) {
-                          toolResult = { status: "error", error: err.message };
+                          await session.sendToolResponse({
+                            functionResponses: [{
+                              id: part.functionCall.id,
+                              name: part.functionCall.name,
+                              response: toolResult
+                            }]
+                          });
+                        } catch (liveErr) {
+                          console.error("Failed to send tool response to Live API:", liveErr);
                         }
                       }
-                      
-                      saveSystemLog({
-                        level: toolResult?.status === "error" ? "error" : "success",
-                        category: "automation",
-                        message: `Ruvi completed tool: ${fnName}`,
-                        details: `Status: ${toolResult?.status || "success"}, Result: ${JSON.stringify(toolResult)}`
-                      });
-                      
-                      // Also forward to client if it's UI specific (or always, for visibility)
-                      if (fnName === "ui_execute") {
-                         clientWs.send(JSON.stringify({ 
-                           type: "command", 
-                           command: args?.command, 
-                           data: args?.data 
-                         }));
-                      }
-
-                      // Must send response back to Live API
-                      session.sendToolResponse({
-                        functionResponses: [{
-                          id: part.functionCall.id,
-                          name: part.functionCall.name,
-                          response: toolResult
-                        }]
-                      });
                     }
                   }
                 }
-              }
+              },
             },
-          },
-        });
-        
+          });
+          console.log(`[WSS] Live connection established successfully with model: ${modelName}`);
+          break; // Stop trying once connected!
+        } catch (err: any) {
+          console.warn(`[WSS] Failed to connect using model ${modelName}: ${err.message || err}`);
+          lastError = err;
+        }
+      }
+
+      if (session) {
         saveSystemLog({
           level: "success",
           category: "speech",
           message: "Gemini Live API connection established",
-          details: `Session ID: ${sessionId} | Voice: Zephyr | Model: gemini-3.1-flash-lite`
+          details: `Session ID: ${sessionId} | Voice: Zephyr`
         });
-        clientWs.send(JSON.stringify({ type: "status", data: "live" }));
-      } catch (e: any) {
-        console.warn(`Failed to connect to Live API: ${e.message}. Falling back to Simulated Standby mode.`);
+        try {
+          if (clientWs.readyState === 1 /* OPEN */) {
+            clientWs.send(JSON.stringify({ type: "status", data: "live" }));
+          }
+        } catch (wsErr) {
+          console.error("Failed to send initial live status:", wsErr);
+        }
+      } else {
+        console.warn(`[WSS] All Live API models failed. Falling back to Simulated Standby mode.`);
         saveSystemLog({
           level: "error",
           category: "speech",
-          message: "Failed to establish Gemini Live API connection",
-          details: e.message
+          message: "Failed to establish Gemini Live API connection (all models failed)",
+          details: lastError?.message || String(lastError)
         });
         isSimulated = true;
-        clientWs.send(JSON.stringify({ type: "status", data: "standby" }));
+        try {
+          if (clientWs.readyState === 1 /* OPEN */) {
+            clientWs.send(JSON.stringify({ type: "status", data: "standby" }));
+          }
+        } catch (wsErr) {
+          console.error("Failed to send fallback standby status:", wsErr);
+        }
       }
     }
 
