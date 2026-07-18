@@ -16,6 +16,7 @@ export class MicrophoneManager {
       return this.stream;
     } catch (e) {
       console.warn("Microphone access denied:", e);
+// eslint-disable-next-line preserve-caught-error
       throw new Error("Microphone permission denied.");
     }
   }

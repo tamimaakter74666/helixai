@@ -8,10 +8,15 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    port: 3000,
-    strictPort: true,
     watch: {
-      ignored: ['**/ruvi_memory.json', '**/ruvi.db', '**/sqlite.db', '**/db.sqlite']
+      ignored: [
+        '**/ruvi_memory.json',
+        '**/ruvi.db',
+        '**/sqlite.db',
+        '**/db.sqlite',
+        '**/server.log',
+        '**/*.log'
+      ]
     }
   },
 });

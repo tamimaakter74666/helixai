@@ -1,5 +1,9 @@
 import React from "react";
-import { Mic, MicOff, Brain, Activity, Cpu, HardDrive, Wifi, ShieldAlert, Layers, Network, Terminal as TerminalIcon } from "lucide-react";
+ 
+ 
+ 
+ 
+import { Mic, MicOff, Brain, Activity, Cpu, HardDrive, Wifi, ShieldAlert, Layers, Network, Terminal as _TerminalIcon } from "lucide-react";
 import VoiceWaveform from "./VoiceWaveform";
 import SystemMonitor from "./SystemMonitor";
 
@@ -13,6 +17,12 @@ interface GlobalSidebarProps {
   interruptVoice: () => void;
   isTTSMuted: boolean;
   setIsTTSMuted: (v: boolean) => void;
+  setActiveTab?: (tab: string) => void;
+  activeTab?: string;
+  engineMode?: "auto" | "gemini" | "local";
+  activeVoiceEngine?: "gemini" | "local";
+  fallbackReason?: string;
+  setEngineMode?: (mode: "auto" | "gemini" | "local") => void;
 }
 
 export default function GlobalSidebar({
@@ -24,7 +34,13 @@ export default function GlobalSidebar({
   triggerWakeWord,
   interruptVoice,
   isTTSMuted,
-  setIsTTSMuted
+  setIsTTSMuted,
+  setActiveTab,
+  activeTab,
+  engineMode = "auto",
+  activeVoiceEngine = "local",
+  fallbackReason = "",
+  setEngineMode
 }: GlobalSidebarProps) {
   return (
     <div className="w-80 h-full border-r border-cyan-500/20 bg-slate-900/60 backdrop-blur-md flex flex-col relative z-50 shrink-0 overflow-y-auto overflow-x-hidden scrollbar-none pb-12">
@@ -106,6 +122,51 @@ export default function GlobalSidebar({
               {isTTSMuted ? <MicOff className="w-3 h-3" /> : <Mic className="w-3 h-3" />} Mute
             </button>
           </div>
+
+          {/* Active Voice Pipeline Status */}
+          <div className="w-full mt-4 pt-3 border-t border-cyan-500/10 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-[9px] font-mono text-slate-400 uppercase">Voice Engine:</span>
+              {activeVoiceEngine === "gemini" ? (
+                <span className="flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/25">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Gemini Live Voice
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-[10px] font-mono text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/25" title={fallbackReason}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Local Voice
+                </span>
+              )}
+            </div>
+
+            {fallbackReason && activeVoiceEngine === "local" && (
+              <p className="text-[8px] font-sans text-amber-300/80 leading-tight bg-amber-500/5 p-1 px-1.5 rounded border border-amber-500/10 text-center">
+                Reason: {fallbackReason}
+              </p>
+            )}
+
+            {/* Manual Switch Mode Selection */}
+            <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+              {[
+                { id: "auto", label: "Auto" },
+                { id: "gemini", label: "Gemini" },
+                { id: "local", label: "Local" }
+              ].map((modeOpt) => (
+                <button
+                  key={modeOpt.id}
+                  onClick={() => setEngineMode && setEngineMode(modeOpt.id as any)}
+                  className={`py-1 rounded font-mono text-[9px] transition-all uppercase ${
+                    engineMode === modeOpt.id
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold"
+                      : "text-slate-500 hover:text-slate-300 border border-transparent"
+                  }`}
+                >
+                  {modeOpt.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Model Specs */}
@@ -130,8 +191,31 @@ export default function GlobalSidebar({
           </div>
         </div>
 
+        {/* Dedicated Sidebar Shortcut to Analytics */}
+        <button
+          onClick={() => setActiveTab && setActiveTab("analytics")}
+          className={`w-full p-3 rounded-xl border text-left transition-all duration-300 flex items-center justify-between group ${
+            activeTab === "analytics"
+              ? "bg-cyan-500/20 border-cyan-500/45 text-cyan-300 shadow-[inset_0_0_15px_rgba(0,242,254,0.15)] scale-[1.01]"
+              : "bg-slate-950/40 hover:bg-slate-950/70 border-slate-800 hover:border-cyan-500/35 text-slate-300"
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${
+              activeTab === "analytics" ? "bg-cyan-500/25 border-cyan-500/40 text-cyan-400" : "bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400"
+            }`}>
+              <Activity className="w-4 h-4 animate-pulse" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold tracking-wide">System Logs & Analytics</span>
+              <span className="text-[9px] text-cyan-400/80 font-sans">সিস্টেম অ্যানালিটিক্স ও এরর লগ</span>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono text-cyan-400 opacity-80 group-hover:translate-x-1 transition-transform">→</span>
+        </button>
+
         {/* Real-time Hardware Specs (Reusing SystemMonitor) */}
-        <SystemMonitor />
+        <SystemMonitor setActiveTab={setActiveTab} activeTab={activeTab} />
 
       </div>
     </div>

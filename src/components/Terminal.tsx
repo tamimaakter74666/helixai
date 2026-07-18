@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+ 
+ 
 import { Terminal, Code2, Play } from "lucide-react";
 
 export default function SimulatedTerminal() {
@@ -19,25 +21,57 @@ export default function SimulatedTerminal() {
   }, [logs]);
 
   useEffect(() => {
-    const fakeLogs = [
-      "Running semantic integrity check...",
-      "Allocating VRAM for generative vision transformer...",
-      "[WARN] Memory spike detected in segment 0x0A94",
-      "Compensating with dynamic paging...",
-      "Ping: DeepSeek-R1 core module active.",
-      "RadarSweep telemetry channel open at port 8092.",
-      "Re-calibrating speech synthesis phonemes...",
-    ];
-
-    const interval = setInterval(() => {
-      if (Math.random() > 0.6) {
-        const randomLog = fakeLogs[Math.floor(Math.random() * fakeLogs.length)];
-        const timestamp = new Date().toISOString().split("T")[1].substring(0, 12);
-        setLogs((prev) => [...prev.slice(-30), `[${timestamp}] ${randomLog}`]);
+    let isMounted = true;
+    let errorCount = 0;
+    
+    const fetchLogs = async () => {
+      try {
+        const response = await fetch("/api/logs?limit=30");
+        if (response.ok) {
+          const data = await response.json();
+          if (isMounted) {
+            // Data is returned newest first usually, let's format them
+            // Depending on the server implementation, we reverse them for the terminal view
+            const formattedLogs = data.reverse().map((log: any) => {
+              const time = new Date(log.timestamp).toISOString().split("T")[1].substring(0, 12);
+              let prefix = "";
+              if (log.level === "error") prefix = "[WARN] ";
+              else if (log.level === "success") prefix = "[OK] ";
+              else if (log.level === "info") prefix = "[INFO] ";
+              
+              return `[${time}] ${prefix}${log.category.toUpperCase()}: ${log.message}`;
+            });
+            
+            // Keep some boot logs if real logs are few
+            if (formattedLogs.length === 0) {
+              setLogs([
+                "Ruvi Core Kernel v3.5.1 Boot Sequence Initiated...",
+                "[OK] System initialized, waiting for events...",
+              ]);
+            } else {
+              setLogs(formattedLogs);
+            }
+            errorCount = 0;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch logs", err);
+        errorCount++;
       }
-    }, 1500);
+    };
 
-    return () => clearInterval(interval);
+    fetchLogs();
+    const interval = setInterval(() => {
+       // Slow down polling if errors happen
+       if (errorCount < 3) {
+         fetchLogs();
+       }
+    }, 2000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   return (

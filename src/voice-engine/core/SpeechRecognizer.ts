@@ -1,39 +1,46 @@
-
 import { EventEmitter } from "../utils/EventEmitter";
+import { OfflineTranscriber } from "./OfflineTranscriber";
 
 export interface SpeechRecognizerEvents {
   transcript: (text: string, isFinal: boolean) => void;
   modelSpoke: (text: string) => void;
-  error: (err: any) => void;
+  error: (err: unknown) => void;
   end: () => void;
   start: () => void;
 }
 
 export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
   private recognition: any = null;
+  private offlineTranscriber: OfflineTranscriber;
   private isListening = false;
   private errorCount = 0;
   private lastErrorTime = 0;
   private restartTimeoutId: any = null;
+  private language = "bn-BD";
 
   constructor() {
     super();
+    
+    // Initialize Offline Transcriber
+    this.offlineTranscriber = new OfflineTranscriber((text) => {
+      this.emit("transcript", text, true);
+    });
+
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = true;
       this.recognition.interimResults = true;
-      this.recognition.lang = "bn-BD"; // Or en-US depending on state
+      this.recognition.lang = this.language;
 
       this.recognition.onstart = () => {
         console.log("[SpeechRecognizer] Web Speech API started listening successfully.");
-        this.errorCount = 0; // Reset error count on successful startup
+        this.errorCount = 0;
         this.emit("start");
       };
 
       this.recognition.onresult = (event: any) => {
-        console.log("Speech recognition onresult", event);
-        this.errorCount = 0; // Reset error state on any successful speech fragment!
+        this.errorCount = 0;
         let interimTranscript = "";
         let finalTranscript = "";
 
@@ -46,10 +53,12 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
         }
 
         if (finalTranscript) {
+          if (/^\[.*\]$/.test(finalTranscript.trim()) || /^\(.*\)$/.test(finalTranscript.trim())) return;
           this.lastFinalTranscriptTime = Date.now();
           this.lastTranscriptString = finalTranscript;
           this.emit("transcript", finalTranscript, true);
         } else if (interimTranscript) {
+          if (/^\[.*\]$/.test(interimTranscript.trim()) || /^\(.*\)$/.test(interimTranscript.trim())) return;
           this.emit("transcript", interimTranscript, false);
         }
       };
@@ -58,7 +67,6 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
         const now = Date.now();
         const errStr = String(event.error || "").toLowerCase();
         
-        // "no-speech" is not a real failure, it is just silence. Do not increment error backoffs.
         if (errStr !== "no-speech" && errStr !== "aborted") {
           if (now - this.lastErrorTime < 5000) {
             this.errorCount++;
@@ -70,7 +78,13 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
 
         console.warn(`[SpeechRecognizer] onerror event: ${event.error} (Conseq. count: ${this.errorCount})`);
         
-        // Stop retrying immediately for fatal/unrecoverable errors
+        if (errStr === "network" || !navigator.onLine) {
+           console.log("[SpeechRecognizer] Network error detected. Switching to offline transcriber automatically...");
+           this.recognition.stop();
+           this.offlineTranscriber.start();
+           return;
+        }
+
         const fatalErrors = ["not-allowed", "service-not-allowed", "language-not-supported"];
         if (fatalErrors.includes(errStr)) {
           console.warn(`[SpeechRecognizer] Fatal speech error: ${event.error}. Disabling automatic listening.`);
@@ -81,7 +95,6 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
           }
         }
 
-        // Do not emit errors for normal aborts or silence, as they are part of regular operations
         if (errStr !== "no-speech" && errStr !== "aborted") {
           this.emit("error", event.error);
         }
@@ -89,32 +102,51 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
 
       this.recognition.onend = () => {
         this.emit("end");
-        if (this.isListening) {
-          // If we had real errors (like network/audio issues), calculate backoff (up to 10s) to avoid hammer-restarting
-          // If silence (no-speech) or normal completion, restart immediately (100ms) for maximum responsiveness!
+        if (this.isListening && navigator.onLine) {
           const backoffDelay = this.errorCount > 0 ? Math.min(10000, 500 * Math.pow(2, this.errorCount - 1)) : 100;
-          console.log(`[SpeechRecognizer] onend triggered. Scheduling restart in ${backoffDelay}ms.`);
-          
           if (this.restartTimeoutId) clearTimeout(this.restartTimeoutId);
           this.restartTimeoutId = setTimeout(() => {
-            if (this.isListening) {
-               try { this.recognition.start(); } catch (e) {}
+            if (this.isListening && navigator.onLine) {
+               try { this.recognition.start(); } catch (_e) { /* empty */ }
             }
           }, backoffDelay);
         }
       };
     }
+
+    // Auto-switch back to online when connection is restored
+    window.addEventListener("online", () => {
+      if (this.isListening) {
+        console.log("[SpeechRecognizer] Internet connection restored. Switching back to Cloud Voice...");
+        this.offlineTranscriber.stop();
+        this.start();
+      }
+    });
+
+    window.addEventListener("offline", () => {
+      if (this.isListening) {
+        console.log("[SpeechRecognizer] Internet connection lost. Switching to Local Whisper...");
+        if (this.recognition) {
+           try { this.recognition.stop(); } catch (_e) { /* empty */ }
+        }
+        this.offlineTranscriber.start();
+      }
+    });
   }
 
   start() {
     this.isListening = true;
-    this.errorCount = 0; // Reset consecutive error tally when user starts recording
+    this.errorCount = 0;
     if (this.restartTimeoutId) {
       clearTimeout(this.restartTimeoutId);
       this.restartTimeoutId = null;
     }
-    if (this.recognition) {
-      try { this.recognition.start(); } catch (e) {}
+    
+    if (!navigator.onLine) {
+       console.log("[SpeechRecognizer] Starting offline transcriber...");
+       this.offlineTranscriber.start();
+    } else if (this.recognition) {
+      try { this.recognition.start(); } catch (_e) { /* empty */ }
     }
   }
 
@@ -125,14 +157,17 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
       this.restartTimeoutId = null;
     }
     if (this.recognition) {
-      try { this.recognition.stop(); } catch (e) {}
+      try { this.recognition.stop(); } catch (_e) { /* empty */ }
     }
+    this.offlineTranscriber.stop();
   }
 
   setLanguage(lang: string) {
+    this.language = lang;
+    this.offlineTranscriber.setLanguage(lang);
     if (this.recognition) {
        this.recognition.lang = lang;
-       if (this.isListening) {
+       if (this.isListening && navigator.onLine) {
           this.stop();
           setTimeout(() => this.start(), 100);
        }
@@ -143,12 +178,9 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
   private lastTranscriptString = "";
 
   processLiveMessage(msg: any) {
-    // 1. Process User Transcripts from Gemini Live API
     if (msg.serverContent?.inputTranscription) {
       const tx = msg.serverContent.inputTranscription;
       if (tx.text) {
-         console.log("Gemini Live API Final User Transcript:", tx.text);
-         // Deduplicate against local SpeechRecognition
          if (Date.now() - this.lastFinalTranscriptTime > 2000 || this.lastTranscriptString !== tx.text) {
              this.emit("transcript", tx.text, true);
              this.lastFinalTranscriptTime = Date.now();
@@ -159,29 +191,12 @@ export class SpeechRecognizer extends EventEmitter<SpeechRecognizerEvents> {
     if (msg.serverContent?.interimInputTranscription) {
       const tx = msg.serverContent.interimInputTranscription;
       if (tx.text) {
-         console.log("Gemini Live API Interim User Transcript:", tx.text);
          this.emit("transcript", tx.text, false);
       }
     }
-
-    // 2. Process Client turns if sent by server
-    if (msg.clientContent?.turns) {
-       for (const turn of msg.clientContent.turns) {
-          if (turn.parts) {
-             for (const part of turn.parts) {
-                if (part.text) {
-                   this.emit("transcript", part.text, true);
-                }
-             }
-          }
-       }
-    }
-    
-    // 3. Process Model responses (what Ruvi says)
     if (msg.serverContent?.modelTurn?.parts) {
       for (const part of msg.serverContent.modelTurn.parts) {
          if (part.text) {
-             console.log("Gemini Live API Model Spoke:", part.text);
              this.emit("modelSpoke", part.text);
          }
       }

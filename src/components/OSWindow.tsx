@@ -1,6 +1,8 @@
 import React, { ReactNode, useState } from "react";
-import { Minus, Square, X, Maximize2, Minimize2 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+ 
+import { Minus, X, Maximize2, Minimize2 } from "lucide-react";
+ 
+import { motion } from "motion/react";
 
 interface OSWindowProps {
   title: string;

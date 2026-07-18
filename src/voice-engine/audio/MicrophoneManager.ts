@@ -34,9 +34,9 @@ export class MicrophoneManager extends EventEmitter<MicrophoneEvents> {
       });
 
       return this.activeStream;
-    } catch (e: any) {
+    } catch (e: unknown) {
       LoggingManager.error("MicrophoneManager", "Failed to get microphone stream.", e);
-      this.emit("error", e);
+      this.emit("error", e instanceof Error ? e : new Error(String(e)));
       return null;
     }
   }

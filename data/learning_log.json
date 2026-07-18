@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": 1783961803788,
+    "action": "REGISTER",
+    "skillName": "getBitcoinPrice",
+    "details": "Version 1 installed.",
+    "version": 1
+  }
+]

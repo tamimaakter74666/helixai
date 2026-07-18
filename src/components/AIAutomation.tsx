@@ -1,4 +1,5 @@
 import React from 'react';
+ 
 import { GitCommit, GitBranch, Play, CheckCircle2, Clock, Users } from 'lucide-react';
 
 export default function AIAutomation() {

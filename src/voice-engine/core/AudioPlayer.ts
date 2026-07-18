@@ -1,4 +1,6 @@
 
+import { LoggingManager } from "../utils/LoggingManager";
+
 export class AudioPlayer {
   private audioCtx: AudioContext | null = null;
   private nextStartTime = 0;
@@ -7,18 +9,32 @@ export class AudioPlayer {
   init() {
     if (!this.audioCtx) {
       this.audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+      LoggingManager.info("AudioPlayer", "AudioContext initialized at 24kHz sample rate.");
     }
   }
 
   setMuted(muted: boolean) {
     this.isMuted = muted;
     if (muted) {
+      LoggingManager.info("AudioPlayer", "Audio player muted. Stopping all scheduled playbacks.");
       this.stopAll();
+    } else {
+      LoggingManager.info("AudioPlayer", "Audio player unmuted.");
     }
   }
 
+  getRemainingPlayTimeMs(): number {
+    if (!this.audioCtx) return 0;
+    const remainingSeconds = this.nextStartTime - this.audioCtx.currentTime;
+    return Math.max(0, remainingSeconds * 1000);
+  }
+
+  isPlaying(): boolean {
+    if (!this.audioCtx) return false;
+    return this.audioCtx.currentTime < this.nextStartTime;
+  }
+
   playChunk(base64Data: string) {
-    
     if (this.isMuted) return;
     if (!this.audioCtx) this.init();
 
@@ -48,15 +64,22 @@ export class AudioPlayer {
       this.nextStartTime = currentTime;
     }
     
+    const chunkDurationMs = Math.round(audioBuffer.duration * 1000);
+    const remainingBeforeMs = Math.round((this.nextStartTime - currentTime) * 1000);
+    LoggingManager.debug("AudioPlayer", `Enqueued audio chunk. Duration: ${chunkDurationMs}ms. Plays in: ${remainingBeforeMs}ms.`);
+
     source.start(this.nextStartTime);
     this.nextStartTime += audioBuffer.duration;
   }
 
   stopAll() {
     if (this.audioCtx) {
-      this.audioCtx.close();
+      try {
+        this.audioCtx.close();
+      } catch (e) {}
       this.audioCtx = null;
       this.nextStartTime = 0;
+      LoggingManager.info("AudioPlayer", "AudioContext closed and all active playback stopped.");
     }
   }
 }

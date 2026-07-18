@@ -1,0 +1,38 @@
+
+> ruvi-ai-hologram@0.0.0 dev
+> tsx server.ts
+
+[Registry] Registered capability: getBitcoinPrice
+Ruvi JSON Database initialized at /app/applet/ruvi_memory.json
+[Registry] Registered capability: file_read
+[Registry] Registered capability: file_write
+[Registry] Registered capability: project_scan
+[Registry] Registered capability: system_build
+[Registry] Registered capability: git_commit
+[Registry] Registered capability: server_restart
+[Registry] Registered capability: desktop_execute
+[Registry] Registered capability: ui_execute
+[Registry] Registered capability: terminal_execute
+[Registry] Registered capability: register_capability
+[Registry] Registered capability: rollback_capability
+WebSocket server error: Port is already in use
+node:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:1941:16)
+    at listenInCluster (node:net:1998:12)
+    at node:net:2207:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1977:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+
+Node.js v22.23.0

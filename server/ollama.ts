@@ -1,5 +1,6 @@
 import si from "systeminformation";
 import { getModelAverages } from "./db";
+import { getActiveCompanion } from "./desktop";
 
 export interface OllamaModelDetails {
   parent_model?: string;
@@ -23,13 +24,27 @@ si.mem().then(info => {
   totalMemoryGB = Math.round(info.total / (1024 ** 3));
 }).catch(() => {});
 
+export function getEffectiveOllamaMemoryGB(): number {
+  const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").toLowerCase();
+  const isRemote = !ollamaHost.includes("localhost") && !ollamaHost.includes("127.0.0.1") && !ollamaHost.includes("0.0.0.0");
+  
+  // If Ollama is running on a remote host or we have an active desktop companion connected,
+  // we should assume the client system has ample RAM (at least 24GB) rather than penalizing models
+  // based on the sandbox/container's restricted resource pool.
+  if (isRemote || getActiveCompanion()) {
+    return 24;
+  }
+  
+  return totalMemoryGB;
+}
+
 export async function getOllamaStatus() {
   const start = Date.now();
   const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
   try {
     const res = await fetch(`${ollamaHost}/api/tags`, {
       method: "GET",
-      signal: AbortSignal.timeout(1500)
+      signal: AbortSignal.timeout(5000) // Upgraded from 1500ms to 5000ms to handle slower waking hosts and avoid false-offline readings
     });
     if (res.ok) {
       const data = await res.json();
@@ -49,7 +64,7 @@ export function scoreModelForTask(model: OllamaModel, task: string, historicalSt
   const name = (model.name || "").toLowerCase();
   const details = model.details || {};
   const family = (details.family || "").toLowerCase();
-  const families = (details.families || []).map(f => String(f).toLowerCase());
+  const families = Array.isArray(details.families) ? details.families.map(f => String(f).toLowerCase()) : [];
   
   let score = 50; // default base score
 
@@ -58,15 +73,16 @@ export function scoreModelForTask(model: OllamaModel, task: string, historicalSt
   if (details.parameter_size) {
     const match = details.parameter_size.match(/([\d.]+)/);
     if (match) params = parseFloat(match[1]);
-  } else {
+  } else if (model.size && typeof model.size === "number") {
     // Estimate parameters from model size in bytes
     // (A 4-bit quantized model is roughly 0.6GB to 0.8GB per billion parameters)
-    params = model.size / (1024 * 1024 * 1024) * 1.4;
+    params = (model.size / (1024 * 1024 * 1024)) * 1.4;
   }
 
   // 1. Hardware Awareness (RAM / VRAM constraints)
+  const effectiveMemoryGB = getEffectiveOllamaMemoryGB();
   if (params > 0) {
-    if (totalMemoryGB <= 8) {
+    if (effectiveMemoryGB <= 8) {
       // Small system (e.g. 8GB): prefer smaller models to prevent severe lag / crash
       if (params <= 4) {
         score += 20; // 1.5B - 3B is perfect
@@ -75,7 +91,7 @@ export function scoreModelForTask(model: OllamaModel, task: string, historicalSt
       } else {
         score -= 40; // > 9B will crawl or crash on 8GB RAM
       }
-    } else if (totalMemoryGB <= 16) {
+    } else if (effectiveMemoryGB <= 16) {
       // Medium system (e.g. 16GB): sweet spot is 7B-9B
       if (params >= 5 && params <= 11) {
         score += 25;
@@ -274,7 +290,7 @@ export async function getEvaluatedOllamaModels() {
   return {
     online: true,
     latency: status.latency,
-    systemRAM: `${totalMemoryGB} GB`,
+    systemRAM: `${getEffectiveOllamaMemoryGB()} GB`,
     models: evaluated
   };
 }

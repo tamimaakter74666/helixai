@@ -1,6 +1,9 @@
 import React from "react";
 import OSWindow from "./OSWindow";
+ 
+ 
 import { Shield, Lock, Key, Eye, AlertTriangle, Fingerprint } from "lucide-react";
+ 
 import { motion } from "motion/react";
 
 export default function SecurityCenter() {

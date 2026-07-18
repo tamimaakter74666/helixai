@@ -1,0 +1,11 @@
+[
+  {
+    "name": "getBitcoinPrice",
+    "description": "Fetches the current price of Bitcoin in USD using CoinGecko API.",
+    "parameters": {},
+    "scriptBody": "const axios = require('axios');\ntry {\n  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');\n  return `বিটকয়েনের বর্তমান মূল্য: $${response.data.bitcoin.usd} USD`;\n} catch (error) {\n  return 'দুঃখিত, বিটকয়েনের মূল্য এই মুহূর্তে আনা সম্ভব হচ্ছে না।';\n}",
+    "version": 1,
+    "timestamp": 1783961803788,
+    "rollbackScriptBody": ""
+  }
+]

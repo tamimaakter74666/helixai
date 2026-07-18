@@ -9,13 +9,16 @@ import {
   Code, 
   PenTool, 
   Eye, 
+ 
   Sliders, 
   Server, 
+ 
   Activity,
   Cpu,
   Layers,
   Search,
   RefreshCw,
+ 
   HelpCircle,
   Lightbulb
 } from "lucide-react";
@@ -58,11 +61,52 @@ export default function OllamaModelManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTask, setSelectedTask] = useState<"general" | "code" | "creative" | "vision">("general");
   const [testPrompt, setTestPrompt] = useState("");
+  const [selectedModel, setSelectedModel] = useState<string>(() => localStorage.getItem("ruvi_ollama_selected_model") || "");
   const [simulatedRouting, setSimulatedRouting] = useState<{
     bestModel: string;
     score: number;
     reason: string;
   } | null>(null);
+
+  const handleSelectModel = (modelName: string) => {
+    setSelectedModel(modelName);
+    localStorage.setItem("ruvi_ollama_selected_model", modelName);
+    localStorage.setItem("ruvi_selected_provider", "ollama");
+    
+    // Play sound
+    try {
+      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      osc.connect(gain);
+      gain.connect(context.destination);
+      osc.frequency.setValueAtTime(800, context.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, context.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.05, context.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, context.currentTime + 0.15);
+      osc.start();
+      osc.stop(context.currentTime + 0.15);
+    } catch (_e) {}
+  };
+
+  const handleResetToAuto = () => {
+    setSelectedModel("");
+    localStorage.removeItem("ruvi_ollama_selected_model");
+    // Play sound
+    try {
+      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      osc.connect(gain);
+      gain.connect(context.destination);
+      osc.frequency.setValueAtTime(1000, context.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(600, context.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.05, context.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, context.currentTime + 0.15);
+      osc.start();
+      osc.stop(context.currentTime + 0.15);
+    } catch (_e) {}
+  };
 
   const fetchModels = async () => {
     setLoading(true);
@@ -169,14 +213,24 @@ export default function OllamaModelManager() {
             Automatically discover local Ollama models, analyze metadata, score capabilities, and route user tasks dynamically based on VRAM/RAM constraints and model families.
           </p>
         </div>
-        <button 
-          onClick={fetchModels}
-          disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-mono rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-300 transition-all cursor-pointer select-none"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          {loading ? "Discovering..." : "Scan Tags / Refresh"}
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          {selectedModel && (
+            <button
+              onClick={handleResetToAuto}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-mono rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 transition-all cursor-pointer select-none"
+            >
+              Reset to Dynamic Router
+            </button>
+          )}
+          <button 
+            onClick={fetchModels}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 text-xs font-mono rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-300 transition-all cursor-pointer select-none"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            {loading ? "Discovering..." : "Scan Tags / Refresh"}
+          </button>
+        </div>
       </div>
 
       {/* Grid of Telemetry & Simulation */}
@@ -474,9 +528,18 @@ export default function OllamaModelManager() {
                       </td>
 
                       <td className="py-4 text-right">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 uppercase">
-                          <span className="w-1 h-1 bg-emerald-400 rounded-full animate-ping" /> READY
-                        </span>
+                        {selectedModel === model.name ? (
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1.5 rounded-xl border border-emerald-500/20">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> PINNED / ACTIVE
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleSelectModel(model.name)}
+                            className="px-2.5 py-1.5 text-[10px] font-mono rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-850 hover:border-slate-750 text-slate-300 hover:text-white transition-all cursor-pointer select-none"
+                          >
+                            PIN MODEL
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

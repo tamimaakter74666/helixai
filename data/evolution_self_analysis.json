@@ -1,0 +1,18 @@
+[
+  {
+    "id": "find_1784035285715_0",
+    "category": "Slow components",
+    "finding": "Event loop starvation caused by synchronous File System calls.",
+    "evidence": "Found synchronous File System calls in tools registry loop.",
+    "impact": "High",
+    "date": "2026-07-14"
+  },
+  {
+    "id": "find_1784035285715_1",
+    "category": "Architectural limitations",
+    "finding": "High technical debt due to 'God Object' components.",
+    "evidence": "Main UI component (src/App.tsx) is 2209 lines long.",
+    "impact": "Medium",
+    "date": "2026-07-14"
+  }
+]

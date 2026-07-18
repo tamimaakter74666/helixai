@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import OSWindow from "./OSWindow";
+ 
+ 
+ 
+ 
+ 
 import { Lightbulb, Tv, Thermometer, Lock, Camera, Zap, Shield, ShieldAlert, Cpu } from "lucide-react";
 import { motion } from "motion/react";
 

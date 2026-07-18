@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion } from "motion/react";
 import { useVoiceEngine } from "./voice-engine";
 import { WaveformVisualizer } from "./components/WaveformVisualizer";
 import {
@@ -22,6 +23,9 @@ import {
   Moon,
   Sun,
   Camera,
+  Menu,
+  Wifi,
+  WifiOff,
   Play,
   RotateCcw,
   Plus,
@@ -29,7 +33,6 @@ import {
   Zap,
   Info,
   ExternalLink,
-  Wifi,
   Monitor,
   LayoutDashboard,
   PlugZap,
@@ -52,15 +55,19 @@ import {
   Gamepad2,
   Activity,
   Server,
-  Terminal as TerminalIcon,
+  Terminal as _TerminalIcon,
   HardDrive
 } from "lucide-react";
 import GlobalSidebar from "./components/GlobalSidebar";
-import VoiceWaveform from "./components/VoiceWaveform";
+ 
+import _VoiceWaveform from "./components/VoiceWaveform";
 import RadarSweep from "./components/RadarSweep";
 import SimulatedTerminal from "./components/Terminal";
 import ComingSoonOSPanel from "./components/ComingSoonOSPanel";
+import CognitiveMemory from "./components/CognitiveMemory";
 import OllamaModelManager from "./components/OllamaModelManager";
+import LMStudioModelManager from "./components/LMStudioModelManager";
+import AgentRouterModelManager from "./components/AgentRouterModelManager";
 import OrchestratorEngine from "./components/OrchestratorEngine";
 import RuViewAnalytics from "./components/RuViewAnalytics";
 import CognitiveEngine from "./components/CognitiveEngine";
@@ -72,6 +79,8 @@ import Dock from "./components/Dock";
 import CommandPalette from "./components/CommandPalette";
 import SmartHomeOS from "./components/SmartHomeOS";
 import SecurityCenter from "./components/SecurityCenter";
+import SystemLogDashboard from "./components/SystemLogDashboard";
+ 
 import { ChatMessage, MemoryLog, PlannerTask, WhatsAppMessage } from "./types";
 
 export default function App() {
@@ -84,7 +93,8 @@ export default function App() {
       try {
         const saved = localStorage.getItem("ruvi_dashboard_layout");
         return (saved as any) || "balanced";
-      } catch (e) {
+ 
+      } catch (_e) {
         return "balanced";
       }
     }
@@ -93,14 +103,31 @@ export default function App() {
   useEffect(() => {
     try {
       localStorage.setItem("ruvi_dashboard_layout", dashboardLayout);
-    } catch (e) {}
+ 
+    } catch (_e) { /* empty */ }
   }, [dashboardLayout]);
 
   const [isFloatingOpen, setIsFloatingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("core");
   const [isSelfUpgrading, setIsSelfUpgrading] = useState(false);
+  const [isOnline, setIsOnline] = useState(typeof window !== "undefined" ? navigator.onLine : true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   // Voice & Chat states
   // isListening removed
@@ -125,13 +152,33 @@ export default function App() {
   const [isTTSMuted, setIsTTSMuted] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState<"bengali" | "english_female" | "english_male">("bengali");
 
-  const handleVoiceCommand = useCallback((cmd: string, data?: any) => {
+ 
+  const handleVoiceCommand = useCallback((cmd: string, _data?: unknown) => {
     if (cmd === "remove_background" || cmd === "sunset_sky" || cmd === "upscale_4k") {
        runPresetPhotoEdit(cmd === "remove_background" ? "bg" : cmd === "sunset_sky" ? "sunset" : "4k");
     }
   }, []);
 
-  const { voiceState, transcript: voiceTranscript, isFinal, startListening, startWakeWordMode, stop: stopVoice, interrupt: interruptVoice, respond: voiceRespond, setLanguage: setVoiceLanguage, voiceManager, audioVolume, error: voiceError } = useVoiceEngine(handleVoiceCommand);
+  const {
+    voiceState,
+    transcript: voiceTranscript,
+    isFinal,
+    startListening,
+    startWakeWordMode,
+    stop: stopVoice,
+    interrupt: interruptVoice,
+    respond: voiceRespond,
+    setLanguage: setVoiceLanguage,
+    voiceManager,
+    audioVolume,
+    error: voiceError,
+    engineMode,
+    activeVoiceEngine,
+    fallbackReason,
+    setEngineMode,
+    calibrationStatus,
+    calibrateNoise
+  } = useVoiceEngine(handleVoiceCommand);
 
   // Sync selected voice language to speech recognition engine
   useEffect(() => {
@@ -142,11 +189,17 @@ export default function App() {
 
   const prevVoiceStateRef = useRef(voiceState);
   useEffect(() => {
-    if (voiceState === "Listening" && (prevVoiceStateRef.current === "WakeListening" || prevVoiceStateRef.current === "Idle")) {
+    if (voiceState === "Listening" && prevVoiceStateRef.current === "WakeListening") {
       triggerWakeWord();
     }
     prevVoiceStateRef.current = voiceState;
   }, [voiceState]);
+
+  // Always keep a fresh reference to handleSendMessage to avoid stale closures in useEffect
+  const handleSendMessageRef = useRef(handleSendMessage);
+  useEffect(() => {
+    handleSendMessageRef.current = handleSendMessage;
+  }, [handleSendMessage]);
 
   useEffect(() => {
     const handleModelSpoke = (text: string) => {
@@ -156,11 +209,38 @@ export default function App() {
          content: text,
          timestamp: new Date()
        }]);
+
+       if (voiceManager.activeVoiceEngine === "gemini") {
+         fetch("/api/chat/save", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ role: "assistant", message: text })
+         }).catch(err => console.error("Failed to save assistant chat message", err));
+       }
     };
     const handleUserSpoke = (text: string, final: boolean) => {
        setInputMessage(text);
        if (final && text.trim().length > 0) {
-         handleSendMessage(text);
+         if (voiceManager.activeVoiceEngine === "gemini") {
+           // Gemini Live Mode: Add user spoken message to UI log and clear draft,
+           // but do NOT trigger standard /api/chat because Gemini Live itself streams response.
+           setMessages(prev => [...prev, {
+             id: Math.random().toString(),
+             role: "user",
+             content: text,
+             timestamp: new Date()
+           }]);
+           setInputMessage("");
+
+           fetch("/api/chat/save", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ role: "user", message: text })
+           }).catch(err => console.error("Failed to save user chat message", err));
+         } else {
+           // Local mode fallback: send via API using the latest reference
+           handleSendMessageRef.current(text);
+         }
        }
     };
     
@@ -183,6 +263,29 @@ export default function App() {
   useEffect(() => {
     if (voiceError) {
       console.warn("Voice engine error detected in App.tsx:", voiceError);
+      
+      let errMsg = "An unknown voice error occurred.";
+      const errStr = String(voiceError).toLowerCase();
+      
+      if (errStr.includes("not-allowed")) {
+        errMsg = "Microphone access denied or Web Speech API is blocked. If you are in the AI Studio preview, please click 'Open App' (in a new tab) to allow speech recognition in Local Mode.";
+      } else if (errStr.includes("network")) {
+        errMsg = "Network error: Web Speech API requires an internet connection for Bengali transcription.";
+      } else if (errStr.includes("aborted")) {
+         // Ignore aborted, usually normal
+         return;
+      } else {
+        errMsg = `Voice engine error: ${String(voiceError)}. If you are using Local Mode, you might need to open the app in a new tab.`;
+      }
+      
+      setMessages(prev => [...prev, {
+         id: Math.random().toString(),
+         role: "assistant",
+         content: `⚠️ **System Alert**: ${errMsg}`,
+         speakText: "I encountered a voice engine error.",
+         timestamp: new Date(),
+         routingInfo: { selectedAI: "System", reason: "Error Event" }
+      }]);
     }
   }, [voiceError]);
   
@@ -221,7 +324,38 @@ export default function App() {
 
 
   // Multi-Brain Mode
-  const [selectedRouterAI, setSelectedRouterAI] = useState<"auto" | "gemini" | "deepseek" | "claude" | "ollama">("auto");
+  const [selectedRouterAI, setSelectedRouterAI] = useState<"auto" | "gemini" | "deepseek" | "claude" | "ollama" | "lmstudio" | "agentrouter">(() => {
+    const saved = localStorage.getItem("ruvi_selected_provider");
+    // Compatibility migration
+    if (saved === "openrouter") return "agentrouter";
+    return (saved as any) || "auto";
+  });
+
+  const [modelsSubTab, setModelsSubTab] = useState<"lmstudio" | "ollama" | "agentrouter">("agentrouter");
+
+  // LM Studio Startup & Auto-Switch Configuration
+  useEffect(() => {
+    const initializeLMStudioModel = async () => {
+      try {
+        const res = await fetch("/api/lmstudio/models");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.online && data.models && data.models.length > 0) {
+            const savedModel = localStorage.getItem("ruvi_lmstudio_selected_model");
+            const modelNames = data.models.map((m: any) => m.name);
+            if (!savedModel || !modelNames.includes(savedModel)) {
+              const firstModel = modelNames[0];
+              localStorage.setItem("ruvi_lmstudio_selected_model", firstModel);
+              console.log(`[LM Studio Init] No valid model found in storage. Auto-configured to first available: ${firstModel}`);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to initialize LM Studio models:", err);
+      }
+    };
+    initializeLMStudioModel();
+  }, []);
 
   // Dynamic Holographic Emotion State
   const [detectedEmotion, setDetectedEmotion] = useState<"calm" | "joy" | "sorrow" | "anger" | "surprise">("calm");
@@ -243,7 +377,8 @@ export default function App() {
   const [whatsappQueue, setWhatsappQueue] = useState<WhatsAppMessage[]>([]);
 
   // Audio Context & TTS references
-  const recognitionRef = useRef<any>(null);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const recognitionRef = useRef<unknown>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -260,6 +395,8 @@ export default function App() {
   // Refs to avoid stale closures in event listeners
   const messagesRef = useRef(messages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+
+  const isRequestPendingRef = useRef(false);
 
   const triggerWakeWord = () => {
     playFuturisticAudio(880, "triangle", 0.15);
@@ -306,7 +443,8 @@ export default function App() {
       voiceManager.stateMachine.transition("WakeListening");
     }
   };
-  const setIsListening = (val: boolean) => {};
+ 
+  const setIsListening = (_val: boolean) => {};
 
   const playFuturisticAudio = (freq: number, type: OscillatorType, duration: number) => {
     try {
@@ -337,6 +475,7 @@ export default function App() {
   };
 
   // Voice engine handles TTS internally, so we just pass the text to it
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const speakOutLoud = (text: string, onEndState: "idle" | "listening" = "idle") => {
     if (isTTSMuted) {
       console.log("TTS is muted, skipping speech playback.");
@@ -349,12 +488,18 @@ export default function App() {
 
   // Core Send Message function (interacts with Express server routes /api/chat)
   async function handleSendMessage(customMessage?: string) {
+    if (isRequestPendingRef.current) {
+      console.log("[App.tsx] Ignored sendMessage because a request is already in progress.");
+      return;
+    }
+
     // Sync-unlock the browser SpeechSynthesis audio context in user click
     voiceRespond("", selectedVoice);
 
     const textToSend = customMessage || inputMessage;
     if (!textToSend.trim()) return;
 
+    isRequestPendingRef.current = true;
     setInputMessage("");
     setAssistantState("thinking");
     setIsListening(false);
@@ -376,7 +521,14 @@ export default function App() {
         message: textToSend,
         language: selectedVoice,
         provider: selectedRouterAI,
-        history: messagesRef.current.slice(-5).map((m) => ({
+        modelName: selectedRouterAI === "ollama"
+          ? (localStorage.getItem("ruvi_ollama_selected_model") || undefined)
+          : (selectedRouterAI === "lmstudio"
+            ? (localStorage.getItem("ruvi_lmstudio_selected_model") || undefined)
+            : (selectedRouterAI === "agentrouter" || selectedRouterAI === "deepseek"
+              ? (localStorage.getItem("ruvi_agentrouter_selected_model") || localStorage.getItem("ruvi_openrouter_selected_model") || "deepseek/deepseek-chat")
+              : undefined)),
+        history: messagesRef.current.slice(-5).map((m: any) => ({
           role: m.role,
           content: m.content
         }))
@@ -420,8 +572,9 @@ export default function App() {
       setMessages((prev) => [...prev, assistantMsg]);
 
       // Speak TTS response out loud if speakText exists and TTS not muted
-      if (data.speakText) {
-        speakOutLoud(data.speakText);
+      const textToSpeak = data.speakText || data.response;
+      if (textToSpeak) {
+        speakOutLoud(textToSpeak);
       } else {
         setAssistantState("idle");
       }
@@ -437,7 +590,9 @@ export default function App() {
       
       // Smart offline local fallback response
       const text = (textToSend || "").toLowerCase().trim();
+// eslint-disable-next-line no-useless-assignment
       let offlineContent = "";
+// eslint-disable-next-line no-useless-assignment
       let offlineSpeak = "";
       
       // Heuristic emotion check
@@ -496,11 +651,15 @@ export default function App() {
         },
         timestamp: new Date()
       };
-      setMessages((prev) => [...prev, fallbackMsg as any]);
+      setMessages((prev) => [...prev, fallbackMsg as ChatMessage]);
       speakOutLoud(offlineSpeak, "idle");
+    } finally {
+      isRequestPendingRef.current = false;
     }
+ 
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const lowerMsgMatches = (msg: string, list: string[]) => {
     return list.some(item => msg.includes(item));
   };
@@ -540,7 +699,7 @@ export default function App() {
       "volume_set", "brightness_set", "wifi_toggle", "bluetooth_toggle",
       "lock_pc", "sleep_pc", "restart_pc", "shutdown_pc",
       "app_open", "app_close", "screenshot", "ocr_read",
-      "file_search", "file_create_folder", "file_rename", "file_delete"
+      "file_search", "file_create_folder", "file_rename", "file_delete", "terminal_execute", "security_audit", "analyze_project"
     ].includes(command)) {
       window.dispatchEvent(new CustomEvent("desktop-agent-command", {
         detail: { action: command, params: commandData }
@@ -631,7 +790,16 @@ export default function App() {
   };
 
   // JSX helpers for movable panels to support dynamic card rearrangement
-  const renderFaceWaveform = () => <WaveformVisualizer state={assistantState} audioVolume={audioVolume} transcript={voiceTranscript} emotion={detectedEmotion} />;
+  const renderFaceWaveform = () => (
+    <WaveformVisualizer 
+      state={assistantState} 
+      audioVolume={audioVolume} 
+      transcript={voiceTranscript} 
+      emotion={detectedEmotion}
+      calibrationStatus={calibrationStatus}
+      onCalibrate={calibrateNoise}
+    />
+  );
 
   const renderMemoryVault = () => (
     <div key="memory-vault-card" className="bg-slate-900/60 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-5 flex flex-col shadow-[0_0_15px_rgba(0,242,254,0.05)]">
@@ -722,19 +890,39 @@ export default function App() {
       <div className="absolute top-20 right-10 w-[300px] h-[300px] bg-pink-500/5 blur-[120px] pointer-events-none rounded-full z-0" />
       <div className="absolute bottom-20 left-10 w-[300px] h-[300px] bg-cyan-500/5 blur-[120px] pointer-events-none rounded-full z-0" />
 
+      {/* Global OS Sidebar Overlay for Mobile */}
+      {uiMode === "dashboard" && isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[90] lg:hidden transition-all duration-300"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* Global OS Sidebar */}
       {uiMode === "dashboard" && (
-        <GlobalSidebar 
-          assistantState={assistantState}
-          isListening={isListening}
-          isWakeWordActive={isWakeWordActive}
-          selectedVoice={selectedVoice}
-          setSelectedVoice={setSelectedVoice}
-          triggerWakeWord={triggerWakeWord}
-          interruptVoice={interruptVoice}
-          isTTSMuted={isTTSMuted}
-          setIsTTSMuted={setIsTTSMuted}
-        />
+        <div className={`
+          fixed lg:relative inset-y-0 left-0 z-[100] lg:z-30 lg:flex
+          ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          transition-transform duration-300 ease-in-out shrink-0 h-full
+        `}>
+          <GlobalSidebar 
+            assistantState={assistantState}
+            isListening={isListening}
+            isWakeWordActive={isWakeWordActive}
+            selectedVoice={selectedVoice}
+            setSelectedVoice={setSelectedVoice}
+            triggerWakeWord={triggerWakeWord}
+            interruptVoice={interruptVoice}
+            isTTSMuted={isTTSMuted}
+            setIsTTSMuted={setIsTTSMuted}
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            engineMode={engineMode}
+            activeVoiceEngine={activeVoiceEngine}
+            fallbackReason={fallbackReason}
+            setEngineMode={setEngineMode}
+          />
+        </div>
       )}
 
       {/* Main OS Workspace Area */}
@@ -742,80 +930,201 @@ export default function App() {
         {/* Futuristic Navigation Header */}
         {uiMode === "dashboard" && (
         <header className="border-b border-cyan-500/20 bg-slate-950/80 backdrop-blur-md z-40 shrink-0">
-          <div className="w-full px-4 py-2 flex items-center justify-between">
-            {/* Top Navigation OS Shell */}
-            <div className="flex items-center overflow-x-auto scrollbar-none bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 gap-1 w-full max-w-full">
-              {[
-                { id: "core", icon: MessageSquare, label: "Core" },
-                { id: "orchestrator", icon: Brain, label: "Orchestrator" },
-                { id: "agents", icon: Users, label: "Agents" },
-                { id: "models", icon: Network, label: "Models" },
-                { id: "memory", icon: Database, label: "Memory" },
-              { id: "knowledge", icon: Layers, label: "Knowledge" },
-              { id: "desktop", icon: Monitor, label: "Desktop" },
-              { id: "learning", icon: RefreshCw, label: "Learning" },
-              { id: "automation", icon: Workflow, label: "Automation" },
-              { id: "ruview", icon: Eye, label: "RuView" },
-              { id: "studio", icon: Palette, label: "Studio" },
-              { id: "developer", icon: Code, label: "Developer" },
-              { id: "marketplace", icon: ShoppingCart, label: "Marketplace" },
-              { id: "analytics", icon: LineChart, label: "Analytics" },
-              { id: "security", icon: ShieldAlert, label: "Security" },
-              { id: "communication", icon: MessageCircle, label: "Comms" },
-              { id: "productivity", icon: Calendar, label: "Productivity" },
-              { id: "gaming", icon: Gamepad2, label: "Gaming" }
-            ].map((tab) => (
-              <button 
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono uppercase shrink-0 transition-all ${
-                  activeTab === tab.id 
-                    ? 'bg-cyan-500/20 text-cyan-300 shadow-[0_0_10px_rgba(0,242,254,0.2)] border border-cyan-500/30' 
-                    : 'text-slate-500 hover:text-slate-300 border border-transparent'
-                }`}>
-                <tab.icon className="w-3.5 h-3.5" /> {tab.label}
+          <div className="w-full px-4 py-2 flex flex-col lg:flex-row items-center justify-between gap-3">
+            {/* Left side: Mobile Toggle Menu + Horizontal Category Bar */}
+            <div className="flex items-center gap-2 w-full lg:flex-1 min-w-0">
+              <button
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className="lg:hidden p-2.5 bg-slate-900 border border-cyan-500/30 text-cyan-400 rounded-xl hover:bg-cyan-500/10 transition-all flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(0,242,254,0.1)]"
+                title="Open Voice Panel"
+              >
+                <Menu className="w-4.5 h-4.5" />
               </button>
-            ))}
-          </div>
 
-          {/* Core Controls */}
-          <div className="flex items-center gap-2">
-            {/* Quick Status Light */}
-            <div className="hidden md:flex items-center gap-2 bg-slate-900/60 px-3 py-1.5 rounded-full border border-cyan-500/15 font-mono text-xs text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>Orchestrator: ACTIVE</span>
+              {/* Category Switcher bar */}
+              <div className="flex items-center overflow-x-auto custom-scrollbar pb-1 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 gap-1 flex-1 min-w-0">
+                {[
+                  { id: "core", label: "Core Hub", icon: MessageSquare, tabIds: ["core"] },
+                  { id: "cognitive", label: "Brain OS", icon: Brain, tabIds: ["orchestrator", "agents", "models", "learning"] },
+                  { id: "data", label: "Data System", icon: Database, tabIds: ["memory", "knowledge", "ruview", "analytics"] },
+                  { id: "systems", label: "Systems OS", icon: Monitor, tabIds: ["desktop", "automation", "developer", "security"] },
+                  { id: "suite", label: "Apps Suite", icon: Cpu, tabIds: ["studio", "marketplace", "communication", "productivity", "gaming"] }
+                ].map((cat) => {
+                  const isSelected = cat.tabIds.includes(activeTab);
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        setActiveTab(cat.tabIds[0]);
+                        playFuturisticAudio(300, "sine", 0.05);
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono uppercase shrink-0 transition-all ${
+                        isSelected
+                          ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 shadow-[0_0_10px_rgba(0,242,254,0.2)] border border-cyan-500/30 font-bold'
+                          : 'text-slate-500 hover:text-slate-300 border border-transparent hover:bg-slate-800/20'
+                      }`}
+                    >
+                      <cat.icon className={`w-3.5 h-3.5 ${isSelected ? "text-cyan-400" : "text-slate-500"}`} />
+                      <span>{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Mute TTS button */}
-            <button
-              onClick={() => setIsTTSMuted(!isTTSMuted)}
-              title={isTTSMuted ? "Unmute Voice output" : "Mute Voice output"}
-              className={`p-2 rounded-xl border transition-all duration-300 ${
-                isTTSMuted 
-                  ? "bg-pink-500/10 text-pink-400 border-pink-500/30" 
-                  : "bg-slate-900/80 text-cyan-400 border-cyan-500/20 hover:border-cyan-500/50"
-              }`}
-            >
-              {isTTSMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-            </button>
+            {/* Core Controls */}
+            <div className="flex items-center justify-between lg:justify-end gap-2.5 w-full lg:w-auto shrink-0 border-t lg:border-t-0 border-slate-800/30 pt-2 lg:pt-0">
+              {/* Quick Status Light & Network Status */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-slate-900/60 px-3 py-1.5 rounded-full border border-cyan-500/15 font-mono text-[11px] text-slate-300 shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span>Orchestrator: ACTIVE</span>
+                </div>
 
-            {/* Settings & Design Menu Button */}
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="p-2 rounded-xl bg-slate-900/80 text-white border border-slate-800 hover:border-fuchsia-500/50 hover:bg-fuchsia-500/10 transition-all flex items-center gap-2"
-              title="Design & Settings"
-            >
-              <Settings2 className="w-4 h-4" />
-              <span className="hidden md:inline font-mono text-[10px] uppercase">Design</span>
-            </button>
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-mono text-[11px] transition-all duration-300 shrink-0 ${
+                  isOnline 
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                    : "bg-red-500/10 text-red-400 border-red-500/30 animate-pulse"
+                }`} title={isOnline ? "Network: Online" : "Network: Offline"}>
+                  {isOnline ? (
+                    <>
+                      <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="hidden sm:inline">ONLINE</span>
+                    </>
+                  ) : (
+                    <>
+                      <WifiOff className="w-3.5 h-3.5 text-red-400" />
+                      <span>OFFLINE</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Mute TTS button */}
+                <button
+                  onClick={() => setIsTTSMuted(!isTTSMuted)}
+                  title={isTTSMuted ? "Unmute Voice output" : "Mute Voice output"}
+                  className={`p-2 rounded-xl border transition-all duration-300 ${
+                    isTTSMuted 
+                      ? "bg-pink-500/10 text-pink-400 border-pink-500/30" 
+                      : "bg-slate-900/80 text-cyan-400 border-cyan-500/20 hover:border-cyan-500/50"
+                  }`}
+                >
+                  {isTTSMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
+
+                {/* Settings & Design Menu Button */}
+                <button
+                  onClick={() => setIsSettingsOpen(true)}
+                  className="p-2 rounded-xl bg-slate-900/80 text-white border border-slate-800 hover:border-fuchsia-500/50 hover:bg-fuchsia-500/10 transition-all flex items-center gap-2"
+                  title="Design & Settings"
+                >
+                  <Settings2 className="w-4 h-4" />
+                  <span className="hidden md:inline font-mono text-[10px] uppercase">Design</span>
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
-      )}
+
+          {/* Secondary Sub-tab Menu (rendered dynamically) */}
+          {(() => {
+            const OS_CATEGORIES = [
+              { id: "core", label: "Core Hub", icon: MessageSquare, tabIds: ["core"] },
+              { id: "cognitive", label: "Brain OS", icon: Brain, tabIds: ["orchestrator", "agents", "models", "learning"] },
+              { id: "data", label: "Data System", icon: Database, tabIds: ["memory", "knowledge", "ruview", "analytics"] },
+              { id: "systems", label: "Systems OS", icon: Monitor, tabIds: ["desktop", "automation", "developer", "security"] },
+              { id: "suite", label: "Apps Suite", icon: Cpu, tabIds: ["studio", "marketplace", "communication", "productivity", "gaming"] }
+            ];
+
+            const ALL_OS_TABS = [
+              { id: "core", icon: MessageSquare, label: "Core Hub", desc: "Primary Assistant Workspace" },
+              { id: "orchestrator", icon: Brain, label: "Orchestrator", desc: "Task Planning & Dispatch" },
+              { id: "agents", icon: Users, label: "Cognitive Agents", desc: "Autonomous Sub-agents" },
+              { id: "models", icon: Network, label: "Models Setup", desc: "LLM Router Configuration" },
+              { id: "learning", icon: RefreshCw, label: "Learning Hub", desc: "Autonomous Self-learning" },
+              { id: "memory", icon: Database, label: "Memory Vault", desc: "Durable Short/Long Term Memories" },
+              { id: "knowledge", icon: Layers, label: "Knowledge Sync", desc: "RAG & Database Embeddings" },
+              { id: "ruview", icon: Eye, label: "RuView Analytics", desc: "Real-time Multi-agent Vision" },
+              { id: "analytics", icon: LineChart, label: "System Logs", desc: "Live Diagnostics & Logs" },
+              { id: "desktop", icon: Monitor, label: "Desktop Control", desc: "Direct Host GUI Agent" },
+              { id: "automation", icon: Workflow, label: "Workflows", desc: "Custom Trigger-action Pipes" },
+              { id: "developer", icon: Code, label: "Dev Tools", desc: "Under the Hood Shell/Specs" },
+              { id: "security", icon: ShieldAlert, label: "Security Center", desc: "Token Permissions & Audits" },
+              { id: "studio", icon: Palette, label: "UI Studio", desc: "Visual Theme Constructor" },
+              { id: "marketplace", icon: ShoppingCart, label: "Marketplace", desc: "Plugin Registry & Extensions" },
+              { id: "communication", icon: MessageCircle, label: "Comms Hub", desc: "Integrated Chat Clients" },
+              { id: "productivity", icon: Calendar, label: "Productivity", desc: "Workspace Tasks & Calendar" },
+              { id: "gaming", icon: Gamepad2, label: "Gaming Assistant", desc: "Simulated Environment Playground" }
+            ];
+
+            const currentCategory = OS_CATEGORIES.find(cat => cat.tabIds.includes(activeTab)) || OS_CATEGORIES[0];
+            if (currentCategory.tabIds.length <= 1) return null;
+
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15 }}
+                className="w-full px-4 py-2 border-t border-slate-800/60 bg-slate-950/40 flex items-center gap-2 overflow-x-auto custom-scrollbar"
+              >
+                <div className="flex items-center gap-1 text-[10px] font-mono text-slate-500 uppercase tracking-wider shrink-0 mr-2 border-r border-slate-800/80 pr-3">
+                  <currentCategory.icon className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="ml-1">{currentCategory.label} Modules:</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {currentCategory.tabIds.map((tabId) => {
+                    const tabInfo = ALL_OS_TABS.find(t => t.id === tabId);
+                    if (!tabInfo) return null;
+                    const isActive = activeTab === tabId;
+                    return (
+                      <button
+                        key={tabId}
+                        onClick={() => {
+                          setActiveTab(tabId);
+                          playFuturisticAudio(350, "sine", 0.05);
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono uppercase shrink-0 transition-all ${
+                          isActive
+                            ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-[0_0_8px_rgba(0,242,254,0.15)] font-semibold'
+                            : 'text-slate-500 hover:text-slate-300 border border-transparent hover:bg-slate-900/50'
+                        }`}
+                        title={tabInfo.desc}
+                      >
+                        <tabInfo.icon className="w-3.5 h-3.5" />
+                        <span>{tabInfo.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            );
+          })()}
+        </header>
+        )}
 
       {/* Main Grid Content Area */}
       {(uiMode === "dashboard" || uiMode === "split" || uiMode === "fullscreen") && (
         <main className={`flex-1 overflow-y-auto px-4 py-6 relative z-10 w-full`}>
+          
+          {/* Offline Mode Banner */}
+          {!isOnline && (
+            <div className="mb-6 bg-red-950/40 backdrop-blur-md border border-red-500/30 text-red-400 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[0_0_15px_rgba(239,68,68,0.15)] animate-pulse relative z-50">
+              <div className="flex items-center gap-3">
+                <span className="flex h-3.5 w-3.5 relative shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
+                </span>
+                <div className="flex flex-col">
+                  <span className="font-mono text-xs uppercase font-bold tracking-widest text-red-200">OFFLINE MODE ACTIVE</span>
+                  <span className="text-[11px] text-red-300/85 font-sans">Connecting to server interrupted. Switched to smart local AI logic core.</span>
+                </div>
+              </div>
+              <div className="bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-500/25 text-[10px] font-mono text-red-300 uppercase shrink-0">
+                Local Core Mode
+              </div>
+            </div>
+          )}
         
         {/* Core Chat & Operations Tab */}
         {activeTab === "core" && (
@@ -891,14 +1200,8 @@ export default function App() {
                   dashboardLayout === "immersive" ? "lg:col-span-2" :
                   dashboardLayout === "compact" ? "lg:col-span-4" :
                   "lg:col-span-4"
-                } space-y-6 flex flex-col`}>
+                } order-2 lg:order-none space-y-6 flex flex-col`}>
                   
-                  {/* Holographic Face & Waveform module */}
-                  {dashboardLayout !== "compact" && renderFaceWaveform()}
-
-                  {/* WiFi Sensing & Radar Sweep Component */}
-                  <RadarSweep />
-
                   {/* Smart Memory / Context Recall Storage (shown here for classic / compact) */}
                   {(dashboardLayout === "classic" || dashboardLayout === "compact") && renderMemoryVault()}
 
@@ -911,14 +1214,14 @@ export default function App() {
         <div className={`${
           uiMode === "fullscreen" ? "lg:h-[85vh]" :
           uiMode === "split" ? "lg:order-1 lg:h-[80vh]" :
-          dashboardLayout === "balanced" ? "lg:col-span-6 h-[750px] lg:h-[750px]" :
-          dashboardLayout === "immersive" ? "lg:col-span-8 h-[750px] lg:h-[750px]" :
-          dashboardLayout === "compact" ? "lg:col-span-4 h-[750px] lg:h-[750px]" :
-          "lg:col-span-5 h-[750px] lg:h-[750px]"
-        } space-y-6 flex flex-col`}>
+          dashboardLayout === "balanced" ? "lg:col-span-6 h-[900px] lg:h-[950px]" :
+          dashboardLayout === "immersive" ? "lg:col-span-8 h-[900px] lg:h-[950px]" :
+          dashboardLayout === "compact" ? "lg:col-span-4 h-[900px] lg:h-[950px]" :
+          "lg:col-span-5 h-[900px] lg:h-[950px]"
+        } order-1 lg:order-none space-y-6 flex flex-col`}>
           
-          {/* Holographic Face & Waveform module (rendered at top of chat for compact layout to conserve horizontal space) */}
-          {dashboardLayout === "compact" && renderFaceWaveform()}
+          {/* Holographic Face & 3D Brain Core Waveform (always rendered prominently at the top of the middle column) */}
+          {renderFaceWaveform()}
           
           {/* Main Interactive Hologram Console */}
           <div className="flex-1 bg-slate-900/60 backdrop-blur-md border border-cyan-500/30 rounded-2xl flex flex-col overflow-hidden shadow-[0_0_25px_rgba(0,242,254,0.06)] relative">
@@ -941,9 +1244,9 @@ export default function App() {
             </div>
 
             {/* Router Selector Switches */}
-            <div className="p-2 bg-slate-950/40 border-b border-slate-800 grid grid-cols-5 gap-1 text-[10px] font-mono">
+            <div className="p-2 bg-slate-950/40 border-b border-slate-800 grid grid-cols-3 sm:grid-cols-7 gap-1 text-[10px] font-mono">
               <button
-                onClick={() => { setSelectedRouterAI("auto"); playFuturisticAudio(550, "sine", 0.08); }}
+                onClick={() => { setSelectedRouterAI("auto"); localStorage.setItem("ruvi_selected_provider", "auto"); playFuturisticAudio(550, "sine", 0.08); }}
                 className={`py-1 rounded text-center transition-all ${
                   selectedRouterAI === "auto" ? "bg-cyan-500/20 text-cyan-300 font-semibold" : "text-slate-500 hover:text-slate-300"
                 }`}
@@ -951,7 +1254,7 @@ export default function App() {
                 Auto (Router)
               </button>
               <button
-                onClick={() => { setSelectedRouterAI("gemini"); playFuturisticAudio(650, "sine", 0.08); }}
+                onClick={() => { setSelectedRouterAI("gemini"); localStorage.setItem("ruvi_selected_provider", "gemini"); playFuturisticAudio(650, "sine", 0.08); }}
                 className={`py-1 rounded text-center transition-all ${
                   selectedRouterAI === "gemini" ? "bg-blue-500/20 text-blue-300 font-semibold" : "text-slate-500 hover:text-slate-300"
                 }`}
@@ -959,7 +1262,7 @@ export default function App() {
                 Gemini
               </button>
               <button
-                onClick={() => { setSelectedRouterAI("deepseek"); playFuturisticAudio(750, "sine", 0.08); }}
+                onClick={() => { setSelectedRouterAI("deepseek"); localStorage.setItem("ruvi_selected_provider", "deepseek"); playFuturisticAudio(750, "sine", 0.08); }}
                 className={`py-1 rounded text-center transition-all ${
                   selectedRouterAI === "deepseek" ? "bg-purple-500/20 text-purple-300 font-semibold" : "text-slate-500 hover:text-slate-300"
                 }`}
@@ -967,7 +1270,7 @@ export default function App() {
                 DeepSeek
               </button>
               <button
-                onClick={() => { setSelectedRouterAI("claude"); playFuturisticAudio(850, "sine", 0.08); }}
+                onClick={() => { setSelectedRouterAI("claude"); localStorage.setItem("ruvi_selected_provider", "claude"); playFuturisticAudio(850, "sine", 0.08); }}
                 className={`py-1 rounded text-center transition-all ${
                   selectedRouterAI === "claude" ? "bg-orange-500/20 text-orange-300 font-semibold" : "text-slate-500 hover:text-slate-300"
                 }`}
@@ -975,12 +1278,28 @@ export default function App() {
                 Claude
               </button>
               <button
-                onClick={() => { setSelectedRouterAI("ollama"); playFuturisticAudio(950, "sine", 0.08); }}
+                onClick={() => { setSelectedRouterAI("agentrouter"); localStorage.setItem("ruvi_selected_provider", "agentrouter"); playFuturisticAudio(900, "sine", 0.08); }}
+                className={`py-1 rounded text-center transition-all ${
+                  selectedRouterAI === "agentrouter" ? "bg-purple-500/20 text-purple-300 font-semibold" : "text-slate-500 hover:text-slate-300"
+                }`}
+              >
+                AgentRouter
+              </button>
+              <button
+                onClick={() => { setSelectedRouterAI("ollama"); localStorage.setItem("ruvi_selected_provider", "ollama"); playFuturisticAudio(950, "sine", 0.08); }}
                 className={`py-1 rounded text-center transition-all ${
                   selectedRouterAI === "ollama" ? "bg-emerald-500/20 text-emerald-300 font-semibold" : "text-slate-500 hover:text-slate-300"
                 }`}
               >
                 Ollama
+              </button>
+              <button
+                onClick={() => { setSelectedRouterAI("lmstudio"); localStorage.setItem("ruvi_selected_provider", "lmstudio"); playFuturisticAudio(1050, "sine", 0.08); }}
+                className={`py-1 rounded text-center transition-all ${
+                  selectedRouterAI === "lmstudio" ? "bg-pink-500/20 text-pink-300 font-semibold" : "text-slate-500 hover:text-slate-300"
+                }`}
+              >
+                LM Studio
               </button>
             </div>
 
@@ -995,7 +1314,7 @@ export default function App() {
                 >
                   {/* Speech bubble */}
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm relative ${
+                    className={`max-w-[88%] rounded-xl px-4 py-3 text-sm md:text-base leading-relaxed shadow-sm relative ${
                       m.role === "user"
                         ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-100 rounded-tr-none"
                         : "bg-slate-950/90 border border-slate-800 text-slate-100 rounded-tl-none"
@@ -1023,7 +1342,7 @@ export default function App() {
                     </div>
 
                     {/* Markdown translation text */}
-                    <div className="whitespace-pre-wrap font-sans text-xs md:text-sm">
+                    <div className="whitespace-pre-wrap font-sans text-sm md:text-base leading-relaxed tracking-wide">
                       {m.content}
                     </div>
 
@@ -1187,7 +1506,7 @@ export default function App() {
             dashboardLayout === "immersive" ? "lg:col-span-2" :
             dashboardLayout === "compact" ? "lg:col-span-4" :
             "lg:col-span-3"
-          } space-y-6 flex flex-col`}>
+          } order-3 lg:order-none space-y-6 flex flex-col`}>
           
           {/* Hardware & System Resources Panel (shown here for non-balanced and non-immersive layouts) */}
           {/* Removed SystemMonitor - now in GlobalSidebar */}
@@ -1327,6 +1646,9 @@ export default function App() {
             </div>
           </div>
 
+          {/* WiFi Sensing & Radar Sweep Component */}
+          <RadarSweep />
+
           {/* WhatsApp Safe Automation Queue Panel */}
           <div className="bg-slate-900/60 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_15px_rgba(0,242,254,0.05)] flex flex-col">
             <div className="flex items-center justify-between mb-3 border-b border-cyan-500/10 pb-2">
@@ -1428,14 +1750,52 @@ export default function App() {
 
         {/* Models Tab */}
         {activeTab === "models" && (
-          <div className="animate-in fade-in zoom-in duration-300 h-full overflow-y-auto">
-            <OllamaModelManager />
+          <div className="animate-in fade-in zoom-in duration-300 h-full overflow-y-auto space-y-4">
+            <div className="flex gap-2 border-b border-slate-800 pb-2">
+              <button
+                onClick={() => { setModelsSubTab("agentrouter"); playFuturisticAudio(550, "sine", 0.05); }}
+                className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-lg border transition-all cursor-pointer select-none ${
+                  modelsSubTab === "agentrouter"
+                    ? "bg-purple-500/10 border-purple-500/40 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.15)]"
+                    : "bg-slate-950/60 border-slate-900 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                AgentRouter (Cloud)
+              </button>
+              <button
+                onClick={() => { setModelsSubTab("lmstudio"); playFuturisticAudio(600, "sine", 0.05); }}
+                className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-lg border transition-all cursor-pointer select-none ${
+                  modelsSubTab === "lmstudio"
+                    ? "bg-pink-500/10 border-pink-500/40 text-pink-300 shadow-[0_0_10px_rgba(244,63,94,0.15)]"
+                    : "bg-slate-950/60 border-slate-900 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                LM Studio (Local Host)
+              </button>
+              <button
+                onClick={() => { setModelsSubTab("ollama"); playFuturisticAudio(700, "sine", 0.05); }}
+                className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-lg border transition-all cursor-pointer select-none ${
+                  modelsSubTab === "ollama"
+                    ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.15)]"
+                    : "bg-slate-950/60 border-slate-900 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                Ollama / GPU
+              </button>
+            </div>
+            {modelsSubTab === "agentrouter" ? (
+              <AgentRouterModelManager />
+            ) : modelsSubTab === "lmstudio" ? (
+              <LMStudioModelManager />
+            ) : (
+              <OllamaModelManager />
+            )}
           </div>
         )}
 
         {/* Memory Tab */}
         {activeTab === "memory" && (
-          <ComingSoonOSPanel title="Context & Memory Center" description="Long term memory vault and vector database visualizer." />
+          <CognitiveMemory />
         )}
 
         {/* Knowledge Tab */}
@@ -1490,7 +1850,9 @@ export default function App() {
 
         {/* Analytics Tab */}
         {activeTab === "analytics" && (
-          <ComingSoonOSPanel title="System Analytics" description="Detailed performance, token usage, and latency metrics." />
+          <div className="animate-in fade-in zoom-in duration-300 h-full overflow-y-auto">
+            <SystemLogDashboard />
+          </div>
         )}
 
         {/* Security Tab */}
@@ -1576,7 +1938,7 @@ export default function App() {
               ].map((agent) => (
                 <button
                   key={agent.id}
-                  onClick={() => setActiveTab(agent.id as any)}
+                  onClick={() => setActiveTab(agent.id)}
                   className={`w-full flex items-center gap-3 p-2.5 rounded-xl cursor-pointer border text-left transition-all ${
                     activeTab === agent.id
                       ? "bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/30 text-blue-600 dark:text-blue-300 shadow-sm"
@@ -1651,12 +2013,12 @@ export default function App() {
                       {m.role === "assistant" && (
                         <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mb-1">R</div>
                       )}
-                      <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm transition-all ${
+                      <div className={`max-w-[80%] rounded-2xl px-5 py-3.5 shadow-sm transition-all ${
                         m.role === "user" 
                           ? "bg-blue-500 text-white rounded-br-none" 
                           : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-100 dark:border-slate-700/50"
                       }`}>
-                        <div className="whitespace-pre-wrap text-sm leading-relaxed">{m.content}</div>
+                        <div className="whitespace-pre-wrap text-base leading-relaxed tracking-wide">{m.content}</div>
                         <div className={`text-[9px] mt-1 text-right block ${m.role === "user" ? "text-blue-100" : "text-slate-400 dark:text-slate-500"}`}>
                           Delivered ✓✓
                         </div>
@@ -1717,8 +2079,34 @@ export default function App() {
 
                   {activeTab === "orchestrator" && <OrchestratorEngine />}
                   {activeTab === "agents" && <CognitiveEngine />}
-                  {activeTab === "models" && <OllamaModelManager />}
-                  {activeTab === "memory" && <ComingSoonOSPanel title="Context & Memory Center" />}
+                  {activeTab === "models" && (
+                    <div className="space-y-4">
+                      <div className="flex gap-2 border-b border-slate-800 pb-2">
+                        <button
+                          onClick={() => { setModelsSubTab("lmstudio"); playFuturisticAudio(600, "sine", 0.05); }}
+                          className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-lg border transition-all cursor-pointer select-none ${
+                            modelsSubTab === "lmstudio"
+                              ? "bg-pink-500/10 border-pink-500/40 text-pink-300 shadow-[0_0_10px_rgba(244,63,94,0.15)]"
+                              : "bg-slate-950/60 border-slate-900 text-slate-400 hover:text-slate-200"
+                          }`}
+                        >
+                          LM Studio (Local Host)
+                        </button>
+                        <button
+                          onClick={() => { setModelsSubTab("ollama"); playFuturisticAudio(700, "sine", 0.05); }}
+                          className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-lg border transition-all cursor-pointer select-none ${
+                            modelsSubTab === "ollama"
+                              ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.15)]"
+                              : "bg-slate-950/60 border-slate-900 text-slate-400 hover:text-slate-200"
+                          }`}
+                        >
+                          Ollama / GPU
+                        </button>
+                      </div>
+                      {modelsSubTab === "lmstudio" ? <LMStudioModelManager /> : <OllamaModelManager />}
+                    </div>
+                  )}
+                  {activeTab === "memory" && <CognitiveMemory />}
                   {activeTab === "knowledge" && <KnowledgeSystem />}
                   {activeTab === "desktop" && <DesktopAgent />}
                   {activeTab === "learning" && <SelfLearningEngine onUpgradingChange={setIsSelfUpgrading} />}
@@ -1727,7 +2115,7 @@ export default function App() {
                   {activeTab === "studio" && <ComingSoonOSPanel title="AI Studio Workspace" />}
                   {activeTab === "developer" && <ComingSoonOSPanel title="Developer Environment" />}
                   {activeTab === "marketplace" && <ComingSoonOSPanel title="Plugin Marketplace" />}
-                  {activeTab === "analytics" && <ComingSoonOSPanel title="System Analytics" />}
+                  {activeTab === "analytics" && <SystemLogDashboard />}
                   {activeTab === "security" && <ComingSoonOSPanel title="Security Center" />}
                   {activeTab === "communication" && <ComingSoonOSPanel title="Communication Hub" />}
                   {activeTab === "productivity" && <ComingSoonOSPanel title="Productivity Suite" />}

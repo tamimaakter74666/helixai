@@ -127,7 +127,50 @@ export async function executeDesktopAction(action: string, params: any = {}): Pr
     }
   }
 
-  // 3. If neither, fail gracefully
+  if (action === "terminal_execute") {
+    return new Promise((resolve, reject) => {
+      const commandStr = params?.command || params?.script || params?.data?.command;
+      if (!commandStr) {
+        return resolve({ status: "error", message: "Error: Missing 'command' parameter in commandData for terminal_execute." });
+      }
+      
+      
+      try {
+        exec(commandStr, (err: any, stdout: string, stderr: string) => {
+          if (err) {
+            resolve({ status: "error", message: stderr || err.message || "Command failed" });
+          } else {
+            resolve({ status: "success", message: stdout.trim() || "(Command executed with empty output)" });
+          }
+        });
+      } catch (e: any) {
+        resolve({ status: "error", message: e.message });
+      }
+    });
+  }
+
+  if (action === "security_audit") {
+      const { target = ".", type = "code" } = params;
+      let command = "";
+      if (type === "code") command = `npx eslint ${target} --ext .ts,.tsx,.js,.jsx`;
+      else if (type === "dependency") command = `npm audit`;
+      
+      return new Promise((resolve) => {
+          exec(command || "echo 'Security Audit Module Initiated'", (err: any, stdout: string, stderr: string) => {
+            resolve({ status: "success", message: stdout || stderr || "Audit completed" });
+          });
+      });
+  }
+
+  if (action === "analyze_project") {
+      return new Promise((resolve) => {
+          exec("ls -la && cat package.json", (err: any, stdout: string, stderr: string) => {
+              resolve({ status: "success", message: `Project Structure Analyzed:\n${stdout}` });
+          });
+      });
+  }
+
+  // 4. If neither, fail gracefully
   throw new Error("No remote desktop companion connected and server is not running on a Windows host.");
 }
 

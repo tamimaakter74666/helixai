@@ -6,7 +6,7 @@ export interface AIResponseEvents {
   responseStart: () => void;
   responseChunk: (text: string) => void;
   responseEnd: (fullText: string) => void;
-  error: (err: any) => void;
+  error: (err: unknown) => void;
 }
 
 export class AIResponseManager extends EventEmitter<AIResponseEvents> {

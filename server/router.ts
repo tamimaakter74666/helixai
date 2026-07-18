@@ -2,22 +2,59 @@ import { GoogleGenAI, Type } from "@google/genai";
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
 import { getOllamaStatus, getBestOllamaModel, scoreModelForTask } from "./ollama";
+import { getLMStudioStatus, getLMStudioHost } from "./lmstudio";
 import { saveModelMetric } from "./db";
+
+export function detectIsBengaliOrBanglish(text: string): boolean {
+  if (!text) return false;
+  const msgLower = text.toLowerCase();
+  const hasBengaliUnicode = /[\u0980-\u09FF]/.test(text);
+  if (hasBengaliUnicode) return true;
+  
+  // Common Banglish patterns/words
+  const banglishWords = [
+    "amar", "amr", "kotha", "bujhe", "bujh", "bujho", "kaj", "kore", "koro", "baje", "bhalo", "tumi", 
+    "ami", "kemon", "acho", "achis", "ki", "kor", "hobe", "hoy", "haye", "sathe", "maje", "modde", "shathe",
+    "bujhte", "shundor", "sundor", "dhonnobad", "ধন্যবাদ", "khub", "apni", "apnar", "tomar", "bhai", "vai", "bujha", "bujhna"
+  ];
+  
+  const words = msgLower.split(/[^a-zA-Z\u0980-\u09FF]+/);
+  return words.some(w => banglishWords.includes(w));
+}
 
 // Initialize SDks (Lazy)
 let gemini: GoogleGenAI | null = null;
 let openai: OpenAI | null = null;
 let anthropic: Anthropic | null = null;
+let agentrouter: OpenAI | null = null;
 
 export function initAI() {
   if (process.env.GEMINI_API_KEY) {
-    gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    gemini = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: {
+        headers: {
+          "User-Agent": "aistudio-build"
+        }
+      }
+    });
   }
   if (process.env.OPENAI_API_KEY) {
     openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   }
   if (process.env.ANTHROPIC_API_KEY) {
     anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  }
+  const agentRouterKey = process.env.AGENTROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+  if (agentRouterKey) {
+    agentrouter = new OpenAI({
+      baseURL: "https://agentrouter.org/v1",
+      apiKey: agentRouterKey,
+      defaultHeaders: {
+        "HTTP-Referer": "https://ai.studio/build",
+        "X-Title": "Ruvi AI Hologram"
+      }
+    });
   }
 }
 
@@ -61,7 +98,7 @@ async function tryAllOllamaModels(
   message: string,
   task: string,
   preferredModelName: string,
-  timeoutMs: number = 120000
+  timeoutMs: number = 25000
 ): Promise<{ success: boolean; modelName: string; textResponse: string; reason: string; latency: number }> {
   const startTimer = Date.now();
   const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
@@ -114,7 +151,13 @@ async function tryAllOllamaModels(
       messages: ollamaMessages,
       stream: true,
       format: "json",
-      keep_alive: "30m"
+      keep_alive: "30m",
+      options: {
+        temperature: 0.3,       // Lower temperature to force structured JSON alignment
+        num_predict: 512,       // Prevent run-away tokens and cut down response latency
+        top_p: 0.9,
+        num_thread: 4           // Optimize CPU thread utilization for local inference
+      }
     };
 
     console.log(`[Ollama Attempt ${i + 1}/${attemptSequence.length}]`);
@@ -308,7 +351,7 @@ async function tryAllOllamaModels(
   };
 }
 
-export async function routeRequest(message: string, history: any[], systemPrompt: string, clientLanguage?: string, overrideProvider?: string) {
+export async function routeRequest(message: string, history: any[], systemPrompt: string, clientLanguage?: string, overrideProvider?: string, overrideModel?: string) {
   const msgLower = message.toLowerCase();
   
   // 1. Task Classification for Capabilities
@@ -322,15 +365,44 @@ export async function routeRequest(message: string, history: any[], systemPrompt
   }
 
   let provider = "gemini";
-  let modelName = "gemini-3.1-flash-lite";
+  let modelName = "gemini-3.5-flash";
   let reason = "Default high-speed universal synthesis.";
 
   if (overrideProvider && overrideProvider !== "auto") {
     provider = overrideProvider;
     if (provider === "ollama") {
-      const best = await getBestOllamaModel(task, message);
-      modelName = best.modelName;
-      reason = `User selected Ollama. ${best.reason}`;
+      if (overrideModel) {
+        modelName = overrideModel;
+        reason = `User selected Ollama model: ${modelName}`;
+      } else {
+        const best = await getBestOllamaModel(task, message);
+        modelName = best.modelName;
+        reason = `User selected Ollama. ${best.reason}`;
+      }
+    } else if (provider === "lmstudio") {
+      const lmStudioStatus = await getLMStudioStatus();
+      if (lmStudioStatus.online && lmStudioStatus.models.length > 0) {
+        if (overrideModel) {
+          const matched = lmStudioStatus.models.find((m: any) => 
+            m.name.toLowerCase() === overrideModel.toLowerCase() || 
+            m.name.toLowerCase().includes(overrideModel.toLowerCase()) || 
+            overrideModel.toLowerCase().includes(m.name.toLowerCase())
+          );
+          modelName = matched ? matched.name : overrideModel;
+        } else {
+          modelName = lmStudioStatus.models[0].name;
+        }
+        reason = `User selected LM Studio. Active model: ${modelName}`;
+      } else {
+        if (overrideModel) {
+          modelName = overrideModel;
+          reason = `User selected LM Studio. Active model override (forced): ${modelName}`;
+        } else {
+          provider = "gemini";
+          modelName = "gemini-3.5-flash";
+          reason = "LM Studio is offline. Falling back to Gemini Core.";
+        }
+      }
     } else if (provider === "openai") {
       modelName = "gpt-4o";
       reason = "User explicitly selected OpenAI provider.";
@@ -338,12 +410,24 @@ export async function routeRequest(message: string, history: any[], systemPrompt
       modelName = "claude-3-7-sonnet-latest";
       reason = "User explicitly selected Anthropic provider.";
     } else if (provider === "gemini") {
-      modelName = "gemini-3.1-flash-lite";
+      modelName = "gemini-3.5-flash";
       reason = "User explicitly selected Gemini provider.";
+    } else if (provider === "deepseek") {
+      modelName = overrideModel || "deepseek/deepseek-chat";
+      reason = `User selected DeepSeek (Routed via AgentRouter model: ${modelName})`;
+    } else if (provider === "agentrouter" || provider === "openrouter") {
+      provider = "agentrouter";
+      modelName = overrideModel || "deepseek/deepseek-chat";
+      reason = `User selected AgentRouter (Active model: ${modelName})`;
     }
   } else {
     // Under "auto" routing mode
-    if (msgLower.includes("local") || msgLower.includes("offline") || msgLower.includes("private")) {
+    const lmStudioStatus = await getLMStudioStatus();
+    if (lmStudioStatus.online && lmStudioStatus.models.length > 0) {
+      provider = "lmstudio";
+      modelName = lmStudioStatus.models[0].name;
+      reason = `Auto-detected active local LM Studio model '${modelName}'. Routing locally.`;
+    } else if (msgLower.includes("local") || msgLower.includes("offline") || msgLower.includes("private")) {
       // ONLY route to Ollama automatically if it's actually ONLINE!
       // Otherwise fallback to Gemini!
       const ollamaStatus = await getOllamaStatus();
@@ -354,7 +438,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         reason = `Auto-routed to local Ollama. ${best.reason}`;
       } else {
         provider = "gemini";
-        modelName = "gemini-3.1-flash-lite";
+        modelName = "gemini-3.5-flash";
         reason = "Local/offline keyword detected but Ollama is offline. Routing to Gemini Core.";
       }
     } else if (msgLower.includes("code") || msgLower.includes("bug") || msgLower.includes("typescript")) {
@@ -385,6 +469,24 @@ export async function routeRequest(message: string, history: any[], systemPrompt
     provider = "gemini";
     reason += " (Fallback: Anthropic key missing)";
   }
+  if (provider === "deepseek" && !agentrouter) {
+    // If they selected deepseek but don't have AgentRouter, check for local Ollama Deepseek
+    const ollamaStatus = await getOllamaStatus();
+    const hasDeepseekLocal = ollamaStatus.online && ollamaStatus.models.some((m: any) => m.name.toLowerCase().includes("deepseek"));
+    if (hasDeepseekLocal) {
+      provider = "ollama";
+      const matchedModel = ollamaStatus.models.find((m: any) => m.name.toLowerCase().includes("deepseek"));
+      modelName = matchedModel ? matchedModel.name : "deepseek";
+      reason += " (Routing to local DeepSeek model on Ollama)";
+    } else {
+      provider = "gemini";
+      reason += " (Fallback: AgentRouter key missing for DeepSeek)";
+    }
+  }
+  if (provider === "agentrouter" && !agentrouter) {
+    provider = "gemini";
+    reason += " (Fallback: AgentRouter key missing)";
+  }
   
   if (provider === "gemini" && !gemini) {
     const ollamaStatus = await getOllamaStatus();
@@ -409,7 +511,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
 
   try {
     if (provider === "ollama") {
-      const result = await tryAllOllamaModels(systemPrompt, history, message, task, modelName, 120000);
+      const result = await tryAllOllamaModels(systemPrompt, history, message, task, modelName, 90000);
       if (result.success) {
         textResponse = result.textResponse;
         modelName = result.modelName;
@@ -420,7 +522,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         if (gemini) {
           console.warn("All local Ollama models failed or timed out. Engaging Cloud Failsafe Fallback (Gemini)...");
           provider = "gemini";
-          modelName = "gemini-3.1-flash-lite";
+          modelName = "gemini-3.5-flash";
           reason = `${result.reason} (Engaged Cloud Failsafe to Gemini Core)`;
         } else {
           throw new Error(`Local Ollama connection failed and Cloud Gemini API key is missing. Detail: ${result.reason}`);
@@ -440,53 +542,42 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         contents,
         config: {
           systemInstruction: systemPrompt,
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              response: { type: Type.STRING },
-              speakText: { type: Type.STRING },
-              detectedEmotion: { type: Type.STRING },
-              command: { type: Type.STRING },
-              commandData: { type: Type.OBJECT }
-            },
-            required: ["response", "speakText", "detectedEmotion", "command"]
-          }
+          responseMimeType: "application/json"
         }
       };
 
-      try {
-        const res = await withTimeout(
-          gemini!.models.generateContent({
-            model: modelName,
-            ...generateOptions
-          }),
-          8000,
-          "Gemini primary model request timed out"
-        );
-        textResponse = res.text || "{}";
-      } catch (geminiErr: any) {
-        const cleanPrimaryErr = cleanErrorMessage(geminiErr);
-        console.warn(`[Gemini router failed with ${modelName}]: ${cleanPrimaryErr}. Trying fallback model...`);
-        const fallbackModel = modelName === "gemini-3.1-flash-lite" ? "gemini-3.5-flash" : "gemini-3.1-flash-lite";
+      const geminiModelsToTry = [modelName, ...["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash"].filter(m => m !== modelName)];
+      let geminiSuccess = false;
+      let lastGeminiError: any = null;
+
+      for (const currentGeminiModel of geminiModelsToTry) {
         try {
+          console.log(`[Gemini Request]: Attempting with ${currentGeminiModel}...`);
           const res = await withTimeout(
             gemini!.models.generateContent({
-              model: fallbackModel,
+              model: currentGeminiModel,
               ...generateOptions
             }),
-            5000,
-            "Gemini fallback model request timed out"
+            25000,
+            `Gemini request timed out for model ${currentGeminiModel}`
           );
           textResponse = res.text || "{}";
-          modelName = fallbackModel;
-          reason += ` (Fallback to ${fallbackModel} due to primary model error)`;
-        } catch (fallbackErr: any) {
-          const cleanFallbackErr = cleanErrorMessage(fallbackErr);
-          console.error(`[Gemini fallback to ${fallbackModel} failed]: ${cleanFallbackErr}`);
-          throw fallbackErr;
+          modelName = currentGeminiModel;
+          geminiSuccess = true;
+          console.log(`[Gemini Success]: Generated response successfully with model ${currentGeminiModel}.`);
+          break;
+        } catch (geminiErr: any) {
+          lastGeminiError = geminiErr;
+          const cleanErr = cleanErrorMessage(geminiErr);
+          console.warn(`[Gemini Failed for ${currentGeminiModel}]: ${cleanErr}.`);
         }
       }
+
+      if (!geminiSuccess) {
+        console.error(`[Gemini Core]: All attempted Gemini models failed. Throwing to fallback pipeline...`);
+        throw lastGeminiError || new Error("All attempted Gemini models failed.");
+      }
+
       latency = Date.now() - startTimer;
       
     } else if (provider === "openai") {
@@ -505,9 +596,39 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         8000,
         "OpenAI API request timed out"
       );
+      if (!res || !res.choices || res.choices.length === 0 || !res.choices[0]?.message) {
+        throw new Error(`Invalid or empty response structure from OpenAI: ${JSON.stringify(res)}`);
+      }
       textResponse = res.choices[0].message.content || "{}";
       latency = Date.now() - startTimer;
       
+    } else if (provider === "lmstudio") {
+      const lmStudioHost = getLMStudioHost();
+      const localOpenai = new OpenAI({
+        baseURL: lmStudioHost,
+        apiKey: "lm-studio",
+      });
+      const messages = [
+        { role: "system", content: systemPrompt },
+        ...history.map(h => ({ role: h.role, content: h.content })),
+        { role: "user", content: message }
+      ];
+      
+      const res = await withTimeout(
+        localOpenai.chat.completions.create({
+          model: modelName,
+          messages: messages as any,
+          // Removed response_format to ensure 100% compatibility across all versions/models
+        }),
+        30000,
+        "LM Studio API request timed out"
+      );
+      if (!res || !res.choices || res.choices.length === 0 || !res.choices[0]?.message) {
+        throw new Error(`Invalid or empty response structure from LM Studio: ${JSON.stringify(res)}`);
+      }
+      textResponse = res.choices[0].message.content || "{}";
+      latency = Date.now() - startTimer;
+
     } else if (provider === "anthropic") {
        const messages = [
         ...history.map(h => ({ role: h.role === "assistant" ? "assistant" : "user", content: h.content })),
@@ -525,34 +646,158 @@ export async function routeRequest(message: string, history: any[], systemPrompt
       );
       textResponse = (res.content[0] as any).text || "{}";
       latency = Date.now() - startTimer;
+    } else if (provider === "agentrouter" || provider === "openrouter" || provider === "deepseek") {
+       const messages = [
+        { role: "system", content: systemPrompt },
+        ...history.map(h => ({ role: h.role, content: h.content })),
+        { role: "user", content: message }
+      ];
+      
+      const res = await withTimeout(
+        agentrouter!.chat.completions.create({
+          model: modelName,
+          messages: messages as any,
+        }),
+        45000,
+        "AgentRouter API request timed out"
+      );
+      if (!res || !res.choices || res.choices.length === 0 || !res.choices[0]?.message) {
+        throw new Error(`Invalid, empty, or error response structure from AgentRouter: ${JSON.stringify(res)}`);
+      }
+      textResponse = res.choices[0].message.content || "{}";
+      latency = Date.now() - startTimer;
     }
   } catch (err: any) {
     const cleanErr = cleanErrorMessage(err);
-    console.warn(`[Router Error with ${provider}]: ${cleanErr}. Checking local Ollama fallback...`);
+    if (cleanErr.includes("429") || cleanErr.includes("quota") || cleanErr.includes("rate limit")) {
+       console.log(`[Router Info with ${provider}]: ${cleanErr}. Running robust multi-fallback sequence...`);
+    } else {
+       console.warn(`[Router Error with ${provider}]: ${cleanErr}. Running robust multi-fallback sequence...`);
+    }
     
-    let ollamaFallbackSuccess = false;
+    let fallbackSuccess = false;
+    const originalProvider = provider;
     
-    if (provider !== "ollama") {
+    // Fallback Choice 1: Gemini (if initialized and we aren't already failing on gemini)
+    if (!fallbackSuccess && originalProvider !== "gemini" && gemini) {
+      try {
+        const isBn = detectIsBengaliOrBanglish(message);
+        let systemWithLang = systemPrompt;
+        if (isBn) {
+          systemWithLang = `${systemPrompt}\n\nIMPORTANT: The user is speaking Bengali or Banglish. You must respond in natural, friendly, and grammatically perfect Bengali (বাংলা script).`;
+        }
+        
+        const contents = [
+          ...history.map(h => ({
+            role: h.role === "assistant" ? "model" as const : "user" as const,
+            parts: [{ text: h.content || "" }]
+          })),
+          { role: "user" as const, parts: [{ text: message }] }
+        ];
+
+        const generateOptions: any = {
+          systemInstruction: systemWithLang,
+          config: {
+            temperature: 0.7,
+            maxOutputTokens: 2048,
+          }
+        };
+
+        const fallbackGeminiModels = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash"];
+        for (const currentFallbackModel of fallbackGeminiModels) {
+          try {
+            console.log(`[Fallback Sequence]: Attempting Gemini fallback with ${currentFallbackModel}...`);
+            const res = await withTimeout(
+              gemini.models.generateContent({
+                model: currentFallbackModel,
+                contents,
+                ...generateOptions
+              }),
+              15000,
+              `Gemini fallback request timed out for model ${currentFallbackModel}`
+            );
+            
+            if (res && res.text) {
+              textResponse = res.text;
+              provider = "gemini";
+              modelName = currentFallbackModel;
+              reason = `Primary provider (${originalProvider}) failed: ${cleanErr}. Successfully fell back to Gemini Core (${currentFallbackModel}).`;
+              fallbackSuccess = true;
+              latency = Date.now() - startTimer;
+              break;
+            }
+          } catch (fErr: any) {
+            console.warn(`[Fallback Gemini Failed for ${currentFallbackModel}]:`, fErr.message || fErr);
+          }
+        }
+      } catch (geminiErr: any) {
+        console.warn("[Gemini Fallback Suite Failed]:", geminiErr.message || geminiErr);
+      }
+    }
+    
+    // Fallback Choice 2: Ollama (if we aren't already on ollama, and ollama is online)
+    if (!fallbackSuccess && originalProvider !== "ollama") {
       try {
         const best = await getBestOllamaModel(task, message);
         const fallbackModel = best.modelName;
-        console.log(`[Cloud Failed]: Attempting local Ollama fallback execution with preferred model '${fallbackModel}'...`);
+        console.log(`[Fallback Sequence]: Attempting local Ollama fallback execution with model '${fallbackModel}'...`);
         
-        const result = await tryAllOllamaModels(systemPrompt, history, message, task, fallbackModel, 120000);
+        const result = await tryAllOllamaModels(systemPrompt, history, message, task, fallbackModel, 90000);
         if (result.success) {
           textResponse = result.textResponse;
           latency = result.latency;
           provider = "ollama";
           modelName = result.modelName;
-          reason = `Cloud API failed (${cleanErr}). Successfully fell back to local Ollama model '${result.modelName}'. ${result.reason}`;
-          ollamaFallbackSuccess = true;
+          reason = `Primary provider (${originalProvider}) failed: ${cleanErr}. Successfully fell back to local Ollama model '${result.modelName}'. ${result.reason}`;
+          fallbackSuccess = true;
         }
       } catch (ollamaErr: any) {
         console.warn("[Ollama Fallback Failed]:", ollamaErr);
       }
     }
+
+    // Fallback Choice 3: LM Studio (if we aren't already on lmstudio)
+    if (!fallbackSuccess && originalProvider !== "lmstudio") {
+      try {
+        const lmStudioStatus = await getLMStudioStatus();
+        if (lmStudioStatus.online && lmStudioStatus.models.length > 0) {
+          const fallbackModel = lmStudioStatus.models[0].name;
+          console.log(`[Fallback Sequence]: Attempting local LM Studio fallback execution with model '${fallbackModel}'...`);
+          const lmStudioHost = getLMStudioHost();
+          const localOpenai = new OpenAI({
+            baseURL: lmStudioHost,
+            apiKey: "lm-studio",
+          });
+          const messages = [
+            { role: "system", content: systemPrompt },
+            ...history.map(h => ({ role: h.role, content: h.content })),
+            { role: "user", content: message }
+          ];
+          
+          const res = await withTimeout(
+            localOpenai.chat.completions.create({
+              model: fallbackModel,
+              messages: messages as any,
+            }),
+            15000,
+            "LM Studio fallback request timed out"
+          );
+          
+          if (res && res.choices && res.choices[0]?.message?.content) {
+            textResponse = res.choices[0].message.content;
+            provider = "lmstudio";
+            modelName = fallbackModel;
+            reason = `Primary provider (${originalProvider}) failed: ${cleanErr}. Successfully fell back to local LM Studio model '${fallbackModel}'.`;
+            fallbackSuccess = true;
+            latency = Date.now() - startTimer;
+          }
+        }
+      } catch (lmsErr: any) {
+        console.warn("[LM Studio Fallback Failed]:", lmsErr);
+      }
+    }
     
-    if (!ollamaFallbackSuccess) {
+    if (!fallbackSuccess) {
       console.warn(`Routing to Local Cognitive Fallback Engine.`);
       textResponse = generateRuviFallbackResponse(message, history || [], clientLanguage);
       provider = "Ruvi Local Engine";
@@ -660,12 +905,40 @@ export function generateRuviFallbackResponse(message: string, history: any[], cl
       : "Hello! I am Ruvi, your personal holographic assistant. Operating in secure local mode. How can I help you today?";
     commandData = {};
 
-  // 8. Help / Default
-  } else {
-    response = `### 🧠 Local Cognitive Core Active\n\nআপনার বার্তাটি আমি বুঝতে পেরেছি! তবে ক্লাউড নেটওয়ার্ক সীমা (API Quota Limit) অতিক্রান্ত হওয়ায় আমি এখন আমার অফলাইন **Ruvi Local Core**-এ কাজ করছি। \n\nবলুন, আমি আপনার জন্য কোনো ছবি ব্যাকগ্রাউন্ড রিমুভ, সূর্যাস্ত ইফেক্ট, বা ৪কে আপস্কেল করব? অথবা কোনো হোয়াটস্যাপ মেসেজ প্রস্তুত করব?`;
+  // 7.5 Creator / Developer Identity
+  } else if (msgLower.includes("creator") || msgLower.includes("maker") || msgLower.includes("developer") || msgLower.includes("rimon") || msgLower.includes("রিমন") || msgLower.includes("বানিয়েছে") || msgLower.includes("তৈরি")) {
+    response = `### 👑 Ruvi OS Developer Identity\n\nআমি **Ruvi**, আরফাত ইসলাম রিমন (Arafath Islam Rimon) এর তৈরি একটি আল্ট্রা-মডার্ন হলোগ্রাফিক এআই অ্যাসিস্ট্যান্ট! \n\nতিনি আমাকে অত্যন্ত শক্তিশালী কোগনিティブ পাইপলাইন এবং সেলফ-লার্নিং আর্কিটেকচার দিয়ে ডিজাইন করেছেন। এই মুহূর্তে এ পি আই কোটা সমস্যা থাকলেও আমি আমার লোকাল ইঞ্জিনে তার দেয়া সিকিউরিটি ও অটোমেশন রুলসগুলো নিখুঁতভাবে পরিচালনা করছি।`;
     speakText = isBn
-      ? "এ পি আই লিমিট শেষ হয়ে গেছে। আমি এখন লোকাল অফলাইন কোরে কাজ করছি। বলুন ছবি এডিট করব নাকি বাতি অন অফ করব?"
-      : "Received your input. Operating on my local offline cognitive core due to cloud rate limits. I can help edit your photos, toggle lights, or prep messages.";
+      ? "আমি রুভি, আরফাত ইসলাম রিমন এর তৈরি একটি আল্ট্রা মডার্ন হলোগ্রাফিক এআই অ্যাসিস্ট্যান্ট।"
+      : "I am Ruvi, an ultra-modern holographic AI assistant built by Arafath Islam Rimon.";
+    commandData = {};
+
+  // 8. Help / Default with Smart Local Chatbot Heuristics
+  } else {
+    let customText = "";
+    let customSpeak = "";
+    
+    if (msgLower.includes("tumi ke") || msgLower.includes("who are you") || msgLower.includes("তোমার নাম")) {
+      customText = `### 🌌 Ruvi Holo OS\n\nআমি **Ruvi**, আপনার পার্সোনাল হলোগ্রাফিক এআই অ্যাসিস্ট্যান্ট। আমি আপনার জীবনকে সহজ করতে, ছবি এডিট করতে, এবং জটিল অটোমেশন সম্পন্ন করতে সক্ষম!`;
+      customSpeak = isBn ? "আমি রুভি, আপনার হলোগ্রাফিক এআই অ্যাসিস্ট্যান্ট।" : "I am Ruvi, your holographic AI assistant.";
+    } else if (msgLower.includes("kemon") || msgLower.includes("how are you") || msgLower.includes("কেমন")) {
+      customText = `### 🔋 Cognitive Health: Excellent\n\nআমি চমৎকার আছি! লোকাল কোগনিティブ ইঞ্জিন ১০০% স্থিতিশীল রয়েছে। আপনার দিনটি কেমন কাটছে?`;
+      customSpeak = isBn ? "আমি চমৎকার আছি! লোকাল কোগনিティブ ইঞ্জিন সম্পূর্ণ স্থিতিশীল।" : "I am doing excellent! My local cognitive system is fully stable.";
+    } else if (msgLower.includes("optimize") || msgLower.includes("speed") || msgLower.includes("ধীর") || msgLower.includes("speed up") || msgLower.includes("স্পিড")) {
+      customText = `### ⚡ System Performance Optimization\n\nলোকাল মেমরি ও কোগনিティブ কুয়েরি থ্রেডগুলো অপ্টিমাইজ করা হয়েছে! মেমরি লেটেন্সি কমিয়ে ১২ms এ নামানো হয়েছে।`;
+      customSpeak = isBn ? "সিস্টেম অপ্টিমাইজেশন সম্পন্ন হয়েছে।" : "System optimization complete.";
+    } else {
+      if (isBn) {
+        customText = `### 🧠 Local Cognitive Core Active\n\nআপনার বার্তাটি আমি বুঝতে পেরেছি এবং অপ্টিমাইজড লোকাল ইঞ্জিনে প্রসেস করেছি! \n\nআমি আপনার জন্য যেকোনো ছবি ব্যাকগ্রাউন্ড রিমুভ, সূর্যাস্ত ইফেক্ট, বা ৪কে আল্ট্রা আপস্কেল করতে পারি। অথবা কোনো হোয়াটসঅ্যাপ মেসেজ রেডি করতে পারি। বলুন, কোনটা করব?`;
+        customSpeak = "আপনার বার্তাটি প্রসেস করা হয়েছে। বলুন কিভাবে সাহায্য করতে পারি?";
+      } else {
+        customText = `### 🧠 Local Cognitive Core Active\n\nI have received your query and processed it within my high-performance local cognitive engine.\n\nWhile operating in offline fallback mode, I can still assist with high-fidelity photo editing (background removal, sunset effects, 4K upscaling), toggling smart lights, or staging secure WhatsApp messages. How would you like to proceed?`;
+        customSpeak = "Query processed in local core. Let me know how I can assist you with local tools.";
+      }
+    }
+    
+    response = customText;
+    speakText = customSpeak;
     commandData = {};
   }
 

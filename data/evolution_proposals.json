@@ -1,0 +1,30 @@
+[
+  {
+    "id": "prop_1784035285716_0",
+    "problem": "Blocking the Node.js event loop during registry operations.",
+    "rootCause": "Use of synchronous fs methods.",
+    "supportingEvidence": "Found synchronous File System calls in tools registry loop.",
+    "expectedBenefit": "Improved server responsiveness and concurrent request handling.",
+    "riskAssessment": "Low; standard migration to async/await patterns.",
+    "filesLikelyAffected": [
+      "server/toolsRegistry.ts"
+    ],
+    "estimatedComplexity": "Low",
+    "status": "Executed",
+    "date": "2026-07-14"
+  },
+  {
+    "id": "prop_1784035285716_1",
+    "problem": "Maintenance difficulty of main UI file.",
+    "rootCause": "Lack of component modularization and separation of concerns.",
+    "supportingEvidence": "src/App.tsx length is 2209 lines.",
+    "expectedBenefit": "Increased code readability, reusability, and reduced bundle size.",
+    "riskAssessment": "Medium; requires careful state management migration.",
+    "filesLikelyAffected": [
+      "src/App.tsx"
+    ],
+    "estimatedComplexity": "Medium",
+    "status": "Pending",
+    "date": "2026-07-14"
+  }
+]

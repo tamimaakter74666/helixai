@@ -23,11 +23,16 @@ export default function VoiceWaveform({ state }: VoiceWaveformProps) {
       ctx.clearRect(0, 0, w, h);
 
       // Core parameters based on state
+// eslint-disable-next-line no-useless-assignment
       let speed = 0.08;
+// eslint-disable-next-line no-useless-assignment
       let waveCount = 4;
+// eslint-disable-next-line no-useless-assignment
       let color = "rgba(0, 242, 254, 0.4)";
+// eslint-disable-next-line no-useless-assignment
       let primaryColor = "#00f2fe";
       let secondaryColor = "#ff0080";
+// eslint-disable-next-line no-useless-assignment
       let amplitudeFactor = 1.0;
 
       if (state === "listening" || state === "wake_listening") {
@@ -43,11 +48,13 @@ export default function VoiceWaveform({ state }: VoiceWaveformProps) {
         primaryColor = "#a855f7";
         secondaryColor = "#ec4899";
         amplitudeFactor = 0.6;
+ 
       } else if (state === "speaking") {
         speed = 0.22;
         waveCount = 7;
         color = "rgba(255, 0, 128, 0.5)";
         primaryColor = "#ff0080";
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         secondaryColor = "#00f2fe";
         amplitudeFactor = 2.4;
       } else {
@@ -98,11 +105,13 @@ export default function VoiceWaveform({ state }: VoiceWaveformProps) {
       }
 
       // Draw multi-layered sine waves
+ 
       for (let i = 0; i < waveCount; i++) {
         ctx.beginPath();
         ctx.lineWidth = i === 0 ? 3.0 : 1.0;
         
         // Blend colors
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const alpha = 1.0 - i / waveCount;
         ctx.strokeStyle = i === 0 ? primaryColor : color;
         

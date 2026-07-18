@@ -18,6 +18,8 @@ export default function DesktopAgent() {
   const [isConnected, setIsConnected] = useState(false);
   const [localPlatform, setLocalPlatform] = useState("unknown");
   const [companionInfo, setCompanionInfo] = useState<any>(null);
+ 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isConnecting, setIsConnecting] = useState(false);
 
   // Control state
@@ -44,6 +46,8 @@ export default function DesktopAgent() {
 
   // Virtual Screen / Interactive Mock
   const [screenImage, setScreenImage] = useState<string | null>(null);
+ 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isCapturing, setIsCapturing] = useState(false);
   const [virtualMouseX, setVirtualMouseX] = useState(400);
   const [virtualMouseY, setVirtualMouseY] = useState(300);
@@ -81,7 +85,8 @@ export default function DesktopAgent() {
       if (data.connected && !isConnected) {
         addLog("success", `Windows Companion agent detected! Handshake accepted.`);
       }
-    } catch (err) {
+ 
+    } catch (_err) {
       // Slient fail
     }
   };

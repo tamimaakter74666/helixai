@@ -4,7 +4,7 @@ export interface ChatMessage {
   content: string;
   speakText?: string;
   command?: string;
-  commandData?: any;
+  commandData?: unknown;
   routingInfo?: {
     selectedAI: string;
     reason: string;

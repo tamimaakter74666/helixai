@@ -1,0 +1,24 @@
+[
+  {
+    "id": "know_1784035285715_0",
+    "topic": "Event Loop Blocking in Node.js",
+    "source": "Node.js Official Documentation (Performance Best Practices)",
+    "evidence": "Synchronous File System calls (fs.readFileSync) inside the tools registry loop.",
+    "date": "2026-07-14",
+    "confidenceScore": 0.98,
+    "whyUseful": "Node.js is single-threaded; synchronous I/O operations block the entire event loop, preventing the server from handling incoming requests.",
+    "suggestedImprovement": "Refactor all synchronous filesystem operations to use the fs.promises API or asynchronous callback patterns.",
+    "status": "Verified"
+  },
+  {
+    "id": "know_1784035285715_1",
+    "topic": "Single Responsibility Principle (SRP) in Monolithic Architectures",
+    "source": "Clean Architecture by Robert C. Martin",
+    "evidence": "src/App.tsx exceeding 2200 lines and server/router.ts exceeding 800 lines.",
+    "date": "2026-07-14",
+    "confidenceScore": 0.95,
+    "whyUseful": "Excessive file length indicates poor modularization, increasing technical debt, cognitive load, and risk of regression during simple refactors.",
+    "suggestedImprovement": "Implement component composition patterns and migrate router logic into feature-based controller modules.",
+    "status": "Learned"
+  }
+]
