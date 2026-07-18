@@ -73,4 +73,5 @@ jobs:
           releaseBody: '🚀 Automated production release of Ruvi AI Hologram OS Desktop Client.'
           releaseDraft: true
           prerelease: false
+          tauriScript: npx tauri
           args: ${{ matrix.args }}
