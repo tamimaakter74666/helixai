@@ -74,7 +74,7 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'Ruvi AI Hologram OS v__VERSION__'
           releaseBody: '🚀 Automated production release of Ruvi AI Hologram OS Desktop Client.'
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           tauriScript: npx tauri
           args: ${{ matrix.args }}
