@@ -35,13 +35,13 @@
     ],
     "security": {
       "csp": null
-    },
-    "plugins": {
-      "updater": {
-        "endpoints": [
-          "https://raw.githubusercontent.com/arafathislam279/ruvi-ai-hologram/main/updater.json"
-        ]
-      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://raw.githubusercontent.com/arafathislam279/ruvi-ai-hologram/main/updater.json"
+      ]
     }
   }
 }
