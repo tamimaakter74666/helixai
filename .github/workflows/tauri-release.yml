@@ -2,6 +2,9 @@ name: "Tauri Release Automation"
 
 on:
   push:
+    branches:
+      - main
+      - master
     tags:
       - 'v*' # Triggers on tags like v1.0.0, v1.0.1, etc.
   workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
@@ -65,7 +68,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
+          tagName: v__VERSION__
           releaseName: 'Ruvi AI Hologram OS v__VERSION__'
           releaseBody: '🚀 Automated production release of Ruvi AI Hologram OS Desktop Client.'
           releaseDraft: true
