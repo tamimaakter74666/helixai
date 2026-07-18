@@ -1,0 +1,73 @@
+name: "Tauri Release Automation"
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on tags like v1.0.0, v1.0.1, etc.
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+
+permissions:
+  contents: write # Required to upload releases and assets
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'windows-latest'
+            args: ''
+          # Optional: You can uncomment these to build for macOS and Linux too!
+          # - platform: 'macos-latest'
+          #   args: ''
+          # - platform: 'ubuntu-22.04'
+          #   args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Those targets are only needed on macOS/Windows if you build for mobile
+          # target: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-ios,x86_64-apple-ios,aarch64-apple-ios-sim' || '' }}
+          targets: ''
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libgtk-3-dev libayumu-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Generate Icon Placeholders
+        run: node src-tauri/generate_placeholders.js
+
+      - name: Build Tauri Desktop Application
+        uses: tauri-apps/tauri-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Ruvi AI Hologram OS v__VERSION__'
+          releaseBody: '🚀 Automated production release of Ruvi AI Hologram OS Desktop Client.'
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

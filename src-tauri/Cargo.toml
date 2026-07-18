@@ -1,0 +1,22 @@
+[package]
+name = "ruvi-ai-hologram"
+version = "0.1.0"
+description = "Ruvi AI Hologram Desktop OS Client"
+authors = ["Arafat Islam Rimon <arafathislam279@gmail.com>"]
+edition = "2021"
+
+[lib]
+name = "ruvi_ai_hologram_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = ["image-ico", "image-png"] }
+tauri-plugin-shell = "2.0.0"
+tauri-plugin-fs = "2.0.0"
+tauri-plugin-process = "2.0.0"
+tauri-plugin-os = "2.0.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
