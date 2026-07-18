@@ -41,7 +41,8 @@
     "updater": {
       "endpoints": [
         "https://raw.githubusercontent.com/arafathislam279/ruvi-ai-hologram/main/updater.json"
-      ]
+      ],
+      "pubkey": "oJGNFpxT41BFGoAOYTSS2ZgDqEVQAhiUOj+Rd5Mt3hU="
     }
   }
 }
