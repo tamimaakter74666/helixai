@@ -41,6 +41,7 @@ app.use((req, res, next) => {
   if (customGeminiKey) {
     try {
       initCoreAI(customGeminiKey);
+      initLocalAI(customGeminiKey);
     } catch (e) {
       console.error("Failed to dynamically initialize Core AI key:", e);
     }
@@ -429,16 +430,19 @@ app.post("/api/logs/optimize", async (req, res) => {
 
 // Initialize GoogleGenAI server-side for Image Gen
 const apiKey = process.env.GEMINI_API_KEY;
-let ai: GoogleGenAI | null = null;
-if (apiKey) {
+export let ai: GoogleGenAI | null = null;
+export function initLocalAI(key: string) {
   ai = new GoogleGenAI({
-    apiKey: apiKey,
+    apiKey: key,
     httpOptions: {
       headers: {
         "User-Agent": "aistudio-build",
       },
     },
   });
+}
+if (apiKey) {
+  initLocalAI(apiKey);
 }
 
 // Utility to extract first balanced JSON object from string
@@ -1016,14 +1020,32 @@ async function initServer() {
     const urlString = request ? (request.url || "") : "";
     const urlObj = new URL(urlString, "http://localhost");
     const sessionId = urlObj.searchParams.get("sessionId") || "unknown";
+    
+    const queryGeminiKey = urlObj.searchParams.get("geminiKey") || undefined;
+    let sessionAi = ai;
 
-    if (!ai) {
+    if (queryGeminiKey) {
+      try {
+        sessionAi = new GoogleGenAI({
+          apiKey: queryGeminiKey,
+          httpOptions: {
+            headers: {
+              "User-Agent": "aistudio-build",
+            },
+          },
+        });
+      } catch (err) {
+        console.error("Failed to initialize dynamic key for WS session:", err);
+      }
+    }
+
+    if (!sessionAi) {
       isSimulated = true;
       console.warn("Gemini API key missing. Running Live WebSocket in Simulated Standby mode.");
       clientWs.send(JSON.stringify({ type: "status", data: "standby" }));
     } else {
       try {
-        session = await ai.live.connect({
+        session = await sessionAi.live.connect({
           model: "gemini-3.1-flash-live-preview",
           config: {
             responseModalities: [Modality.AUDIO],

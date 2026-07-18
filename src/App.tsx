@@ -120,6 +120,74 @@ export default function App() {
   const [isSelfUpgrading, setIsSelfUpgrading] = useState(false);
   const [isOnline, setIsOnline] = useState(typeof window !== "undefined" ? navigator.onLine : true);
 
+  const [updateStatus, setUpdateStatus] = useState<string>("idle"); // idle, checking, available, downloading, ready, error, latest, not_supported
+  const [updateProgress, setUpdateProgress] = useState<number>(0);
+  const [updateError, setUpdateError] = useState<string>("");
+
+  const isTauri = typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
+
+  const checkForUpdates = async (autoInstall = false) => {
+    if (!isTauri) {
+      setUpdateStatus("not_supported");
+      return;
+    }
+    
+    setUpdateStatus("checking");
+    try {
+      const { check } = await import("@tauri-apps/plugin-updater");
+      const { relaunch } = await import("@tauri-apps/plugin-process");
+      
+      const update = await check();
+      if (update) {
+        setUpdateStatus("available");
+        
+        if (autoInstall) {
+          setUpdateStatus("downloading");
+          let downloaded = 0;
+          let contentLength = 0;
+          
+          await update.downloadAndInstall((event) => {
+            switch (event.event) {
+              case "Started":
+                contentLength = event.data.contentLength || 0;
+                break;
+              case "Progress":
+                downloaded += event.data.chunkLength;
+                const progress = contentLength > 0 ? Math.round((downloaded / contentLength) * 100) : 50;
+                setUpdateProgress(progress);
+                break;
+              case "Finished":
+                break;
+            }
+          });
+          
+          setUpdateStatus("ready");
+          
+          // Auto-relaunch after 3 seconds
+          setTimeout(async () => {
+            try {
+              await relaunch();
+            } catch (err) {
+              console.error("Failed to relaunch:", err);
+            }
+          }, 3000);
+        }
+      } else {
+        setUpdateStatus("latest");
+      }
+    } catch (err: any) {
+      console.error("Self-updater error:", err);
+      setUpdateStatus("error");
+      setUpdateError(err.message || String(err));
+    }
+  };
+
+  useEffect(() => {
+    if (isTauri) {
+      checkForUpdates(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const handleOnline = () => setIsOnline(true);
@@ -2364,6 +2432,51 @@ export default function App() {
                     Required for Tauri .exe to route API calls (empty uses default Cloud deployment).
                   </p>
                 </div>
+
+                {/* Self-Updater Block */}
+                <div className="space-y-1.5 border-t border-slate-800 pt-4">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                    <RefreshCw className={`w-3.5 h-3.5 text-indigo-400 ${updateStatus === "checking" || updateStatus === "downloading" ? "animate-spin" : ""}`} />
+                    <span>Ruvi Desktop Self-Updater</span>
+                  </label>
+                  
+                  <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-400">Status:</span>
+                      <span className="font-mono font-bold text-cyan-400">
+                        {updateStatus === "idle" && "Idle"}
+                        {updateStatus === "checking" && "Checking for updates..."}
+                        {updateStatus === "available" && "New update available!"}
+                        {updateStatus === "downloading" && `Downloading (${updateProgress}%)`}
+                        {updateStatus === "ready" && "Update installed! Restarting..."}
+                        {updateStatus === "latest" && "Running latest version (v1.0.0)"}
+                        {updateStatus === "not_supported" && "Web Preview Mode"}
+                        {updateStatus === "error" && "Error updating"}
+                      </span>
+                    </div>
+
+                    {updateStatus === "downloading" && (
+                      <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div className="bg-gradient-to-r from-cyan-500 to-indigo-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${updateProgress}%` }}></div>
+                      </div>
+                    )}
+
+                    {updateStatus === "error" && (
+                      <p className="text-[10px] text-red-400 leading-tight font-mono break-all">{updateError}</p>
+                    )}
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => checkForUpdates(true)}
+                        disabled={updateStatus === "checking" || updateStatus === "downloading" || updateStatus === "ready"}
+                        className="w-full text-center bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-50 text-slate-300 text-[10px] font-mono py-1.5 rounded-lg transition-all"
+                      >
+                        {updateStatus === "checking" || updateStatus === "downloading" ? "Processing..." : "Force Check & Install"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
             

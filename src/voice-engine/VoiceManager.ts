@@ -383,7 +383,34 @@ export class VoiceManager extends EventEmitter<VoiceManagerEvents> {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const sessionId = this.currentSessionId || "session_" + Date.now();
     LoggingManager.info("VoiceManager", "Connecting to Gemini Live WebSocket...", { sessionId });
-    this.ws = new WebSocket(`${protocol}//${window.location.host}/api/live?sessionId=${sessionId}`);
+    
+    const geminiKey = localStorage.getItem("ruvi_gemini_api_key") || "";
+    const openrouterKey = localStorage.getItem("ruvi_openrouter_api_key") || "";
+    
+    let wsUrl = `${protocol}//${window.location.host}/api/live?sessionId=${sessionId}`;
+    const customUrl = localStorage.getItem("ruvi_server_url");
+    
+    if (customUrl) {
+      const cleaned = customUrl.replace(/^http/, "ws").replace(/\/$/, "");
+      wsUrl = `${cleaned}/api/live?sessionId=${sessionId}`;
+    } else {
+      const isTauri = (window as any).__TAURI__ !== undefined || 
+                      window.location.protocol.startsWith("tauri") || 
+                      window.location.hostname === "tauri.localhost";
+      if (isTauri) {
+        const defaultSharedUrl = "https://ais-pre-25gfll5l5kgi5wzrveg5lv-844587094120.asia-southeast1.run.app".replace(/^http/, "ws");
+        wsUrl = `${defaultSharedUrl}/api/live?sessionId=${sessionId}`;
+      }
+    }
+
+    if (geminiKey) {
+      wsUrl += `&geminiKey=${encodeURIComponent(geminiKey)}`;
+    }
+    if (openrouterKey) {
+      wsUrl += `&openrouterKey=${encodeURIComponent(openrouterKey)}`;
+    }
+
+    this.ws = new WebSocket(wsUrl);
     
     this.ws.onmessage = (event) => {
       try {
