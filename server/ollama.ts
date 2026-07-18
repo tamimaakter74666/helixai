@@ -24,8 +24,14 @@ si.mem().then(info => {
   totalMemoryGB = Math.round(info.total / (1024 ** 3));
 }).catch(() => {});
 
+let activeOllamaHost = "http://127.0.0.1:11434";
+
+export function getOllamaHost(): string {
+  return activeOllamaHost;
+}
+
 export function getEffectiveOllamaMemoryGB(): number {
-  const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").toLowerCase();
+  const ollamaHost = (process.env.OLLAMA_HOST || activeOllamaHost).toLowerCase();
   const isRemote = !ollamaHost.includes("localhost") && !ollamaHost.includes("127.0.0.1") && !ollamaHost.includes("0.0.0.0");
   
   // If Ollama is running on a remote host or we have an active desktop companion connected,
@@ -40,19 +46,32 @@ export function getEffectiveOllamaMemoryGB(): number {
 
 export async function getOllamaStatus() {
   const start = Date.now();
-  const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
-  try {
-    const res = await fetch(`${ollamaHost}/api/tags`, {
-      method: "GET",
-      signal: AbortSignal.timeout(5000) // Upgraded from 1500ms to 5000ms to handle slower waking hosts and avoid false-offline readings
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const latency = Date.now() - start;
-      return { online: true, latency, models: (data.models || []) as OllamaModel[] };
+  const hostsToTry = [
+    process.env.OLLAMA_HOST,
+    "http://127.0.0.1:11434",
+    "http://localhost:11434",
+    "http://host.docker.internal:11434"
+  ].filter(Boolean) as string[];
+
+  const uniqueHosts = Array.from(new Set(hostsToTry.map(h => h.replace(/\/$/, ""))));
+  const currentActive = activeOllamaHost.replace(/\/$/, "");
+  const orderedHosts = [currentActive, ...uniqueHosts.filter(h => h !== currentActive)];
+
+  for (const host of orderedHosts) {
+    try {
+      const res = await fetch(`${host}/api/tags`, {
+        method: "GET",
+        signal: AbortSignal.timeout(2000)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const latency = Date.now() - start;
+        activeOllamaHost = host;
+        return { online: true, latency, models: (data.models || []) as OllamaModel[] };
+      }
+    } catch (err) {
+      // Continue to try next host
     }
-  } catch (err) {
-    // Silently fail if Ollama is not active or reachable
   }
   return { online: false, latency: 0, models: [] as OllamaModel[] };
 }

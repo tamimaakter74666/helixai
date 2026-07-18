@@ -185,25 +185,35 @@ export default function OllamaModelManager() {
     setLoading(true);
     try {
       // 1. Try fetching directly from local desktop port first
-      try {
-        const localRes = await fetch("http://127.0.0.1:11434/api/tags", {
-          method: "GET",
-          signal: AbortSignal.timeout(1500)
-        });
-        if (localRes.ok) {
-          const localData = await localRes.json();
-          const evaluatedModels = evaluateOllamaModelsClientSide(localData.models || []);
-          setStatus({
-            online: true,
-            latency: 5,
-            systemRAM: "Local Host Desktop",
-            models: evaluatedModels
+      const localAddresses = ["http://127.0.0.1:11434", "http://localhost:11434"];
+      let localRes = null;
+      
+      for (const addr of localAddresses) {
+        try {
+          const r = await fetch(`${addr}/api/tags`, {
+            method: "GET",
+            signal: AbortSignal.timeout(1000)
           });
-          setLoading(false);
-          return;
+          if (r.ok) {
+            localRes = r;
+            break;
+          }
+        } catch (_err) {
+          // ignore and check next
         }
-      } catch (e) {
-        // Direct scan failed, fall back to API proxy
+      }
+
+      if (localRes) {
+        const localData = await localRes.json();
+        const evaluatedModels = evaluateOllamaModelsClientSide(localData.models || []);
+        setStatus({
+          online: true,
+          latency: 5,
+          systemRAM: "Local Host Desktop",
+          models: evaluatedModels
+        });
+        setLoading(false);
+        return;
       }
 
       // 2. Proxy request

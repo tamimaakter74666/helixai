@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
-import { getOllamaStatus, getBestOllamaModel, scoreModelForTask } from "./ollama";
+import { getOllamaStatus, getBestOllamaModel, scoreModelForTask, getOllamaHost } from "./ollama";
 import { getLMStudioStatus, getLMStudioHost } from "./lmstudio";
 import { saveModelMetric } from "./db";
 
@@ -61,6 +61,9 @@ export function initAI(customKeys?: { gemini?: string; agentrouter?: string }) {
 
 function cleanErrorMessage(err: any): string {
   const msg = err?.message || String(err);
+  if (msg.includes("<!doctype html") || msg.includes("<!doctypehtml") || msg.includes("<html") || msg.includes("aliyun")) {
+    return "Service blocked by firewall or temporarily unavailable (HTML WAF/CDN response).";
+  }
   if (msg.includes("quota") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("429")) {
     return "API rate limit or daily quota exceeded (429 RESOURCE_EXHAUSTED).";
   }
@@ -102,7 +105,7 @@ async function tryAllOllamaModels(
   timeoutMs: number = 25000
 ): Promise<{ success: boolean; modelName: string; textResponse: string; reason: string; latency: number }> {
   const startTimer = Date.now();
-  const ollamaHost = (process.env.OLLAMA_HOST || "http://localhost:11434").replace(/\/$/, "");
+  const ollamaHost = (process.env.OLLAMA_HOST || getOllamaHost()).replace(/\/$/, "");
   const url = `${ollamaHost}/api/chat`;
 
   const ollamaMessages = [

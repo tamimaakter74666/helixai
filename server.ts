@@ -121,7 +121,12 @@ app.get("/api/system", async (req, res) => {
 
 // AgentRouter Key Status API
 app.get("/api/agentrouter/status", (req, res) => {
-  res.json({ configured: !!process.env.AGENTROUTER_API_KEY || !!process.env.OPENROUTER_API_KEY });
+  const customAgentRouterKey = req.headers["x-openrouter-api-key"] as string || req.headers["x-agentrouter-api-key"] as string;
+  res.json({ 
+    configured: !!process.env.AGENTROUTER_API_KEY || 
+                !!process.env.OPENROUTER_API_KEY || 
+                (!!customAgentRouterKey && customAgentRouterKey !== "undefined" && customAgentRouterKey.trim() !== "")
+  });
 });
 
 // Ollama Evaluated Models Scoring API
