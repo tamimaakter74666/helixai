@@ -16,7 +16,7 @@
   },
   "build": {
     "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },

@@ -60,6 +60,9 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm install
 
+      - name: Build Frontend
+        run: npm run build
+
       - name: Generate Icon Placeholders
         run: node src-tauri/generate_placeholders.js
 
