@@ -111,6 +111,7 @@ export default function App() {
 
   const [isFloatingOpen, setIsFloatingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<"design" | "connections" | "system">("design");
   const [geminiApiKey, setGeminiApiKey] = useState(() => localStorage.getItem("ruvi_gemini_api_key") || "");
   const [openrouterApiKey, setOpenrouterApiKey] = useState(() => localStorage.getItem("ruvi_openrouter_api_key") || "");
   const [ruviServerUrl, setRuviServerUrl] = useState(() => localStorage.getItem("ruvi_server_url") || "");
@@ -2440,184 +2441,214 @@ export default function App() {
             <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
               <div className="flex items-center gap-2">
                 <Palette className="w-4 h-4 text-cyan-400" />
-                <h2 className="font-mono text-sm font-bold text-slate-200">Design & Layout Setup</h2>
+                <h2 className="font-mono text-sm font-bold text-slate-200">Settings & Layout</h2>
               </div>
               <button onClick={() => setIsSettingsOpen(false)} className="text-slate-500 hover:text-white transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="p-5 space-y-6">
-              {/* Layout Mode Selection */}
-              <div>
-                <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-3">UI Structure</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-                    { id: "split", label: "Split View", icon: Layers },
-                    { id: "fullscreen", label: "Fullscreen Chat", icon: MessageSquare },
-                    { id: "messenger", label: "Messenger Mode", icon: MessageCircle },
-                    { id: "floating", label: "Floating Bubble", icon: Cpu },
-                    { id: "dock", label: "Minimal Dock", icon: Monitor }
-                  ].map((mode) => (
-                    <button
-                      key={mode.id}
-                      onClick={() => setUiMode(mode.id as any)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${
-                        uiMode === mode.id 
-                          ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300" 
-                          : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-600 hover:bg-slate-800"
-                      }`}
-                    >
-                      <mode.icon className="w-5 h-5 mb-2" />
-                      <span className="text-xs font-sans font-medium">{mode.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Tabs Header */}
+            <div className="flex border-b border-slate-800 bg-slate-900/50">
+              <button 
+                onClick={() => setSettingsTab("design")}
+                className={`flex-1 py-3 text-xs font-mono font-medium transition-colors ${settingsTab === "design" ? "text-cyan-400 border-b-2 border-cyan-400" : "text-slate-500 hover:text-slate-300"}`}
+              >
+                Design
+              </button>
+              <button 
+                onClick={() => setSettingsTab("connections")}
+                className={`flex-1 py-3 text-xs font-mono font-medium transition-colors ${settingsTab === "connections" ? "text-cyan-400 border-b-2 border-cyan-400" : "text-slate-500 hover:text-slate-300"}`}
+              >
+                Connections
+              </button>
+              <button 
+                onClick={() => setSettingsTab("system")}
+                className={`flex-1 py-3 text-xs font-mono font-medium transition-colors ${settingsTab === "system" ? "text-cyan-400 border-b-2 border-cyan-400" : "text-slate-500 hover:text-slate-300"}`}
+              >
+                System
+              </button>
+            </div>
 
-              {/* Theme Color Shift */}
-              <div>
-                <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-3">Color Space</h3>
-                <div className="flex justify-between gap-2">
-                  {[
-                    { hue: "0", label: "Cyan Default", color: "bg-cyan-400" },
-                    { hue: "90", label: "Emerald Matrix", color: "bg-emerald-400" },
-                    { hue: "180", label: "Pink Neon", color: "bg-pink-400" },
-                    { hue: "270", label: "Purple Void", color: "bg-purple-400" }
-                  ].map((t) => (
-                    <button
-                      key={t.hue}
-                      onClick={() => setThemeHue(t.hue)}
-                      className={`flex-1 flex flex-col items-center gap-2 p-2 rounded-lg border transition-all ${
-                        themeHue === t.hue 
-                          ? "bg-slate-800 border-slate-500" 
-                          : "bg-slate-950 border-slate-800 hover:border-slate-700"
-                      }`}
-                    >
-                      <div className={`w-6 h-6 rounded-full ${t.color} shadow-lg`} style={{ filter: `hue-rotate(${t.hue}deg)` }} />
-                      <span className="text-[9px] font-mono text-slate-400 hidden sm:block">{t.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Theme Toggle */}
-              <div className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <div className="flex items-center gap-2 text-slate-300">
-                  {theme === "dark" ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-amber-400" />}
-                  <span className="text-sm font-sans">Dark Mode UI</span>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={theme === "dark"}
-                    onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    className="sr-only peer"
-                  />
-                  <div className="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
-                </label>
-              </div>
-
-              {/* API Connection & Keys Setup */}
-              <div className="border-t border-slate-800 pt-4 space-y-4">
-                <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-2">API Keys & Connections</h3>
-                
-                {/* Gemini API Key */}
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
-                    <Key className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Google Gemini API Key</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={geminiApiKey}
-                    onChange={(e) => setGeminiApiKey(e.target.value)}
-                    placeholder="Enter GEMINI_API_KEY..."
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
-                  />
-                  <p className="text-[10px] text-slate-500">Overrides backend default key if specified.</p>
-                </div>
-
-                {/* OpenRouter API Key */}
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
-                    <Key className="w-3.5 h-3.5 text-pink-400" />
-                    <span>AgentRouter / OpenRouter API Key</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={openrouterApiKey}
-                    onChange={(e) => setOpenrouterApiKey(e.target.value)}
-                    placeholder="Enter OpenRouter API Key..."
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
-                  />
-                </div>
-
-                {/* Ruvi Cloud/Local Backend Server URL */}
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
-                    <Globe className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Backend Server URL</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={ruviServerUrl}
-                    onChange={(e) => setRuviServerUrl(e.target.value)}
-                    placeholder="e.g. http://localhost:3000 (Empty for Auto)"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
-                  />
-                  <p className="text-[10px] text-slate-500">
-                    Required for Tauri .exe to route API calls (empty uses default Cloud deployment).
-                  </p>
-                </div>
-
-                {/* Self-Updater Block */}
-                <div className="space-y-1.5 border-t border-slate-800 pt-4">
-                  <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
-                    <RefreshCw className={`w-3.5 h-3.5 text-indigo-400 ${updateStatus === "checking" || updateStatus === "downloading" ? "animate-spin" : ""}`} />
-                    <span>Ruvi Desktop Self-Updater</span>
-                  </label>
-                  
-                  <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-400">Status:</span>
-                      <span className="font-mono font-bold text-cyan-400">
-                        {updateStatus === "idle" && "Idle"}
-                        {updateStatus === "checking" && "Checking for updates..."}
-                        {updateStatus === "available" && "New update available!"}
-                        {updateStatus === "downloading" && `Downloading (${updateProgress}%)`}
-                        {updateStatus === "ready" && "Update installed! Restarting..."}
-                        {updateStatus === "latest" && "Running latest version (v1.0.0)"}
-                        {updateStatus === "not_supported" && "Web Preview Mode"}
-                        {updateStatus === "error" && "Error updating"}
-                      </span>
-                    </div>
-
-                    {updateStatus === "downloading" && (
-                      <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-gradient-to-r from-cyan-500 to-indigo-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${updateProgress}%` }}></div>
-                      </div>
-                    )}
-
-                    {updateStatus === "error" && (
-                      <p className="text-[10px] text-red-400 leading-tight font-mono break-all">{updateError}</p>
-                    )}
-
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => checkForUpdates(true)}
-                        disabled={updateStatus === "checking" || updateStatus === "downloading" || updateStatus === "ready"}
-                        className="w-full text-center bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-50 text-slate-300 text-[10px] font-mono py-1.5 rounded-lg transition-all"
-                      >
-                        {updateStatus === "checking" || updateStatus === "downloading" ? "Processing..." : "Force Check & Install"}
-                      </button>
+            <div className="p-5 space-y-6 max-h-[60vh] overflow-y-auto">
+              {settingsTab === "design" && (
+                <>
+                  {/* Layout Mode Selection */}
+                  <div>
+                    <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-3">UI Structure</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+                        { id: "split", label: "Split View", icon: Layers },
+                        { id: "fullscreen", label: "Fullscreen Chat", icon: MessageSquare },
+                        { id: "messenger", label: "Messenger Mode", icon: MessageCircle },
+                        { id: "floating", label: "Floating Bubble", icon: Cpu },
+                        { id: "dock", label: "Minimal Dock", icon: Monitor }
+                      ].map((mode) => (
+                        <button
+                          key={mode.id}
+                          onClick={() => setUiMode(mode.id as any)}
+                          className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${
+                            uiMode === mode.id 
+                              ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300" 
+                              : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-600 hover:bg-slate-800"
+                          }`}
+                        >
+                          <mode.icon className="w-5 h-5 mb-2" />
+                          <span className="text-xs font-sans font-medium">{mode.label}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
-                </div>
 
-                {/* System Diagnostics Block */}
-                <div className="space-y-1.5 border-t border-slate-800 pt-4">
+                  {/* Theme Color Shift */}
+                  <div>
+                    <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-3">Color Space</h3>
+                    <div className="flex justify-between gap-2">
+                      {[
+                        { hue: "0", label: "Cyan Default", color: "bg-cyan-400" },
+                        { hue: "90", label: "Emerald Matrix", color: "bg-emerald-400" },
+                        { hue: "180", label: "Pink Neon", color: "bg-pink-400" },
+                        { hue: "270", label: "Purple Void", color: "bg-purple-400" }
+                      ].map((t) => (
+                        <button
+                          key={t.hue}
+                          onClick={() => setThemeHue(t.hue)}
+                          className={`flex-1 flex flex-col items-center gap-2 p-2 rounded-lg border transition-all ${
+                            themeHue === t.hue 
+                              ? "bg-slate-800 border-slate-500" 
+                              : "bg-slate-950 border-slate-800 hover:border-slate-700"
+                          }`}
+                        >
+                          <div className={`w-6 h-6 rounded-full ${t.color} shadow-lg`} style={{ filter: `hue-rotate(${t.hue}deg)` }} />
+                          <span className="text-[9px] font-mono text-slate-400 hidden sm:block">{t.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Theme Toggle */}
+                  <div className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <div className="flex items-center gap-2 text-slate-300">
+                      {theme === "dark" ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-amber-400" />}
+                      <span className="text-sm font-sans">Dark Mode UI</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={theme === "dark"}
+                        onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                  </div>
+                </>
+              )}
+
+              {settingsTab === "connections" && (
+                <div className="space-y-4">
+                  <h3 className="font-mono text-[10px] text-slate-500 uppercase tracking-wider mb-2">API Keys & Connections</h3>
+                  
+                  {/* Gemini API Key */}
+                  <div className="space-y-1.5">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                      <Key className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Google Gemini API Key</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={geminiApiKey}
+                      onChange={(e) => setGeminiApiKey(e.target.value)}
+                      placeholder="Enter GEMINI_API_KEY..."
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                    />
+                    <p className="text-[10px] text-slate-500">Overrides backend default key if specified.</p>
+                  </div>
+
+                  {/* OpenRouter API Key */}
+                  <div className="space-y-1.5">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                      <Key className="w-3.5 h-3.5 text-pink-400" />
+                      <span>AgentRouter / OpenRouter API Key</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={openrouterApiKey}
+                      onChange={(e) => setOpenrouterApiKey(e.target.value)}
+                      placeholder="Enter OpenRouter API Key..."
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                    />
+                  </div>
+
+                  {/* Ruvi Cloud/Local Backend Server URL */}
+                  <div className="space-y-1.5">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                      <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Backend Server URL</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={ruviServerUrl}
+                      onChange={(e) => setRuviServerUrl(e.target.value)}
+                      placeholder="e.g. http://localhost:3000 (Empty for Auto)"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500/40 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none placeholder-slate-750 font-mono"
+                    />
+                    <p className="text-[10px] text-slate-500">
+                      Required for Tauri .exe to route API calls (empty uses default Cloud deployment).
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {settingsTab === "system" && (
+                <div className="space-y-6">
+                  {/* Self-Updater Block */}
+                  <div className="space-y-1.5">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
+                      <RefreshCw className={`w-3.5 h-3.5 text-indigo-400 ${updateStatus === "checking" || updateStatus === "downloading" ? "animate-spin" : ""}`} />
+                      <span>Ruvi Desktop Self-Updater</span>
+                    </label>
+                    
+                    <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400">Status:</span>
+                        <span className="font-mono font-bold text-cyan-400">
+                          {updateStatus === "idle" && "Idle"}
+                          {updateStatus === "checking" && "Checking for updates..."}
+                          {updateStatus === "available" && "New update available!"}
+                          {updateStatus === "downloading" && `Downloading (${updateProgress}%)`}
+                          {updateStatus === "ready" && "Update installed! Restarting..."}
+                          {updateStatus === "latest" && "Running latest version (v1.0.0)"}
+                          {updateStatus === "not_supported" && "Web Preview Mode"}
+                          {updateStatus === "error" && "Error updating"}
+                        </span>
+                      </div>
+
+                      {updateStatus === "downloading" && (
+                        <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                          <div className="bg-gradient-to-r from-cyan-500 to-indigo-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${updateProgress}%` }}></div>
+                        </div>
+                      )}
+
+                      {updateStatus === "error" && (
+                        <p className="text-[10px] text-red-400 leading-tight font-mono break-all">{updateError}</p>
+                      )}
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => checkForUpdates(true)}
+                          disabled={updateStatus === "checking" || updateStatus === "downloading" || updateStatus === "ready"}
+                          className="w-full text-center bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-50 text-slate-300 text-[10px] font-mono py-1.5 rounded-lg transition-all"
+                        >
+                          {updateStatus === "checking" || updateStatus === "downloading" ? "Processing..." : "Force Check & Install"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* System Diagnostics Block */}
+                  <div className="space-y-1.5 border-t border-slate-800 pt-4">
                   <label className="flex items-center gap-1.5 text-xs text-slate-400 font-sans font-medium">
                     <Activity className={`w-3.5 h-3.5 text-amber-400 ${isDiagnosticRunning ? "animate-pulse" : ""}`} />
                     <span>Ruvi OS System Diagnostics</span>
@@ -2647,8 +2678,8 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-
-              </div>
+                </div>
+              )}
             </div>
             
             <div className="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-end">

@@ -546,7 +546,15 @@ export class VoiceManager extends EventEmitter<VoiceManagerEvents> {
     };
 
     this.ws.onerror = (err) => {
-      LoggingManager.error("VoiceManager", "Gemini Live WebSocket error occurred.", err);
+      // If we are in an iframe (AI Studio preview), WebSockets might be blocked by proxy or 3P cookie restrictions
+      if (window.self !== window.top) {
+        LoggingManager.warn("VoiceManager", "Gemini Live WebSocket failed. In AI Studio, Gemini Live requires opening the app in a new tab (click the pop-out icon top right).");
+        this.emit("error", "WebSocket failed. Please open the app in a new tab (pop-out icon) to use Gemini Live voice features.");
+      } else {
+        LoggingManager.warn("VoiceManager", "Gemini Live WebSocket error occurred.", err);
+        this.emit("error", "Gemini Live WebSocket error occurred.");
+      }
+      
       this.isStandby = true;
       this.emit("status", "standby");
       this.emit("activeEngineChange", this.activeVoiceEngine);

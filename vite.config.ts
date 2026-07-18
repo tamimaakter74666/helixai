@@ -8,6 +8,9 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    hmr: {
+      port: 24678
+    },
     watch: {
       ignored: [
         '**/ruvi_memory.json',
