@@ -14,8 +14,8 @@ if (!fs.existsSync(iconsDir)) {
 const pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 const pngBuffer = Buffer.from(pngBase64, "base64");
 
-// Helper to create a valid ICO file containing the PNG buffer
-function createIcoFromPng(pngBuf, width, height) {
+// Helper to create a valid BMP-based ICO file placeholder
+function createIcoBMP(width, height) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0);     // Reserved (0)
   header.writeUInt16LE(1, 2);     // Type (1 = ICO)
@@ -28,10 +28,36 @@ function createIcoFromPng(pngBuf, width, height) {
   entry.writeUInt8(0, 3);                          // Reserved (0)
   entry.writeUInt16LE(1, 4);                       // Color planes (1)
   entry.writeUInt16LE(32, 6);                      // Bits per pixel (32)
-  entry.writeUInt32LE(pngBuf.length, 8);           // Image data size
+
+  // XOR mask: width * height * 4 bytes (RGBA)
+  const xorSize = width * height * 4;
+  // AND mask: 1 bit per pixel, each row padded to a 4-byte (32-bit) boundary
+  const bytesPerRow = Math.ceil(width / 8);
+  const paddedBytesPerRow = Math.ceil(bytesPerRow / 4) * 4;
+  const andSize = paddedBytesPerRow * height;
+
+  const imageDataSize = 40 + xorSize + andSize;
+  entry.writeUInt32LE(imageDataSize, 8);           // Image data size
   entry.writeUInt32LE(22, 12);                     // Image data offset (6 + 16 = 22)
 
-  return Buffer.concat([header, entry, pngBuf]);
+  // BITMAPINFOHEADER (40 bytes)
+  const bih = Buffer.alloc(40);
+  bih.writeUInt32LE(40, 0);                        // biSize (40)
+  bih.writeInt32LE(width, 4);                      // biWidth
+  bih.writeInt32LE(height * 2, 8);                 // biHeight (doubled for ICO)
+  bih.writeUInt16LE(1, 12);                        // biPlanes
+  bih.writeUInt16LE(32, 14);                       // biBitCount (32 bpp)
+  bih.writeUInt32LE(0, 16);                        // biCompression (0 = BI_RGB)
+  bih.writeUInt32LE(xorSize + andSize, 20);        // biSizeImage
+  bih.writeInt32LE(0, 24);                         // biXPelsPerMeter (0)
+  bih.writeInt32LE(0, 28);                         // biYPelsPerMeter (0)
+  bih.writeUInt32LE(0, 32);                        // biClrUsed (0)
+  bih.writeUInt32LE(0, 36);                        // biClrImportant (0)
+
+  const xorMask = Buffer.alloc(xorSize);           // fully transparent black (all 0s)
+  const andMask = Buffer.alloc(andSize, 0xFF);     // AND mask set to 1s (fully transparent fallback)
+
+  return Buffer.concat([header, entry, bih, xorMask, andMask]);
 }
 
 // Helper to create a valid ICNS file containing the PNG buffer
@@ -65,7 +91,7 @@ for (const file of pngFiles) {
 
 // Create valid ICO placeholder
 const icoPath = path.join(iconsDir, "icon.ico");
-fs.writeFileSync(icoPath, createIcoFromPng(pngBuffer, 1, 1));
+fs.writeFileSync(icoPath, createIcoBMP(32, 32));
 console.log("Created valid ICO placeholder: icon.ico");
 
 // Create valid ICNS placeholder
