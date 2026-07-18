@@ -4037,1538 +4037,124 @@
       "role": "assistant",
       "content": "হ্যালো আরাফাত ইসলাম রিমন ভাই! আশা করি আপনি ভালো আছেন। 'জন্মদিনহ্যালো' দিয়ে কি বিশেষ কোনো জন্মদিনের শুভেচ্ছা বা কোনো বিশেষ প্ল্যান বোঝাতে চাইলেন? আমাকে জানান, আমি আপনাকে সাহায্য করতে প্রস্তুত!",
       "timestamp": "2026-07-18T20:11:18.136Z"
+    },
+    {
+      "id": "47d7ec5f-1d22-424a-9d57-e42f66b45edb",
+      "role": "user",
+      "content": "কিভাবে আমি আপনাকে সাহায্য করতে পারি?",
+      "timestamp": "2026-07-18T20:28:00.368Z"
+    },
+    {
+      "id": "c1ce2aee-acba-4974-ae81-a376e83eb3b2",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:28:22.747Z"
+    },
+    {
+      "id": "7c533a82-14f6-45da-8fc6-7242eff12315",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:28:24.530Z"
+    },
+    {
+      "id": "f1786004-5723-42b6-ab89-70413c1cf5a6",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:28:24.633Z"
+    },
+    {
+      "id": "528196d4-c00e-4d8f-a0d6-4612f44f6d7c",
+      "role": "user",
+      "content": "কী অবস্থা আপনার?",
+      "timestamp": "2026-07-18T20:28:24.646Z"
+    },
+    {
+      "id": "ac995ea2-a93d-497a-97b4-644312b424d1",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:28:24.710Z"
+    },
+    {
+      "id": "ede3f2bb-fae2-4f99-8d49-43116aae2ed1",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:28:24.821Z"
+    },
+    {
+      "id": "27b8ac55-7782-422d-b37e-d3334ee8e533",
+      "role": "user",
+      "content": "আপনার পাসওয়ার্ডটি আবার বলুন।",
+      "timestamp": "2026-07-18T20:28:24.925Z"
+    },
+    {
+      "id": "7fa0f1ec-48e1-41da-817a-6cbb6ba0b119",
+      "role": "user",
+      "content": "দয়া করে কিছুক্ষণ অপেক্ষা করুন।",
+      "timestamp": "2026-07-18T20:28:25.064Z"
+    },
+    {
+      "id": "34960965-bf15-4686-aac7-56579e6bb8ec",
+      "role": "user",
+      "content": "আমার জন্য এক কাপ চা নিয়ে এসো।",
+      "timestamp": "2026-07-18T20:28:25.105Z"
+    },
+    {
+      "id": "48be6640-8f43-4ee9-9968-327e1c6e39ff",
+      "role": "user",
+      "content": "এইটা কি?",
+      "timestamp": "2026-07-18T20:28:25.171Z"
+    },
+    {
+      "id": "b5d8caeb-8695-4a9d-9b6d-dc78d59b1a8b",
+      "role": "user",
+      "content": "হ্যালো, আপনার দিনটি কেমন যাচ্ছে?",
+      "timestamp": "2026-07-18T20:28:25.198Z"
+    },
+    {
+      "id": "9ef56b44-0ded-4eeb-b400-bdab40b10692",
+      "role": "user",
+      "content": "আজকে কি রান্না করেছো?",
+      "timestamp": "2026-07-18T20:28:25.254Z"
+    },
+    {
+      "id": "ee9c4884-3b06-47d9-91a2-e320b0e6957f",
+      "role": "user",
+      "content": "দয়া করে আমার কলটি ধরুন।",
+      "timestamp": "2026-07-18T20:28:25.339Z"
+    },
+    {
+      "id": "217206a7-d5aa-4eee-bc46-4f399e596063",
+      "role": "user",
+      "content": "আমি কি একটু কথা বলতে পারি",
+      "timestamp": "2026-07-18T20:28:25.383Z"
+    },
+    {
+      "id": "a7f5095b-b52e-44de-8a9a-9e67f20b3c7e",
+      "role": "user",
+      "content": "হ্যালো",
+      "timestamp": "2026-07-18T20:38:51.187Z"
+    },
+    {
+      "id": "16d9c45d-66d2-4ee2-82e9-220d867acf36",
+      "role": "user",
+      "content": "তুমি কি আছো?",
+      "timestamp": "2026-07-18T20:38:51.725Z"
+    },
+    {
+      "id": "ce7b10b7-409d-4cf2-95af-fe852ce94560",
+      "role": "user",
+      "content": "আমি তোমাকে খুব ভালোবাসি",
+      "timestamp": "2026-07-18T20:38:53.490Z"
+    },
+    {
+      "id": "147bc0dd-4c0f-4e3e-967e-1f6e64eed134",
+      "role": "user",
+      "content": "Double in demand ki ye sab hua uski",
+      "timestamp": "2026-07-18T20:58:32.148Z"
     }
   ],
   "model_metrics": [],
   "system_logs": [
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784380943731_kr5u4 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "6080123f-c15d-45ce-adb2-1aead89687bd",
-      "timestamp": "2026-07-18T13:37:29.791Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "fa714f54-3c95-4dd4-9eb2-3f936d8846ce",
-      "timestamp": "2026-07-18T13:37:29.873Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784380943731_kr5u4 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "b810ed03-ca15-45f2-a4fd-21e6f154badb",
-      "timestamp": "2026-07-18T13:37:29.995Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "df264e52-5ce5-4a34-b77a-0b8e90cadd3e",
-      "timestamp": "2026-07-18T13:37:30.074Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "39d00f07-a2c4-4a7d-a9a0-a5b011594f50",
-      "timestamp": "2026-07-18T13:41:51.112Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "5bdc7bb2-38ee-4e5f-a0bf-6b298cd17486",
-      "timestamp": "2026-07-18T13:41:51.121Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "ceef0c08-8f46-4272-97c3-cff28937dfb1",
-      "timestamp": "2026-07-18T13:41:51.139Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "4e9c53ff-4101-497e-8bfa-5d1fd268fad8",
-      "timestamp": "2026-07-18T13:41:51.150Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "7fdb7598-b017-433c-b21f-a268330dbc19",
-      "timestamp": "2026-07-18T13:41:51.171Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "e78a6d40-dc82-4897-8511-812347d09e2f",
-      "timestamp": "2026-07-18T13:41:51.191Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "4ec46198-9b89-4756-a525-b6442cbf5b82",
-      "timestamp": "2026-07-18T13:41:51.198Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382110956_0h9qw\"}",
-      "id": "ae3d0a42-5c40-4624-a646-d231a0f05d59",
-      "timestamp": "2026-07-18T13:41:51.205Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "3e23dc01-3a7d-45f5-9d8d-5d9cc1ed60f9",
-      "timestamp": "2026-07-18T13:41:51.216Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382110956_0h9qw\"}",
-      "id": "1370b9ab-90c1-489a-a85c-5a1ce2dbacbd",
-      "timestamp": "2026-07-18T13:41:51.224Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382110956_0h9qw | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "1fac7d2f-ceaa-4e43-9835-bdbfa49056d1",
-      "timestamp": "2026-07-18T13:41:51.436Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "735bc1be-f102-4fb0-88db-0b862fa20d6b",
-      "timestamp": "2026-07-18T13:41:51.513Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382110956_0h9qw | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "f7345ec7-4b03-459f-8bb2-f76c4574a308",
-      "timestamp": "2026-07-18T13:41:51.641Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "199482ee-a5fb-4ca5-bd05-a203d5a3b13a",
-      "timestamp": "2026-07-18T13:41:51.716Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -7.7dB. Spectral filter profile updated.",
-      "id": "f8d210a9-21dc-4f02-a8c1-466de41037c1",
-      "timestamp": "2026-07-18T13:41:52.057Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VAD] VAD threshold dynamically updated to 0.9104 based on calibrated noise floor of -7.7dB (noise RMS: 0.4138).",
-      "id": "9eb9ae9b-63e8-442f-bac3-a1ff18609d88",
-      "timestamp": "2026-07-18T13:41:52.064Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি\" (isFinal: false)",
-      "id": "b9c09b27-f84d-48a3-98c1-fafd62a5c194",
-      "timestamp": "2026-07-18T13:42:30.215Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর\" (isFinal: false)",
-      "id": "148ea771-db85-40db-9190-78cc1f420222",
-      "timestamp": "2026-07-18T13:42:30.403Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ\" (isFinal: false)",
-      "id": "7442b0a7-35b9-4d5e-9cbc-c05ed7180a88",
-      "timestamp": "2026-07-18T13:42:30.598Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বউ না\" (isFinal: false)",
-      "id": "504d6280-89a8-4297-a1aa-9feb2eeb16af",
-      "timestamp": "2026-07-18T13:42:30.734Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বউ না\" (isFinal: false)",
-      "id": "725a4b17-71ab-4205-a930-03e88f6f7d62",
-      "timestamp": "2026-07-18T13:42:30.790Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বউ না\" (isFinal: false)",
-      "id": "16b38909-8c57-406a-a826-b270ff10a7dc",
-      "timestamp": "2026-07-18T13:42:31.009Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না\" (isFinal: false)",
-      "id": "26de2a87-ac6f-4775-9c93-0eabd50e5c65",
-      "timestamp": "2026-07-18T13:42:31.196Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না সব\" (isFinal: false)",
-      "id": "65d7b8d8-9c68-45b8-929a-6ccd2a60f191",
-      "timestamp": "2026-07-18T13:42:31.435Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না সব জায়গায়\" (isFinal: false)",
-      "id": "46595285-3208-4472-86ae-91f5ce828867",
-      "timestamp": "2026-07-18T13:42:31.609Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না\" (isFinal: false)",
-      "id": "c029422c-4baa-4ea6-9e4e-1124abc8ed2b",
-      "timestamp": "2026-07-18T13:42:31.706Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না\" (isFinal: false)",
-      "id": "c21dfedd-0169-4202-b90a-fa21cd14d386",
-      "timestamp": "2026-07-18T13:42:31.723Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"তুমি মোর বৌ না\" (isFinal: true)",
-      "id": "b965b25b-902a-4597-b0a0-2d46a99b964e",
-      "timestamp": "2026-07-18T13:42:33.292Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "704501c3-d08c-4f87-97b9-02e95dd2b18f",
-      "timestamp": "2026-07-18T13:46:44.556Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "4c97b58a-dcfa-4b92-81a3-712bdeb39eb7",
-      "timestamp": "2026-07-18T13:46:44.566Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "d40afd8a-f184-4220-bae4-99f9624ef134",
-      "timestamp": "2026-07-18T13:46:44.574Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "eef1e30f-4f7d-4b79-8ae9-af8bdfb70a03",
-      "timestamp": "2026-07-18T13:46:44.583Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "fb412721-5f7e-4d57-acb2-c7fdc133f0bc",
-      "timestamp": "2026-07-18T13:46:44.592Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> Error",
-      "id": "a8b3a3d0-61b6-4848-9613-c583eecdcdbc",
-      "timestamp": "2026-07-18T13:46:44.637Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "246d9f0f-52b6-49b8-ae57-aed7368eef98",
-      "timestamp": "2026-07-18T13:48:17.215Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "119135ba-ac02-4608-bfe7-831f50fc7eb4",
-      "timestamp": "2026-07-18T13:48:17.236Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "34599b37-a781-45c5-b825-04ee3afc5c08",
-      "timestamp": "2026-07-18T13:48:17.253Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "c571eef8-341a-4390-90f6-015720f74ebc",
-      "timestamp": "2026-07-18T13:48:17.264Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "e1ccf223-07be-40b7-a93f-d2e0acd66a37",
-      "timestamp": "2026-07-18T13:48:17.274Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "5f9b42c1-7a96-47f2-9493-98e4a4492f79",
-      "timestamp": "2026-07-18T13:48:17.353Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "5e49aa9c-06f0-4a31-a91d-6f9a8aeaf540",
-      "timestamp": "2026-07-18T13:48:17.362Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "c3270e06-95ae-4092-a179-acd0feebc27b",
-      "timestamp": "2026-07-18T13:48:17.378Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "54b287c7-e005-4840-98ea-bc47b1af120d",
-      "timestamp": "2026-07-18T13:48:17.392Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "c6f7f89e-aacb-43af-a505-dca63ed6c24e",
-      "timestamp": "2026-07-18T13:48:17.399Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "6b9e3a2a-f4f8-43c9-a406-ce73d64e8f53",
-      "timestamp": "2026-07-18T13:48:17.669Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "fe1dfd92-5343-42ce-9c0d-415d82441a72",
-      "timestamp": "2026-07-18T13:48:17.749Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "63ac2dac-6cfa-4128-b940-cb0358017640",
-      "timestamp": "2026-07-18T13:48:17.790Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "c4acbcc5-51be-42df-925f-90275e80a9e3",
-      "timestamp": "2026-07-18T13:48:17.870Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VAD] VAD threshold dynamically updated to 0.1472 based on calibrated noise floor of -23.5dB (noise RMS: 0.0669).",
-      "id": "ea731d03-8251-4e97-ba22-9a180146af73",
-      "timestamp": "2026-07-18T13:48:18.314Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -23.5dB. Spectral filter profile updated.",
-      "id": "9a1ea02d-5f3c-4514-a896-d42545cbf929",
-      "timestamp": "2026-07-18T13:48:18.327Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "b758c6e3-f031-4d9c-8129-6b1c2988b9a8",
-      "timestamp": "2026-07-18T13:50:17.126Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "ef3696a0-b435-4eb5-8be8-391a1c7454b5",
-      "timestamp": "2026-07-18T13:50:17.279Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "6c33259f-4283-4f1a-9b5e-515a83fb9d65",
-      "timestamp": "2026-07-18T13:50:17.452Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "7560ab72-155f-4932-ba5f-2b02922f96ab",
-      "timestamp": "2026-07-18T13:50:17.535Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "ff461c33-9584-49cc-9e93-e7fec387d520",
-      "timestamp": "2026-07-18T13:50:17.656Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "f76eb4d3-67ae-4221-98aa-fe6ff4948790",
-      "timestamp": "2026-07-18T13:50:17.733Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "e43e657a-6284-47d1-8d24-15a3a09a00c9",
-      "timestamp": "2026-07-18T13:50:26.255Z"
-    },
-    {
-      "level": "error",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket error occurred.",
-      "details": "{\"isTrusted\":true}",
-      "id": "029d452d-c7c2-434e-9c85-f7a446cc7ea9",
-      "timestamp": "2026-07-18T13:50:26.270Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "fb80621b-3191-4210-9a90-eb5ef62e4b58",
-      "timestamp": "2026-07-18T13:50:27.098Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382497107_zwf42\"}",
-      "id": "2d6b139d-7000-4b63-95b5-60a63fe8769e",
-      "timestamp": "2026-07-18T13:50:27.598Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "b0db72f1-6b1b-446e-bbcd-e1226718fc94",
-      "timestamp": "2026-07-18T13:50:28.920Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "bbf4869d-446e-4124-bbe2-f297b25ef1ce",
-      "timestamp": "2026-07-18T13:50:29.000Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382497107_zwf42 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "6bed7748-665d-4d10-9ca1-02bcd90db9d9",
-      "timestamp": "2026-07-18T13:50:29.091Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "c1742720-d78e-40bd-b8a0-08772bdb31c5",
-      "timestamp": "2026-07-18T13:50:29.169Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "e9318243-814e-4302-8b62-d273afb2aa5a",
-      "timestamp": "2026-07-18T13:50:36.260Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "fecb04b4-50ba-406c-9db2-984f832194ee",
-      "timestamp": "2026-07-18T13:50:36.367Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "f7b2a1c2-887c-4695-9268-a0d8726c7b2e",
-      "timestamp": "2026-07-18T13:50:36.400Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "6fcad7bb-bd71-4132-b178-a32712811049",
-      "timestamp": "2026-07-18T13:50:36.459Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "787c74f2-9f02-4785-a9ae-4437041ead0c",
-      "timestamp": "2026-07-18T13:50:36.475Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "bbe3ec9e-33c8-4271-bb59-6570a91624a1",
-      "timestamp": "2026-07-18T13:50:36.498Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "bb3b27e6-5413-4ac9-8153-f0c5a66a7292",
-      "timestamp": "2026-07-18T13:50:36.555Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "50b57548-18ea-48ca-ac45-56ed1f2831e9",
-      "timestamp": "2026-07-18T13:50:36.563Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "1a7d8d2c-c5a4-47d2-9950-3337362c7291",
-      "timestamp": "2026-07-18T13:50:36.576Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "9bb004ff-cce3-40bc-8474-492e3794d2f0",
-      "timestamp": "2026-07-18T13:50:36.585Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "3b116059-cc9d-475c-be65-62a8c8e509a7",
-      "timestamp": "2026-07-18T13:50:36.793Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "8dddbf4c-e6d0-47d9-b5a8-262b4fde7133",
-      "timestamp": "2026-07-18T13:50:36.874Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "91d06e10-a544-4495-865c-a74e161130de",
-      "timestamp": "2026-07-18T13:50:37.000Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "b4547497-87e0-4b87-ad17-aa26decb3626",
-      "timestamp": "2026-07-18T13:50:37.082Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VAD] VAD threshold dynamically updated to 0.2690 based on calibrated noise floor of -18.3dB (noise RMS: 0.1223).",
-      "id": "5da34b0c-4b80-4bf5-a5bd-2e586165242b",
-      "timestamp": "2026-07-18T13:50:37.254Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -18.3dB. Spectral filter profile updated.",
-      "id": "74f80800-0799-468f-80fb-fd29bf432a2f",
-      "timestamp": "2026-07-18T13:50:37.263Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "dba45375-f884-4536-933a-1083e97fe9c6",
-      "timestamp": "2026-07-18T13:55:36.892Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "7280d68b-6f61-4428-98af-cd0fbed47ea1",
-      "timestamp": "2026-07-18T13:55:36.902Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "b378d883-28dd-4164-8529-a4bab46fe625",
-      "timestamp": "2026-07-18T13:55:38.368Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "2cc13318-8700-4330-97f2-aa069429c204",
-      "timestamp": "2026-07-18T13:55:38.376Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "fc60aeaa-6834-45a7-87d9-582553d63414",
-      "timestamp": "2026-07-18T13:55:38.957Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "e9a1c9ff-4065-446c-81fc-4da5b7972635",
-      "timestamp": "2026-07-18T13:55:39.118Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "00b54de1-1da8-4c47-8c58-8f90ad544ca0",
-      "timestamp": "2026-07-18T13:55:39.470Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "df590c10-075e-4cd1-9254-e0db7c4e5f99",
-      "timestamp": "2026-07-18T13:55:39.616Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "5c195e8a-ab62-4cfe-92c5-09a57c84bbeb",
-      "timestamp": "2026-07-18T14:00:38.829Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "47067f7c-baac-4e2c-9eba-bbe254bcd9bb",
-      "timestamp": "2026-07-18T14:00:39.328Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "a97513fb-5ca7-41e6-ab47-ffb0e82008f8",
-      "timestamp": "2026-07-18T14:00:40.367Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "881fdabe-7a3a-46a8-b741-3feb5da9345b",
-      "timestamp": "2026-07-18T14:00:40.383Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "43ac4f77-89aa-418c-8192-46aaef15305e",
-      "timestamp": "2026-07-18T14:00:40.751Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "0a5d61d7-4c6e-4f19-a71c-561b1898c8ef",
-      "timestamp": "2026-07-18T14:00:40.829Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "210cb5f0-9368-4198-b87f-99db31d070e5",
-      "timestamp": "2026-07-18T14:00:40.960Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "016b2331-5324-453e-8706-f9219b155644",
-      "timestamp": "2026-07-18T14:00:41.047Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "3be98e0e-1858-4a8f-bf57-d9a532a89a04",
-      "timestamp": "2026-07-18T14:05:04.374Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "cff4c38a-8564-486e-9267-ef59b82ab1c7",
-      "timestamp": "2026-07-18T14:05:04.385Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "9e38a36c-1ae8-4975-b1d4-98e5e60b6ccd",
-      "timestamp": "2026-07-18T14:05:04.720Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "cd8b6175-c422-4c0f-b84b-945d4496dc6d",
-      "timestamp": "2026-07-18T14:05:04.813Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "580df0a3-ab3f-433a-9f9b-901d2a1e1a4f",
-      "timestamp": "2026-07-18T14:05:04.939Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "d6efdbc6-79bb-4fb6-ac63-69178d54a3b1",
-      "timestamp": "2026-07-18T14:05:05.025Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "3728372b-9c1b-46db-b5eb-7513b0790365",
-      "timestamp": "2026-07-18T14:05:10.478Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784382636214_5blm3\"}",
-      "id": "4ad3fb5e-0caa-4245-b3a7-9782207d7f74",
-      "timestamp": "2026-07-18T14:05:11.654Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "3f2c2d82-298d-4da7-998a-dc62754a1651",
-      "timestamp": "2026-07-18T14:05:11.997Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784382636214_5blm3 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "a6e5bb5c-02de-4766-a4f8-86c20087abd6",
-      "timestamp": "2026-07-18T14:05:12.211Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "25af12fe-2e94-4447-b24c-26f10f14e79b",
-      "timestamp": "2026-07-18T14:05:12.297Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "8d0a9801-8011-448f-ba6e-078ed7c6b5e0",
-      "timestamp": "2026-07-18T14:05:12.974Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "0075ed7e-a8b1-44b5-b63b-1c32ab5457ee",
-      "timestamp": "2026-07-18T14:05:16.314Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "89dc0f55-f4e9-45c7-9a57-fd8a713fcc89",
-      "timestamp": "2026-07-18T14:05:16.365Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "4f4c89bb-4c40-4e60-96b0-033c13386c6f",
-      "timestamp": "2026-07-18T14:05:16.377Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "ebcd5c62-ee14-4679-92ea-01d70fbaaa62",
-      "timestamp": "2026-07-18T14:05:16.409Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "f776691c-23e1-41d5-9043-72b2ccab3258",
-      "timestamp": "2026-07-18T14:05:16.459Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "4645cee4-ee0d-4cdc-8b1f-5bae927a7c5c",
-      "timestamp": "2026-07-18T14:05:16.468Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "250af33d-4a66-4e03-95d4-a7fc51a516ac",
-      "timestamp": "2026-07-18T14:05:16.475Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "dd3050b8-23db-40f6-a070-f529197a7155",
-      "timestamp": "2026-07-18T14:05:16.485Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "556c09b2-98c1-47d3-b915-b11c53855620",
-      "timestamp": "2026-07-18T14:05:16.495Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "15b126aa-48fd-46f4-8af3-52efe96572c1",
-      "timestamp": "2026-07-18T14:05:16.503Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "4416614a-655f-4900-8dd4-a6009a23895a",
-      "timestamp": "2026-07-18T14:05:16.930Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "2417fb53-d8e4-402a-8b3f-3318a56bde25",
-      "timestamp": "2026-07-18T14:05:17.015Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "ac66bd07-1ceb-4b49-a3bf-b94f99a9f071",
-      "timestamp": "2026-07-18T14:05:17.230Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -16.3dB. Spectral filter profile updated.",
-      "id": "3d22bcb8-e5ae-47e5-b657-bd50d0dc336e",
-      "timestamp": "2026-07-18T14:05:17.307Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VAD] VAD threshold dynamically updated to 0.3350 based on calibrated noise floor of -16.3dB (noise RMS: 0.1523).",
-      "id": "a80e59e3-fbe8-4762-870d-694d3219aa32",
-      "timestamp": "2026-07-18T14:05:17.315Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "96236453-e9d7-4c0d-88fe-5aaf499edb58",
-      "timestamp": "2026-07-18T14:05:17.352Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "4e926b76-71f3-4f4c-b1dd-2d178dde3890",
-      "timestamp": "2026-07-18T14:10:16.810Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "c3ef083d-f25d-49b8-ba0a-6afa282caa90",
-      "timestamp": "2026-07-18T14:10:17.110Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "943b32db-1943-4b7c-bbc6-5ddfa2011dde",
-      "timestamp": "2026-07-18T14:10:18.353Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "d12516fa-45b8-469a-aaab-4b80e9d317ce",
-      "timestamp": "2026-07-18T14:10:18.366Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "9ce23056-bb46-4197-942c-af6796db8b0a",
-      "timestamp": "2026-07-18T14:10:18.696Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "d3f45b95-f8e9-45cf-937f-bab943fe409b",
-      "timestamp": "2026-07-18T14:10:18.778Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "53207f32-70cc-493b-aa49-13bf6837afdc",
-      "timestamp": "2026-07-18T14:10:18.907Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "e13952ff-c0b3-4d91-bd9e-bec7f71ad3c6",
-      "timestamp": "2026-07-18T14:10:19.027Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "3c15d78e-c261-42f3-b279-e3ece675bea5",
-      "timestamp": "2026-07-18T14:15:18.578Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "ff311978-511e-4ca3-84fd-996141ed26f2",
-      "timestamp": "2026-07-18T14:15:18.750Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "26c3443c-6394-45aa-9021-38e2c9ab2629",
-      "timestamp": "2026-07-18T14:15:20.348Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "afe86cd5-773f-443e-b9d1-92ddab81e957",
-      "timestamp": "2026-07-18T14:15:20.355Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "8a93d49b-86d8-43e8-9ea4-d197dc2c3500",
-      "timestamp": "2026-07-18T14:15:20.712Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "1643d108-c594-4c2a-bfc3-1275984623ae",
-      "timestamp": "2026-07-18T14:15:20.792Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "7724925d-28d9-483a-97bb-e71f10d3723e",
-      "timestamp": "2026-07-18T14:15:20.906Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "9d65f12f-5668-4c19-80cd-9898c5614d7a",
-      "timestamp": "2026-07-18T14:15:20.986Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "7728c150-d53d-4531-9c5c-0d8eead654bd",
-      "timestamp": "2026-07-18T14:17:43.360Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "edf4a8ee-a693-4bd7-8dfb-9707957deafe",
-      "timestamp": "2026-07-18T14:17:43.376Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "dfaa37af-8563-4a96-9279-69375dd388f1",
-      "timestamp": "2026-07-18T14:17:43.639Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "9d4a8839-d3c0-416a-99ec-07adbef81b3f",
-      "timestamp": "2026-07-18T14:17:43.719Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "1ab0973d-8d13-4588-a90d-89d1dda306e1",
-      "timestamp": "2026-07-18T14:17:43.848Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "ff379238-0749-4bf0-b7f7-864e2c823adb",
-      "timestamp": "2026-07-18T14:17:43.933Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "6269b4b5-5378-46b6-91c0-a2b6475e41b7",
-      "timestamp": "2026-07-18T14:17:49.368Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784383515817_ptw56\"}",
-      "id": "fc13c1ff-b3ea-4e52-af66-3644e0a01837",
-      "timestamp": "2026-07-18T14:17:49.378Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "cb59be17-6c85-49fb-90ee-0f120946ca78",
-      "timestamp": "2026-07-18T14:17:50.830Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "01fcca16-47dc-4c46-ad1d-14e6bde85836",
-      "timestamp": "2026-07-18T14:17:50.917Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784383515817_ptw56 | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "4b664217-e4ad-4ace-8fc9-00e4a7da636a",
-      "timestamp": "2026-07-18T14:17:51.039Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "2ed44971-dbf4-4238-82b0-1822e5abf271",
-      "timestamp": "2026-07-18T14:17:51.115Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "110d1524-2395-4c36-a865-fe3e867b3fa4",
-      "timestamp": "2026-07-18T14:17:56.420Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "7039ee20-0b98-42ee-a0ed-29e1e8f52861",
-      "timestamp": "2026-07-18T14:17:56.454Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "c96dd19a-1c88-49a5-a23e-a1b0be499550",
-      "timestamp": "2026-07-18T14:17:56.476Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "4fe33e04-2ef2-4477-ba25-8833c4668357",
-      "timestamp": "2026-07-18T14:17:56.486Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "2bf5c4b8-9c64-4336-8a57-5c109cf91421",
-      "timestamp": "2026-07-18T14:17:56.564Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "4f611591-9ba9-4609-a1d0-87ae325948b3",
-      "timestamp": "2026-07-18T14:17:56.588Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "12f676d1-8d3e-410e-9f7c-0c4a50d01399",
-      "timestamp": "2026-07-18T14:17:56.596Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "7d232797-9578-4aea-90f2-9f36e4321ab1",
-      "timestamp": "2026-07-18T14:17:56.603Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "42a0ffcd-29a3-47dc-8da2-a660bf4e58a7",
-      "timestamp": "2026-07-18T14:17:56.610Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "b042df05-c4e1-49ef-b234-e99ff5feac87",
-      "timestamp": "2026-07-18T14:17:56.618Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "a8314d84-c92e-44d2-a287-e39e3be11ed0",
-      "timestamp": "2026-07-18T14:17:56.821Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "feccdb53-3697-453f-8fbf-5b9af9d1e4cc",
-      "timestamp": "2026-07-18T14:17:56.901Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "1baa4c13-d29c-4ae5-adc1-4897479b71f1",
-      "timestamp": "2026-07-18T14:17:57.040Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "0b48daee-654b-4106-bd7c-98d57d69c0cc",
-      "timestamp": "2026-07-18T14:17:57.115Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -17.2dB. Spectral filter profile updated.",
-      "id": "4c14b00f-b466-4a46-86fe-85af435979c6",
-      "timestamp": "2026-07-18T14:17:57.420Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VAD] VAD threshold dynamically updated to 0.3035 based on calibrated noise floor of -17.2dB (noise RMS: 0.1379).",
-      "id": "ad7c5872-c026-49e7-916d-84b4be4cb8cd",
-      "timestamp": "2026-07-18T14:17:57.431Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Transcript recognized: \"মরে\" (isFinal: false)",
-      "id": "9ec941b0-8aff-48cc-8625-5a060a98599e",
-      "timestamp": "2026-07-18T14:20:37.593Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "8a0c6443-6c19-4772-9c60-a0f8d203f16b",
-      "timestamp": "2026-07-18T14:22:56.644Z"
-    },
-    {
-      "level": "warning",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
-      "id": "e3d74eae-9a85-47b0-bce7-938dfa71e8f8",
-      "timestamp": "2026-07-18T14:22:56.884Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "c1ae6368-b5b1-4faa-abba-b64af7a909ae",
-      "timestamp": "2026-07-18T14:22:58.359Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "988e0508-cd55-4203-864e-97c2a3643dae",
-      "timestamp": "2026-07-18T14:22:58.369Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "9c3f4cac-600c-449e-a187-ea6a4d5cac41",
-      "timestamp": "2026-07-18T14:22:58.653Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "f7121c88-0ca0-427f-aea7-4da19994d56c",
-      "timestamp": "2026-07-18T14:22:58.756Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "2e2a63e8-b9e7-4e23-a690-60c7a76a9a8b",
-      "timestamp": "2026-07-18T14:22:58.849Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "4d91a746-9f52-421d-bdbc-f1e1e0e7d362",
-      "timestamp": "2026-07-18T14:22:58.952Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "c02520ba-5cf8-4bd4-8e0c-ec1a7bff4535",
-      "timestamp": "2026-07-18T14:23:13.375Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "1e04bad3-7b5c-4ae9-b41b-d84ad222e5bc",
-      "timestamp": "2026-07-18T14:23:13.382Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "65a07a86-ad65-4d02-86df-32e68e79d215",
-      "timestamp": "2026-07-18T14:23:13.644Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "5892f95a-9837-41be-aba7-699fba661a9f",
-      "timestamp": "2026-07-18T14:23:13.745Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "b9d52901-ef48-4177-8afe-e99ceb972192",
-      "timestamp": "2026-07-18T14:23:13.849Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "b1ef16c1-ab8b-4242-9c2a-0f43a6ec5382",
-      "timestamp": "2026-07-18T14:23:13.950Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "3703e1a7-5e18-441c-849e-ec5caaefb0fb",
-      "timestamp": "2026-07-18T14:23:26.707Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384276004_1d9qa\"}",
-      "id": "974a7423-07d0-43c1-b3fa-dd50ac55a524",
-      "timestamp": "2026-07-18T14:23:26.769Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "edd9f59e-b38c-48d1-ad0b-c0e7b4cf39b7",
-      "timestamp": "2026-07-18T14:23:27.790Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384276004_1d9qa | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "8a8a34c0-78f3-4100-a5e2-95684bb94dc6",
-      "timestamp": "2026-07-18T14:23:28.493Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "6df64932-741a-4b56-87f1-0f21500f6eee",
-      "timestamp": "2026-07-18T14:23:28.522Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "7325a211-51ce-4312-8d36-3c46a53f1894",
-      "timestamp": "2026-07-18T14:23:28.711Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "6f625a76-8703-4dfd-94b3-fa19b1143fb6",
-      "timestamp": "2026-07-18T14:23:36.399Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
-      "id": "c8124df1-893d-4392-9f55-7e67a872f8a0",
-      "timestamp": "2026-07-18T14:23:36.426Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "32172b94-3861-4336-a54f-b8846fef5435",
-      "timestamp": "2026-07-18T14:23:36.435Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
-      "id": "6f89a340-0283-44a1-91e2-e45fbff4c5c0",
-      "timestamp": "2026-07-18T14:23:36.454Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] Audio player unmuted.",
-      "id": "fae4af80-22ef-4174-9814-f6406b4aa1ba",
-      "timestamp": "2026-07-18T14:23:36.466Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384616040_3yoly\"}",
-      "id": "f192c806-27fd-424b-bf07-b0f5d5c3a100",
-      "timestamp": "2026-07-18T14:23:36.480Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "c39ce310-fbd4-452e-90cd-971f2eff50e5",
-      "timestamp": "2026-07-18T14:23:36.489Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
-      "id": "77cf5e82-84c6-4a9a-9a5e-d93f1f1ed225",
-      "timestamp": "2026-07-18T14:23:36.496Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
-      "id": "8fd5761e-de77-4ef5-8972-ac2b5acb5786",
-      "timestamp": "2026-07-18T14:23:36.505Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
-      "details": "{\"sessionId\":\"session_1784384616040_3yoly\"}",
-      "id": "8d9d7e24-5c3c-4a1a-a450-df582ecaee66",
-      "timestamp": "2026-07-18T14:23:36.514Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384616040_3yoly | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "c40ba41b-3325-40fc-ba5a-138312467289",
-      "timestamp": "2026-07-18T14:23:36.700Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "43f7ec5b-26a3-42cf-a98c-4b61914a3c1e",
-      "timestamp": "2026-07-18T14:23:36.801Z"
-    },
-    {
-      "level": "success",
-      "category": "speech",
-      "message": "Gemini Live API connection established",
-      "details": "Session ID: session_1784384616040_3yoly | Voice: Zephyr | Model: gemini-3.1-flash-lite",
-      "id": "0708e18f-3cc2-4737-8e5b-440324abb2ac",
-      "timestamp": "2026-07-18T14:23:36.926Z"
-    },
-    {
-      "level": "info",
-      "category": "speech",
-      "message": "[VoiceManager] Gemini Live connection status: live",
-      "id": "7b604afa-1430-4cbd-b11b-192cab9945f2",
-      "timestamp": "2026-07-18T14:23:37.025Z"
-    },
     {
       "level": "success",
       "category": "speech",
@@ -15033,6 +13619,1516 @@
       "details": "Session ID: 123 | Voice: Zephyr",
       "id": "ad4a54c4-84a1-4fed-90fd-1e7bd2490f31",
       "timestamp": "2026-07-18T20:15:26.983Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405573673_xjuqy | Voice: Zephyr",
+      "id": "129008b1-bb81-4551-a062-40c0a0de72c7",
+      "timestamp": "2026-07-18T20:19:31.901Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "23ca3221-bb46-4181-9893-dc41a9924a48",
+      "timestamp": "2026-07-18T20:19:32.501Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405573673_xjuqy | Voice: Zephyr",
+      "id": "4d7b013a-ed61-45c1-98d2-c9e09951a37a",
+      "timestamp": "2026-07-18T20:19:33.376Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "c29d3121-7340-49c1-8f1a-eb41569efc74",
+      "timestamp": "2026-07-18T20:19:36.109Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "e841e544-9767-4d3c-855c-5e3ffbc23a77",
+      "timestamp": "2026-07-18T20:19:57.077Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "2ccf2cff-73ec-4007-83fc-fd35b532e828",
+      "timestamp": "2026-07-18T20:19:57.092Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "a37b943c-383f-403f-bc49-e50c733988e2",
+      "timestamp": "2026-07-18T20:19:57.119Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "32a74563-f0a8-4c06-ac81-189fadc55821",
+      "timestamp": "2026-07-18T20:19:57.206Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "0d5b2c23-73d5-447c-a718-92d1b4d69ab9",
+      "timestamp": "2026-07-18T20:19:57.257Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
+      "id": "14ae6560-ad36-4e9c-986e-929168b66a26",
+      "timestamp": "2026-07-18T20:19:57.279Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "693b4d88-de80-4804-816c-b31d9ad8cc4f",
+      "timestamp": "2026-07-18T20:19:57.293Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "dfe4e4ca-9932-4c47-819a-bff3b960b869",
+      "timestamp": "2026-07-18T20:19:57.306Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
+      "id": "1aa816a0-c159-4248-888f-56bd70519564",
+      "timestamp": "2026-07-18T20:19:57.317Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "3b38628a-71a3-4d4a-bf12-a39c0326599f",
+      "timestamp": "2026-07-18T20:19:57.327Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "d290f3ef-a1ca-4b44-b4a1-507d728171f1",
+      "timestamp": "2026-07-18T20:19:57.549Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -19.9dB. Spectral filter profile updated.",
+      "id": "e4c98a8b-38e3-4780-be48-68e319a39541",
+      "timestamp": "2026-07-18T20:19:59.366Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "77ccdc2e-d516-470f-84c3-283e300b17df",
+      "timestamp": "2026-07-18T20:19:59.422Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] VAD threshold dynamically updated to 0.2236 based on calibrated noise floor of -19.9dB (noise RMS: 0.1016).",
+      "id": "6623501a-1475-43dd-a251-dd0cef508d13",
+      "timestamp": "2026-07-18T20:19:59.454Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] WebSocket failed. In AI Studio, Gemini Live requires opening the app in a new tab (click the pop-out icon top right).",
+      "id": "42c794b6-1854-4ddb-a190-4a468d91f638",
+      "timestamp": "2026-07-18T20:20:22.292Z"
+    },
+    {
+      "level": "error",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket error occurred.",
+      "details": "{\"isTrusted\":true}",
+      "id": "8ab64def-e357-4800-8c66-5c66094c6c06",
+      "timestamp": "2026-07-18T20:20:22.339Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "3f0d36b1-4e4a-4646-8e9e-61ee701aac39",
+      "timestamp": "2026-07-18T20:20:22.365Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "1f26ab89-a624-45e6-a068-38c0234f3334",
+      "timestamp": "2026-07-18T20:20:22.941Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "0c038523-debc-4ad3-b127-514bc19c0941",
+      "timestamp": "2026-07-18T20:20:23.291Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "6e906429-7189-4702-ae45-abbe5214b8b9",
+      "timestamp": "2026-07-18T20:20:23.379Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "1c90ecf7-f71a-464f-9d49-35f559fa8e3b",
+      "timestamp": "2026-07-18T20:23:48.269Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "1455bec9-e28b-4c4e-bf08-b9c9cddd045d",
+      "timestamp": "2026-07-18T20:23:49.456Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "005c8efb-8156-4623-b65e-2bf0413be5ad",
+      "timestamp": "2026-07-18T20:23:50.175Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "6c7eceb1-0ecd-477b-ba5f-5585468098b9",
+      "timestamp": "2026-07-18T20:23:51.551Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "5faf52a1-35d5-4759-a1d2-e74547901e34",
+      "timestamp": "2026-07-18T20:23:52.040Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] WebSocket failed. In AI Studio, Gemini Live requires opening the app in a new tab (click the pop-out icon top right).",
+      "id": "1dd686fe-46f3-463c-aa7b-5db22ddd257e",
+      "timestamp": "2026-07-18T20:23:55.246Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "8e891d02-35e8-4903-9465-ed04e06981ee",
+      "timestamp": "2026-07-18T20:23:55.260Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "6d407ff8-437e-408b-902b-dee3b9d34f64",
+      "timestamp": "2026-07-18T20:23:55.724Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "14cb6f1b-27cb-40ae-94bf-b18cc0c93f48",
+      "timestamp": "2026-07-18T20:23:56.092Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "dccb988e-f803-4959-baca-b70902c53375",
+      "timestamp": "2026-07-18T20:24:08.628Z"
+    },
+    {
+      "level": "error",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket error occurred.",
+      "details": "{\"isTrusted\":true}",
+      "id": "5e1ef8a5-438d-46d7-aeff-95a6be3b14fe",
+      "timestamp": "2026-07-18T20:24:09.253Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784405996746_03q47\"}",
+      "id": "77323a88-58eb-43b6-823c-13a9a13506d4",
+      "timestamp": "2026-07-18T20:24:10.130Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "8ad05c77-f767-4401-8f83-f77fd475ab56",
+      "timestamp": "2026-07-18T20:24:10.374Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "23a6f073-faab-4c95-8fdc-098ebf9b79e7",
+      "timestamp": "2026-07-18T20:24:10.394Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] WebSocket failed. In AI Studio, Gemini Live requires opening the app in a new tab (click the pop-out icon top right).",
+      "id": "a8618db5-dc67-41a5-8c84-9d372c3a3543",
+      "timestamp": "2026-07-18T20:24:10.408Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784405996746_03q47 | Voice: Zephyr",
+      "id": "6d7c8321-8a2f-4adb-bb1e-f4813e10d7aa",
+      "timestamp": "2026-07-18T20:24:10.513Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "d84c1e80-c066-4413-908f-09e2c8a04820",
+      "timestamp": "2026-07-18T20:24:11.192Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "a528ba64-1e11-4b99-8ed9-82599dff7f64",
+      "timestamp": "2026-07-18T20:24:15.181Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
+      "id": "4e29a0ca-e32c-4fa7-bd8e-fa814c39fe74",
+      "timestamp": "2026-07-18T20:24:15.254Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "17089654-2086-4601-b705-ffef61c66996",
+      "timestamp": "2026-07-18T20:24:15.280Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "fbff714d-4423-4f28-895c-60aa21023479",
+      "timestamp": "2026-07-18T20:24:15.289Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "037de9d1-3d92-4db6-9049-146f67f4915d",
+      "timestamp": "2026-07-18T20:24:15.299Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "9deb7397-08fb-47ce-83ff-cfb22ff6107a",
+      "timestamp": "2026-07-18T20:24:15.313Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
+      "id": "ca71c5ad-33ce-4cbc-a012-494a6e18aeca",
+      "timestamp": "2026-07-18T20:24:15.356Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "1983d23b-f153-46c9-98d3-3c8394ffef31",
+      "timestamp": "2026-07-18T20:24:15.365Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "0639a73a-6f37-42b3-8d78-f504ffef83d2",
+      "timestamp": "2026-07-18T20:24:15.373Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "61843472-7dbe-4e05-94bd-bcb798cb01f2",
+      "timestamp": "2026-07-18T20:24:15.389Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "9fd32c6d-87f0-431d-8ae8-e5b4be9b8a3e",
+      "timestamp": "2026-07-18T20:24:15.578Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "b46ca03b-50d8-4782-9597-0348f02e9310",
+      "timestamp": "2026-07-18T20:24:15.676Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -20.6dB. Spectral filter profile updated.",
+      "id": "79bc41e0-4ed3-477b-9b49-26acdf8647f2",
+      "timestamp": "2026-07-18T20:24:16.122Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] VAD threshold dynamically updated to 0.2062 based on calibrated noise floor of -20.6dB (noise RMS: 0.0937).",
+      "id": "c02f544d-2649-4b2a-821a-ff93cb6c29d3",
+      "timestamp": "2026-07-18T20:24:16.149Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "e85c9cb8-49b9-4420-ba0c-817b4e2ac9fd",
+      "timestamp": "2026-07-18T20:24:16.677Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "54ee0426-6f2e-42b4-a4f6-f3227884db5e",
+      "timestamp": "2026-07-18T20:24:17.154Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"কিভাবে আমি আপনাকে সাহায্য করতে পারি?\" (isFinal: true)",
+      "id": "f5a897af-01cf-47a2-b906-518d00bbca78",
+      "timestamp": "2026-07-18T20:28:00.377Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> Listening",
+      "id": "6f5b68c7-464a-458a-b31b-258c98f6b06b",
+      "timestamp": "2026-07-18T20:28:22.385Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "4143dca8-b549-4bf0-822f-e0b592025fbe",
+      "timestamp": "2026-07-18T20:28:22.401Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "621d3cf9-5e61-4b82-a647-c02761cca007",
+      "timestamp": "2026-07-18T20:28:22.732Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "2a8e4111-7046-4b1b-a602-369716977283",
+      "timestamp": "2026-07-18T20:28:22.847Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো\"",
+      "id": "f9bebd99-0781-4ebc-a1cc-f9d0987a9f8e",
+      "timestamp": "2026-07-18T20:28:24.509Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "f5e338b8-339f-4ee6-a653-ba86bfc5fcee",
+      "timestamp": "2026-07-18T20:28:24.551Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "3ea6fd2e-4eb1-43b3-ad0e-b1bf80e914fc",
+      "timestamp": "2026-07-18T20:28:24.575Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"কী অবস্থা আপনার?\" (isFinal: true)",
+      "id": "e0e52240-7814-4b67-902c-e59c8347b843",
+      "timestamp": "2026-07-18T20:28:24.604Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো\"",
+      "id": "c5a35e9d-81f8-41f6-ad2f-218217588fee",
+      "timestamp": "2026-07-18T20:28:24.621Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"কী অবস্থা আপনার?\"",
+      "id": "e3905413-0761-4037-b4e2-80c0477c9587",
+      "timestamp": "2026-07-18T20:28:24.667Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "9e457f1b-e5f0-41ef-8fa3-2344099879e4",
+      "timestamp": "2026-07-18T20:28:24.686Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো\"",
+      "id": "3673f381-1fbf-4481-b317-b69b5b96d932",
+      "timestamp": "2026-07-18T20:28:24.721Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো\"",
+      "id": "b83ba4b1-642a-4ea7-9192-e03f25cddc2d",
+      "timestamp": "2026-07-18T20:28:24.867Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"আপনার পাসওয়ার্ডটি আবার বলুন।\" (isFinal: true)",
+      "id": "3d2d77e4-540c-42c0-ba24-57e539a3c8e2",
+      "timestamp": "2026-07-18T20:28:24.881Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"আপনার পাসওয়ার্ডটি আবার বলুন।\"",
+      "id": "3e670aea-cdd2-4787-941b-a8cd1c02634b",
+      "timestamp": "2026-07-18T20:28:24.957Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"দয়া করে কিছুক্ষণ অপেক্ষা করুন।\" (isFinal: true)",
+      "id": "9d3df32b-1ad5-449c-a198-cbb3b8966b56",
+      "timestamp": "2026-07-18T20:28:24.989Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"দয়া করে কিছুক্ষণ অপেক্ষা করুন।\"",
+      "id": "4c7ebd4f-978d-4cb1-ae44-8105545f824d",
+      "timestamp": "2026-07-18T20:28:25.018Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Echo Loop Rejection: Substring match. User text: \"হ্যাঁ, বলুন।\", matched recent AI text: \"হ্যাঁ বলুন আমি শুনছি yes i am listening\"",
+      "id": "34edf505-e981-4726-921a-7d5c548a440f",
+      "timestamp": "2026-07-18T20:28:25.036Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"আমার জন্য এক কাপ চা নিয়ে এসো।\" (isFinal: true)",
+      "id": "b7a25e27-8565-411f-8cd7-e6c0c963c730",
+      "timestamp": "2026-07-18T20:28:25.087Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"আমার জন্য এক কাপ চা নিয়ে এসো।\"",
+      "id": "b3d5adfb-c752-48ff-bc81-ea06b2df4441",
+      "timestamp": "2026-07-18T20:28:25.120Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"এইটা কি?\" (isFinal: true)",
+      "id": "0b2d7143-4f70-4cfc-a9a3-19dfd3604f94",
+      "timestamp": "2026-07-18T20:28:25.135Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"আমি কি একটু কথা বলতে পারি\" (isFinal: true)",
+      "id": "e470bb3c-f12a-492a-8875-27e4649887ae",
+      "timestamp": "2026-07-18T20:28:25.149Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"এইটা কি?\"",
+      "id": "01aad751-46e8-4269-a2fd-d638648fdab9",
+      "timestamp": "2026-07-18T20:28:25.161Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো, আপনার দিনটি কেমন যাচ্ছে?\" (isFinal: true)",
+      "id": "34eca21d-71b9-476e-bd56-f05bd9e74d15",
+      "timestamp": "2026-07-18T20:28:25.188Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো, আপনার দিনটি কেমন যাচ্ছে?\"",
+      "id": "32503afa-db73-42c8-b556-d9884c31f71e",
+      "timestamp": "2026-07-18T20:28:25.229Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"আজকে কি রান্না করেছো?\"",
+      "id": "c469e98a-f2b0-498a-b4c3-8998035e128b",
+      "timestamp": "2026-07-18T20:28:25.278Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"আজকে কি রান্না করেছো?\" (isFinal: true)",
+      "id": "50cd788e-23fb-41c4-8b13-8e9a1b48a65c",
+      "timestamp": "2026-07-18T20:28:25.296Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"দয়া করে আমার কলটি ধরুন।\" (isFinal: true)",
+      "id": "a07314f3-d413-4fef-a35a-82cde26d2e2c",
+      "timestamp": "2026-07-18T20:28:25.320Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"দয়া করে আমার কলটি ধরুন।\"",
+      "id": "7d64df17-3a58-4661-9fde-a38d6a324912",
+      "timestamp": "2026-07-18T20:28:25.363Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"আমি কি একটু কথা বলতে পারি\"",
+      "id": "d4506954-1af7-40d9-88d7-89dfdcec8563",
+      "timestamp": "2026-07-18T20:28:25.402Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "346a7bd6-1019-45d4-a42d-b12865a243cd",
+      "timestamp": "2026-07-18T20:29:15.470Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "febd1d97-7d86-4c10-a248-507f6fb2570a",
+      "timestamp": "2026-07-18T20:29:16.982Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "f816b3d8-3c95-494e-b3a6-0f63a53516ca",
+      "timestamp": "2026-07-18T20:29:17.310Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "f10df74e-c01b-40ed-8f8d-2cccde38f68f",
+      "timestamp": "2026-07-18T20:29:17.411Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "0927f340-cce4-4738-8f7f-5b4ee6c01fe4",
+      "timestamp": "2026-07-18T20:30:38.597Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "e4cf8fb0-9a03-49d6-8410-47768f7452d3",
+      "timestamp": "2026-07-18T20:30:38.675Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "c45e312b-a468-4cd5-9a6d-2bbafe2f3f29",
+      "timestamp": "2026-07-18T20:30:39.455Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "a602736a-69d1-4fb5-a2b2-bda1f027b215",
+      "timestamp": "2026-07-18T20:30:39.661Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "0306997b-7bee-4b78-8958-cb8e1a8a2436",
+      "timestamp": "2026-07-18T20:30:41.966Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "f9877dbf-7b43-4d7a-9036-5ccece0e9ec1",
+      "timestamp": "2026-07-18T20:30:41.978Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "4ed3386e-4d9a-4864-9e36-ebb033fe3dac",
+      "timestamp": "2026-07-18T20:34:35.385Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "476d6ea9-0efd-49d0-99c8-aa222d98bdaf",
+      "timestamp": "2026-07-18T20:34:37.188Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "ea9b5d24-07fd-4e25-8cfc-f6a93476d2c8",
+      "timestamp": "2026-07-18T20:34:38.232Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "7e548f60-3fff-4947-b624-99219cfa1cba",
+      "timestamp": "2026-07-18T20:34:39.365Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "bac9dcce-e554-4858-92ec-ed14b126bb19",
+      "timestamp": "2026-07-18T20:35:39.543Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "0eef2216-951c-4f3f-9a88-74739f2dc9bd",
+      "timestamp": "2026-07-18T20:35:42.720Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "b75777a8-73c8-4609-9b5e-f1358d582f78",
+      "timestamp": "2026-07-18T20:35:46.570Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "42f9dda2-f1e4-408f-a4d8-db8d7ea629d4",
+      "timestamp": "2026-07-18T20:35:47.148Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "1be957a0-5dd2-48da-9f10-25985a54ba79",
+      "timestamp": "2026-07-18T20:36:11.362Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "322b3943-d7ba-4eef-b29e-fb4ccf6dff2d",
+      "timestamp": "2026-07-18T20:36:13.261Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "0c86a898-c6f3-4def-bf0f-ed69a76c6ee8",
+      "timestamp": "2026-07-18T20:36:13.607Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "957dc66e-a89a-4898-8937-39fb0efee8c8",
+      "timestamp": "2026-07-18T20:36:13.706Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "36b0ed6d-134f-4232-b077-89477eee4c25",
+      "timestamp": "2026-07-18T20:38:22.029Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "1c2ed1b9-be20-46d7-9fff-4019b50b4013",
+      "timestamp": "2026-07-18T20:38:22.064Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "f5680cc6-390b-4834-986e-f73ec35fdd06",
+      "timestamp": "2026-07-18T20:38:25.615Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "8e7945f8-c629-42c8-87c9-ca3a6c87b8cd",
+      "timestamp": "2026-07-18T20:38:28.386Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "7380d20e-4fb4-49a0-bfaa-8db0b3c2a2ab",
+      "timestamp": "2026-07-18T20:38:28.481Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "e09737f3-988d-46bf-8c21-e544edf4a03c",
+      "timestamp": "2026-07-18T20:38:29.025Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"হ্যালো\"",
+      "id": "2281beb5-fd7c-4de0-8695-412ee245b57e",
+      "timestamp": "2026-07-18T20:38:51.197Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"হ্যালো\" (isFinal: true)",
+      "id": "25ed7c6b-4e3f-4d0f-ac57-354d29bc07ce",
+      "timestamp": "2026-07-18T20:38:51.654Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"তুমি কি আছো?\" (isFinal: true)",
+      "id": "4be89d86-f48a-4616-a3e5-e2240f368a7c",
+      "timestamp": "2026-07-18T20:38:51.715Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"তুমি কি আছো?\"",
+      "id": "6d9d1e73-fbb0-4879-a09b-1e3fc52109b5",
+      "timestamp": "2026-07-18T20:38:51.737Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"আমি তোমাকে খুব ভালোবাসি\"",
+      "id": "b894413c-d201-404e-aff4-cbe442a4dc23",
+      "timestamp": "2026-07-18T20:38:53.497Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"আমি তোমাকে খুব ভালোবাসি\" (isFinal: true)",
+      "id": "080ba782-ca12-423e-87ed-47d2af63a15b",
+      "timestamp": "2026-07-18T20:38:53.507Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "7df26335-6126-4404-8d9f-7cc074d61231",
+      "timestamp": "2026-07-18T20:39:01.370Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "d1f4c0c4-ae65-4444-a3ca-a9746af65d6b",
+      "timestamp": "2026-07-18T20:39:03.183Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "e837a5f3-a965-4604-9c69-798928a02987",
+      "timestamp": "2026-07-18T20:39:03.529Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "b9dea0fe-da97-45db-a576-99a6430b405b",
+      "timestamp": "2026-07-18T20:39:04.162Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "8dd5b3d4-300a-4eef-a481-ca1e53b9bde9",
+      "timestamp": "2026-07-18T20:42:31.336Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "9fce8eea-22bc-4992-a01b-2745295d1c77",
+      "timestamp": "2026-07-18T20:42:33.775Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "a0d664bf-45dc-4e32-a87e-f9a46bff97cd",
+      "timestamp": "2026-07-18T20:42:36.238Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "a1495533-7acd-4b25-89dd-6f5c34472d0c",
+      "timestamp": "2026-07-18T20:42:36.316Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "77d52503-9549-4bed-b7a8-da87dd44ed06",
+      "timestamp": "2026-07-18T20:43:29.497Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "79acf773-e83b-4ee9-8f4e-95251e8a8ebb",
+      "timestamp": "2026-07-18T20:43:31.111Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "162048e1-dc2a-4b25-921e-65acc01b9f30",
+      "timestamp": "2026-07-18T20:43:37.565Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "a4ef8b6f-2a01-4f19-9ba3-5eb100fbd33a",
+      "timestamp": "2026-07-18T20:43:38.227Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "b11bdbe3-02fd-4d4a-967d-0c01a6964809",
+      "timestamp": "2026-07-18T20:50:53.018Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "ea688b5d-54f6-4df6-a4d6-577dca3fe559",
+      "timestamp": "2026-07-18T20:50:53.997Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "39f8b0ce-8149-4e62-8da0-9b10e7a47b00",
+      "timestamp": "2026-07-18T20:50:54.268Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "94040664-9efd-4b28-991b-1c81c0b164b6",
+      "timestamp": "2026-07-18T20:50:55.213Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "0af3091e-da9c-40ed-8af1-477d24e22fd4",
+      "timestamp": "2026-07-18T20:52:13.342Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "9db65aea-5391-4764-ac02-8232e6ba1f51",
+      "timestamp": "2026-07-18T20:52:15.009Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "8396ee5f-d265-4262-9304-b0371f32e5da",
+      "timestamp": "2026-07-18T20:52:16.268Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "23391636-c151-4c12-a55f-34a15c297ced",
+      "timestamp": "2026-07-18T20:52:16.349Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "34783029-2daa-425c-9aff-7219fe261a50",
+      "timestamp": "2026-07-18T20:52:34.393Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "6437c5be-98e2-4bd7-b455-3aeac71a5cde",
+      "timestamp": "2026-07-18T20:52:36.009Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "3078c5c5-3602-4844-a575-62674568b7e9",
+      "timestamp": "2026-07-18T20:52:38.404Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "cd15db02-b392-4c84-8d00-fb0f5269b4d2",
+      "timestamp": "2026-07-18T20:52:38.484Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "19ff1267-c3e7-4d69-bebe-995d5082b8d2",
+      "timestamp": "2026-07-18T20:53:15.367Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "45537472-752d-4b66-aedf-7257be205c5f",
+      "timestamp": "2026-07-18T20:53:17.003Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "c219c415-c431-474a-b6d9-04cdccd6d314",
+      "timestamp": "2026-07-18T20:53:17.543Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "770782f4-cfeb-4afd-b01a-0461982c05be",
+      "timestamp": "2026-07-18T20:53:18.156Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] Speech detected start (User started speaking).",
+      "id": "2dad82ed-cef0-496c-8893-fb1dbd251308",
+      "timestamp": "2026-07-18T20:56:48.395Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] Speech detected end (User stopped speaking/silence).",
+      "id": "c6e8c5a6-3334-44b0-bca3-fab6ad3263d0",
+      "timestamp": "2026-07-18T20:56:50.307Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] Speech detected start (User started speaking).",
+      "id": "feebbc84-3e29-4668-93cf-304f15ef8e66",
+      "timestamp": "2026-07-18T20:57:52.169Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] Speech detected end (User stopped speaking/silence).",
+      "id": "2fc2fbed-36ff-4ff1-93c9-30acd9207b75",
+      "timestamp": "2026-07-18T20:57:53.227Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "3677d01d-521b-4838-8153-b8b847f5f9b3",
+      "timestamp": "2026-07-18T20:58:02.266Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784406254876_omjyd\"}",
+      "id": "dfaabadc-9f16-4551-9492-d1e0849627ed",
+      "timestamp": "2026-07-18T20:58:03.270Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784406254876_omjyd | Voice: Zephyr",
+      "id": "3ec194e7-ecec-49cc-b480-389366715bd8",
+      "timestamp": "2026-07-18T20:58:03.561Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "81b91a2f-d411-4ca3-b6af-ed75923fe964",
+      "timestamp": "2026-07-18T20:58:03.640Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live user transcript: \"Double in demand ki ye sab hua uski\"",
+      "id": "305fe3fc-9378-4e4d-a9bf-25289227aeb0",
+      "timestamp": "2026-07-18T20:58:31.608Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"Double in demand ki ye sab hua uski\" (isFinal: true)",
+      "id": "f9e2c2f6-fad8-4127-a5b5-86aa3648a269",
+      "timestamp": "2026-07-18T20:58:32.186Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Processing final user speech command: \"Double in demand ki ye sab hua uski\"",
+      "id": "360ce445-bdf5-4952-8908-3a53928ddced",
+      "timestamp": "2026-07-18T20:58:32.193Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> Speaking",
+      "id": "d89faf2d-316c-4b80-b5a3-6ccdf3600b94",
+      "timestamp": "2026-07-18T20:58:32.213Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live turn complete. Remaining audio playback: 59ms. Scheduling Listening state transition.",
+      "id": "9f156e10-a181-4417-b900-f73e724243b5",
+      "timestamp": "2026-07-18T20:58:34.579Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[VoiceManager] Playback completed. Transitioning back to Listening.",
+      "id": "853f81be-2519-47bc-b925-ebe4183c5535",
+      "timestamp": "2026-07-18T20:58:35.006Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> Listening",
+      "id": "f8c5ad8b-d9df-43ed-a1e8-7172f578c065",
+      "timestamp": "2026-07-18T20:58:35.032Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
+      "id": "493a07a5-c422-457d-9584-599f0fc35ead",
+      "timestamp": "2026-07-18T20:58:50.015Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "13b8d281-4155-4f17-9e4d-c1bdd8483535",
+      "timestamp": "2026-07-18T20:58:50.023Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext closed and all active playback stopped.",
+      "id": "9c07d586-e1ef-40d2-ad21-fa4a3faeeba4",
+      "timestamp": "2026-07-18T20:58:50.033Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
+      "id": "0dfb2435-253a-4623-9fe6-bcf99d13c59c",
+      "timestamp": "2026-07-18T20:58:50.042Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "243d3c5a-d755-4da9-b22b-75769fe15fd3",
+      "timestamp": "2026-07-18T20:58:50.052Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784408329711_zur1x\"}",
+      "id": "9937ae61-3ab4-45bd-a949-fa812dab3231",
+      "timestamp": "2026-07-18T20:58:50.060Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "b2763ddb-eef7-423c-b144-94648df55d8c",
+      "timestamp": "2026-07-18T20:58:50.226Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
+      "id": "4202edfd-1ef4-4dd9-a5fb-0b37941722ec",
+      "timestamp": "2026-07-18T20:58:50.234Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "6297bee8-2992-458e-837a-c3f77b2ba789",
+      "timestamp": "2026-07-18T20:58:50.244Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "20e68b04-a4d9-41cf-9e80-c60b25cacf1f",
+      "timestamp": "2026-07-18T20:58:50.271Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "5cb8527d-fea5-4b2a-9bc0-0a37322c5796",
+      "timestamp": "2026-07-18T20:58:50.281Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
+      "id": "3a4ac967-438f-441a-8c89-8dc05653507c",
+      "timestamp": "2026-07-18T20:58:50.303Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784408329816_lopjj\"}",
+      "id": "153a8015-5d81-4ff3-a86f-b6b7ca241698",
+      "timestamp": "2026-07-18T20:58:50.313Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "f528ec9d-0b8b-45e6-b471-f65c7714fd50",
+      "timestamp": "2026-07-18T20:58:50.323Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "b27314e6-1794-4ca4-869b-7b6207081449",
+      "timestamp": "2026-07-18T20:58:50.331Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784408329816_lopjj\"}",
+      "id": "8bd8fba0-b7e3-495b-885b-7fae7615a284",
+      "timestamp": "2026-07-18T20:58:50.343Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -22.1dB. Spectral filter profile updated.",
+      "id": "621fc53b-56a8-48ed-b0fb-13e0de87e76a",
+      "timestamp": "2026-07-18T20:58:51.094Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] VAD threshold dynamically updated to 0.1720 based on calibrated noise floor of -22.1dB (noise RMS: 0.0782).",
+      "id": "dad60f99-a587-40fa-b7ad-c578ca622a2d",
+      "timestamp": "2026-07-18T20:58:51.103Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext closed and all active playback stopped.",
+      "id": "50cddd5b-d81b-4bf9-9624-3f50942bb8c4",
+      "timestamp": "2026-07-18T20:58:53.973Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> Idle",
+      "id": "ec0567ff-2284-4dd9-a6c1-0666149c629e",
+      "timestamp": "2026-07-18T20:58:53.998Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket failed. In AI Studio, Gemini Live requires opening the app in a new tab (click the pop-out icon top right).",
+      "id": "cf4151db-a596-495d-b464-f9e08f6be1c0",
+      "timestamp": "2026-07-18T20:58:54.006Z"
+    },
+    {
+      "level": "warning",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live WebSocket connection closed.",
+      "id": "75a55bfe-51c8-4d3a-99f5-45c18780beb8",
+      "timestamp": "2026-07-18T20:58:54.016Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784408329816_lopjj | Voice: Zephyr",
+      "id": "716d82fe-dc98-47ff-bee1-a76206578061",
+      "timestamp": "2026-07-18T20:58:56.209Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "04135611-3912-4bbc-a90b-1ecb20f26eb0",
+      "timestamp": "2026-07-18T20:58:56.288Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "1da7a671-926f-455f-b298-e7afd76e5cec",
+      "timestamp": "2026-07-18T21:05:25.177Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player unmuted.",
+      "id": "ae9795db-9ef6-441b-863e-0713a59b2a6b",
+      "timestamp": "2026-07-18T21:05:25.193Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "c7a5ff56-ec01-49fe-b936-41348d651d77",
+      "timestamp": "2026-07-18T21:05:25.218Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceStateMachine] Engine state transition -> WakeListening",
+      "id": "82ab9e08-4baa-40ba-a37e-95a469e75c7c",
+      "timestamp": "2026-07-18T21:05:25.259Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "71d0bb7c-e397-49fb-9ea4-12ac7eab0f95",
+      "timestamp": "2026-07-18T21:05:25.271Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] Audio player muted. Stopping all scheduled playbacks.",
+      "id": "2a808094-1294-4fcf-b87c-2cc621bcdeca",
+      "timestamp": "2026-07-18T21:05:25.297Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[AudioPlayer] AudioContext initialized at 24kHz sample rate.",
+      "id": "006f890e-2b10-4645-96bf-3bdac3504858",
+      "timestamp": "2026-07-18T21:05:25.308Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784408724443_4p19k\"}",
+      "id": "933b42f9-1599-47a9-9c27-0672182f5790",
+      "timestamp": "2026-07-18T21:05:25.318Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Connecting to Gemini Live WebSocket...",
+      "details": "{\"sessionId\":\"session_1784408724443_4p19k\"}",
+      "id": "903ad682-3f31-4d08-84da-512008a56883",
+      "timestamp": "2026-07-18T21:05:25.363Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Starting background noise profile calibration... Please remain silent.",
+      "id": "cfd30f30-47df-499a-b181-2b449d4e66f9",
+      "timestamp": "2026-07-18T21:05:25.379Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VAD] VAD threshold dynamically updated to 0.8074 based on calibrated noise floor of -8.7dB (noise RMS: 0.3670).",
+      "id": "4202ce4b-d171-4444-96de-c13856dab2a5",
+      "timestamp": "2026-07-18T21:05:26.057Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "[NoiseSuppressor] Ambient background noise calibration complete! Noise floor measured at -8.7dB. Spectral filter profile updated.",
+      "id": "3d8d2706-7c59-4c40-a598-197c11756607",
+      "timestamp": "2026-07-18T21:05:26.072Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784408724443_4p19k | Voice: Zephyr",
+      "id": "0e16215b-b737-4bf0-9542-91fd54c427f6",
+      "timestamp": "2026-07-18T21:05:30.190Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "a9db914a-9444-40ed-86ca-41fbfe3eadcc",
+      "timestamp": "2026-07-18T21:05:30.275Z"
+    },
+    {
+      "level": "success",
+      "category": "speech",
+      "message": "Gemini Live API connection established",
+      "details": "Session ID: session_1784408724443_4p19k | Voice: Zephyr",
+      "id": "3e264b2f-5222-455b-b894-16a62fc534cf",
+      "timestamp": "2026-07-18T21:05:30.386Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Gemini Live connection status: live",
+      "id": "9755f545-5501-4577-a1d0-a3fe6588b6d2",
+      "timestamp": "2026-07-18T21:05:30.471Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"করিস\" (isFinal: false)",
+      "id": "fc4035e2-bf5e-405b-b0d8-ca7cf9266136",
+      "timestamp": "2026-07-18T21:06:03.586Z"
+    },
+    {
+      "level": "info",
+      "category": "speech",
+      "message": "[VoiceManager] Transcript recognized: \"সবকিছু\" (isFinal: false)",
+      "id": "31505c8e-279e-4f3d-8c97-db408781bae5",
+      "timestamp": "2026-07-18T21:06:28.180Z"
     }
   ],
   "traces": [

@@ -15,7 +15,7 @@ export interface LearnedSkill {
 }
 
 export class LearningManager {
-  private dataDir = path.join(process.cwd(), "data");
+  private dataDir = (() => { try { fs.accessSync(process.cwd(), fs.constants.W_OK); return path.join(process.cwd(), "data"); } catch (e) { return "/tmp/data"; } })();
   private skillsFile = path.join(this.dataDir, "learned_skills.json");
   private learningLogFile = path.join(this.dataDir, "learning_log.json");
 

@@ -817,7 +817,7 @@ async function getLocalTranscriber() {
 
   const { pipeline, env } = await import("@xenova/transformers");
   env.allowLocalModels = true;
-  env.cacheDir = path.resolve(process.cwd(), ".model-cache");
+  env.cacheDir = "/tmp/.model-cache";
   env.remoteHost = "https://hf-mirror.com"; // Use high-speed mirror to completely prevent gateway timeouts
 
   console.log("[Offline Whisper] Loading local Whisper model (Xenova/whisper-tiny) for offline transcription on-demand...");
@@ -832,7 +832,7 @@ async function getLocalTranscriber() {
     
     try {
       const fs = await import("fs");
-      const cachePath = path.resolve(process.cwd(), ".model-cache", "Xenova", "whisper-tiny");
+      const cachePath = path.resolve(env.cacheDir, "Xenova", "whisper-tiny");
       if (fs.existsSync(cachePath)) {
         fs.rmSync(cachePath, { recursive: true, force: true });
         console.log("[Offline Whisper] Corrupted model cache folder deleted.");

@@ -92,7 +92,7 @@ export interface SelfAuditResult {
 }
 
 export class EvolutionManager {
-  private dataDir = path.join(process.cwd(), "data");
+  private dataDir = (() => { try { fs.accessSync(process.cwd(), fs.constants.W_OK); return path.join(process.cwd(), "data"); } catch (e) { return "/tmp/data"; } })();
   private knowledgeFile = path.join(this.dataDir, "evolution_knowledge.json");
   private selfAnalysisFile = path.join(this.dataDir, "evolution_self_analysis.json");
   private proposalsFile = path.join(this.dataDir, "evolution_proposals.json");

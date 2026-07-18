@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-const dbPath = path.resolve(process.cwd(), "ruvi_memory.json");
+const dbPath = (() => { try { fs.accessSync(process.cwd(), fs.constants.W_OK); return path.resolve(process.cwd(), "ruvi_memory.json"); } catch (e) { return "/tmp/ruvi_memory.json"; } })();
 
 export interface ModelMetric {
   modelName: string;

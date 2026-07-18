@@ -199,7 +199,20 @@ export class OfflineTranscriber {
       formData.append("audio", blob, "audio.wav");
       formData.append("language", this.language);
 
-      const res = await fetch("/api/transcribe", {
+      let fetchUrl = "/api/transcribe";
+      const customUrl = localStorage.getItem("ruvi_server_url");
+      if (customUrl) {
+        fetchUrl = `${customUrl.replace(/\/$/, "")}/api/transcribe`;
+      } else {
+        const isTauri = (window as any).__TAURI__ !== undefined || 
+                        window.location.protocol.startsWith("tauri") || 
+                        window.location.hostname === "tauri.localhost";
+        if (isTauri) {
+          fetchUrl = "https://ais-pre-25gfll5l5kgi5wzrveg5lv-844587094120.asia-southeast1.run.app/api/transcribe";
+        }
+      }
+
+      const res = await fetch(fetchUrl, {
         method: "POST",
         body: formData,
       });
@@ -227,7 +240,12 @@ export class OfflineTranscriber {
          console.warn("[OfflineTranscriber] Local transcript failed", await res.text());
       }
     } catch (e) {
-      console.error("[OfflineTranscriber] Transcription upload failed", e);
+      if (window.self !== window.top) {
+        console.warn("[OfflineTranscriber] Failed to fetch. In AI Studio, audio transcription requires opening the app in a new tab.");
+        this.onTranscript(" [Error: Audio upload failed. Please open the app in a new tab to use voice features.] ");
+      } else {
+        console.error("[OfflineTranscriber] Transcription upload failed", e);
+      }
     }
   }
 }
