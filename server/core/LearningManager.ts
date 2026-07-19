@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { registry, Capability } from "./Registry";
 import { createRequire } from "module";
-const customRequire = typeof require !== "undefined" ? require : createRequire(import.meta.url);
+const customRequire = typeof require !== "undefined" ? require : createRequire((import.meta as any).url || "file://");
 
 export interface LearnedSkill {
   name: string;

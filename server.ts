@@ -9,9 +9,7 @@ import { registerAllTools } from "./server/core/ToolsRegistration";
 import dotenv from "dotenv";
 import os from "os";
 import multer from "multer";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const wavefile = require("wavefile");
+import wavefile from "wavefile";
 const WaveFile = wavefile.WaveFile;
 
 import si from "systeminformation";
