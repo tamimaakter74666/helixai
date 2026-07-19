@@ -9,8 +9,10 @@ import { registerAllTools } from "./server/core/ToolsRegistration";
 import dotenv from "dotenv";
 import os from "os";
 import multer from "multer";
-import * as wavefilepkg from "wavefile";
-const WaveFile = (wavefilepkg as any).WaveFile || (wavefilepkg as any).default?.WaveFile;
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const wavefile = require("wavefile");
+const WaveFile = wavefile.WaveFile;
 
 import si from "systeminformation";
 import { initDb, saveChatMessage, getChatHistory, saveSystemLog, getSystemLogs, clearSystemLogs, saveMemory, getMemories, updateMemory, deleteMemory, saveRequestTrace, getRequestTraces, getRequestTrace, clearRequestTraces } from "./server/db";
