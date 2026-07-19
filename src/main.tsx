@@ -18,7 +18,7 @@ const customFetch = function(this: any, input: RequestInfo | URL, init?: Request
 
   if (typeof url === "string" && url.startsWith("/api/") && isTauri) {
     const customUrl = localStorage.getItem("ruvi_server_url");
-    const defaultSharedUrl = "https://ais-pre-25gfll5l5kgi5wzrveg5lv-844587094120.asia-southeast1.run.app";
+    const defaultSharedUrl = "http://localhost:3000";
     const base = customUrl ? customUrl.replace(/\/$/, "") : defaultSharedUrl;
     const fullUrl = `${base}${url}`;
 

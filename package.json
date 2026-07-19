@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build",
+    "build": "vite build && bun build server.ts --compile --define 'process.env.NODE_ENV=\"production\"' --outfile=backend-dist/ruvi-server",
     "lint": "tsc --noEmit",
     "preview": "vite preview",
     "start": "tsx server.ts",

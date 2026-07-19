@@ -9,8 +9,7 @@ import { registerAllTools } from "./server/core/ToolsRegistration";
 import dotenv from "dotenv";
 import os from "os";
 import multer from "multer";
-import * as wavefilepkg from "wavefile";
-const WaveFile = (wavefilepkg as any).WaveFile || (wavefilepkg as any).default?.WaveFile;
+import { WaveFile } from "wavefile";
 
 import si from "systeminformation";
 import { initDb, saveChatMessage, getChatHistory, saveSystemLog, getSystemLogs, clearSystemLogs, saveMemory, getMemories, updateMemory, deleteMemory, saveRequestTrace, getRequestTraces, getRequestTrace, clearRequestTraces } from "./server/db";
@@ -975,19 +974,12 @@ app.post("/api/desktop/execute", async (req, res) => {
 
 // Serve frontend static assets in production, otherwise Vite handles it
 async function initServer() {
-  if (process.env.NODE_ENV !== "production") {
-    const { createServer: createViteServer } = await import("vite");
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
+  
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
-    });
+    );
   }
   
   const httpServer = app.listen(PORT, "0.0.0.0", () => {

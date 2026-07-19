@@ -94,6 +94,25 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_os::init())
+        .setup(|app| {
+            #[cfg(not(debug_assertions))]
+            {
+                use tauri::Manager;
+                use std::process::Command;
+                let resource_dir = app.path().resource_dir().unwrap_or_default();
+                
+                let binary_name = if cfg!(windows) { "ruvi-server.exe" } else { "ruvi-server" };
+                let server_path = resource_dir.join("backend-dist").join(binary_name);
+                
+                let _ = Command::new(server_path).spawn();
+            }
+            #[cfg(debug_assertions)]
+            {
+                use std::process::Command;
+                let _ = Command::new("npm").args(["run", "start"]).spawn();
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![fetch_local_http, fetch_native_http])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

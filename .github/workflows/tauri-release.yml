@@ -60,7 +60,11 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm install
 
-      - name: Build Frontend
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Build Frontend & Backend
         run: npm run build
 
       - name: Generate Icon Placeholders
