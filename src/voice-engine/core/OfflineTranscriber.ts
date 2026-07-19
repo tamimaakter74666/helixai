@@ -208,7 +208,7 @@ export class OfflineTranscriber {
                         window.location.protocol.startsWith("tauri") || 
                         window.location.hostname === "tauri.localhost";
         if (isTauri) {
-          fetchUrl = "https://ais-pre-25gfll5l5kgi5wzrveg5lv-844587094120.asia-southeast1.run.app/api/transcribe";
+          fetchUrl = "http://127.0.0.1:3000/api/transcribe";
         }
       }
 

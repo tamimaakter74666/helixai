@@ -398,8 +398,7 @@ export class VoiceManager extends EventEmitter<VoiceManagerEvents> {
                       window.location.protocol.startsWith("tauri") || 
                       window.location.hostname === "tauri.localhost";
       if (isTauri) {
-        const defaultSharedUrl = "https://ais-pre-25gfll5l5kgi5wzrveg5lv-844587094120.asia-southeast1.run.app".replace(/^http/, "ws");
-        wsUrl = `${defaultSharedUrl}/api/live?sessionId=${sessionId}`;
+        wsUrl = `ws://127.0.0.1:3000/api/live?sessionId=${sessionId}`;
       }
     }
 
