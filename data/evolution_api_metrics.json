@@ -1,0 +1,10 @@
+{
+  "totalRequests": 0,
+  "successfulRequests": 0,
+  "failedRequests": 0,
+  "rateLimitHits": 0,
+  "activeRetries": 0,
+  "status": "Healthy",
+  "queueLength": 0,
+  "backoffDelayMs": 0
+}

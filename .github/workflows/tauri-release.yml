@@ -65,7 +65,7 @@ jobs:
         with:
           bun-version: latest
       - name: Build Frontend & Backend
-        run: npm run build
+        run: npm run build && npm run build:backend
 
       - name: Generate Icon Placeholders
         run: node src-tauri/generate_placeholders.js
@@ -74,6 +74,8 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
           tagName: v__VERSION__
           releaseName: 'Ruvi AI Hologram OS v__VERSION__'

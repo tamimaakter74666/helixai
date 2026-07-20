@@ -17,7 +17,8 @@ const customFetch = function(this: any, input: RequestInfo | URL, init?: Request
                   window.location.hostname === "tauri.localhost";
 
   if (typeof url === "string" && url.startsWith("/api/") && isTauri) {
-    const customUrl = localStorage.getItem("ruvi_server_url");
+    let customUrl = localStorage.getItem("ruvi_server_url");
+    if (customUrl) customUrl = customUrl.replace("localhost", "127.0.0.1");
     // In Tauri, the server is always spawned locally by Rust on port 3000
     const defaultSharedUrl = "http://127.0.0.1:3000";
     const base = customUrl ? customUrl.replace(/\/$/, "") : defaultSharedUrl;

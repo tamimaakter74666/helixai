@@ -40,5 +40,12 @@
       "csp": null
     }
   },
-  "plugins": {}
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/arafat-islam-rimon/ruvi-os/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY4MjJDODVGNkI3N0YxQkUKUldTKzhYZHJYOGdpK0k1MmR3Nk9VbHhuOHdTekxycC8rc0t2N1VOYTNlVElIb1h3WThGU1FPdDIK"
+    }
+  }
 }

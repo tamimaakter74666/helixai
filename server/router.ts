@@ -369,7 +369,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
   }
 
   let provider = "gemini";
-  let modelName = "gemini-3.5-flash";
+  let modelName = "gemini-2.5-flash";
   let reason = "Default high-speed universal synthesis.";
 
   if (overrideProvider && overrideProvider !== "auto") {
@@ -403,7 +403,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
           reason = `User selected LM Studio. Active model override (forced): ${modelName}`;
         } else {
           provider = "gemini";
-          modelName = "gemini-3.5-flash";
+          modelName = "gemini-2.5-flash";
           reason = "LM Studio is offline. Falling back to Gemini Core.";
         }
       }
@@ -414,7 +414,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
       modelName = "claude-3-7-sonnet-latest";
       reason = "User explicitly selected Anthropic provider.";
     } else if (provider === "gemini") {
-      modelName = "gemini-3.5-flash";
+      modelName = "gemini-2.5-flash";
       reason = "User explicitly selected Gemini provider.";
     } else if (provider === "deepseek") {
       modelName = overrideModel || "deepseek/deepseek-chat";
@@ -442,7 +442,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         reason = `Auto-routed to local Ollama. ${best.reason}`;
       } else {
         provider = "gemini";
-        modelName = "gemini-3.5-flash";
+        modelName = "gemini-2.5-flash";
         reason = "Local/offline keyword detected but Ollama is offline. Routing to Gemini Core.";
       }
     } else if (msgLower.includes("code") || msgLower.includes("bug") || msgLower.includes("typescript")) {
@@ -526,7 +526,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         if (gemini) {
           console.warn("All local Ollama models failed or timed out. Engaging Cloud Failsafe Fallback (Gemini)...");
           provider = "gemini";
-          modelName = "gemini-3.5-flash";
+          modelName = "gemini-2.5-flash";
           reason = `${result.reason} (Engaged Cloud Failsafe to Gemini Core)`;
         } else {
           throw new Error(`Local Ollama connection failed and Cloud Gemini API key is missing. Detail: ${result.reason}`);
@@ -546,11 +546,17 @@ export async function routeRequest(message: string, history: any[], systemPrompt
         contents,
         config: {
           systemInstruction: systemPrompt,
-          responseMimeType: "application/json"
+          responseMimeType: "application/json",
+          safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT" as any, threshold: "BLOCK_NONE" as any },
+            { category: "HARM_CATEGORY_HATE_SPEECH" as any, threshold: "BLOCK_NONE" as any },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT" as any, threshold: "BLOCK_NONE" as any },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT" as any, threshold: "BLOCK_NONE" as any }
+          ]
         }
       };
 
-      const geminiModelsToTry = [modelName, ...["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash"].filter(m => m !== modelName)];
+      const geminiModelsToTry = [modelName, ...["gemini-2.5-flash", "gemini-3.1-flash-lite"].filter(m => m !== modelName)];
       let geminiSuccess = false;
       let lastGeminiError: any = null;
 
@@ -707,7 +713,7 @@ export async function routeRequest(message: string, history: any[], systemPrompt
           }
         };
 
-        const fallbackGeminiModels = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash"];
+        const fallbackGeminiModels = ["gemini-2.5-flash", "gemini-3.1-flash-lite"];
         for (const currentFallbackModel of fallbackGeminiModels) {
           try {
             console.log(`[Fallback Sequence]: Attempting Gemini fallback with ${currentFallbackModel}...`);

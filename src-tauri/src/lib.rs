@@ -59,14 +59,14 @@ async fn fetch_native_http(url: String, options: Option<FetchOptions>) -> Result
 
     let res = req_builder.send()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("{:?}", e))?;
 
     let status = res.status().as_u16();
     let status_text = res.status().canonical_reason().unwrap_or("").to_string();
 
     let body = res.text()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("{:?}", e))?;
 
     Ok(FetchResponse {
         status,
@@ -107,6 +107,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             #[cfg(not(debug_assertions))]
             {

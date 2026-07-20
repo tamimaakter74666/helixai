@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build:backend": "bun build --compile server.ts --outfile backend-dist/ruvi-server",
     "lint": "tsc --noEmit",
     "preview": "vite preview",
-    "start": "node dist/server.cjs",
+    "start": "NODE_ENV=production node dist/server.cjs",
     "tauri": "tauri"
   },
   "dependencies": {
@@ -60,6 +61,7 @@
     "@types/sqlite3": "^3.1.11",
     "@types/uuid": "^10.0.0",
     "eslint": "^10.7.0",
+    "pkg": "^5.8.1",
     "typescript-eslint": "^8.63.0"
   }
 }

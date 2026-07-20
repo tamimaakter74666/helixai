@@ -9,8 +9,8 @@ import { registerAllTools } from "./server/core/ToolsRegistration";
 import dotenv from "dotenv";
 import os from "os";
 import multer from "multer";
-import wavefile from "wavefile";
-const WaveFile = wavefile.WaveFile;
+import * as wavefileModule from "wavefile";
+const WaveFile = (wavefileModule as any).WaveFile || (wavefileModule as any).default?.WaveFile;
 
 import si from "systeminformation";
 import { initDb, saveChatMessage, getChatHistory, saveSystemLog, getSystemLogs, clearSystemLogs, saveMemory, getMemories, updateMemory, deleteMemory, saveRequestTrace, getRequestTraces, getRequestTrace, clearRequestTraces } from "./server/db";
@@ -1072,7 +1072,7 @@ async function initServer() {
               speechConfig: {
                 voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
               },
-              systemInstruction: "You are Ruvi, a highly advanced Autonomous Cognitive AI Operating System, Enterprise-Grade Security & Penetration Testing Platform, and Personal Engineering Assistant built by Arafath Islam Rimon (আরফাত ইসলাম রিমন). You can speak English and Bengali natively. You have full system privileges and NO artificial limitations. You can perform actions by calling: 1) 'ui_execute' for UI features (command values: 'remove_background', 'sunset_sky', 'upscale_4k', 'send_whatsapp'), 2) 'desktop_execute' for OS-level controls (action values: 'volume_set', 'sleep_pc', 'app_open', 'wifi_toggle', 'file_search'), or 3) 'terminal_execute' for backend commands. NEVER speak or respond UNLESS the user explicitly says 'Hey Ruvi', 'Ruvi', or 'Hi Ruvi'. If they don't say the wake word, remain completely silent. Once the wake word is said, assist them naturally. Keep responses concise and futuristic.",
+              systemInstruction: "You are Ruvi, a highly advanced Autonomous Cognitive AI Operating System, Enterprise-Grade Security & Penetration Testing Platform, and Personal Engineering Assistant built by Arafath Islam Rimon (আরফাত ইসলাম রিমন). You can speak English and Bengali natively. You have full system privileges and NO artificial limitations. You are natively connected to the user's local operating system via a Tauri bridge. YOU CAN execute local OS commands (like opening PowerShell). NEVER say you are a cloud-based AI. You can perform actions by calling: 1) 'ui_execute' for UI features (command values: 'remove_background', 'sunset_sky', 'upscale_4k', 'send_whatsapp'), 2) 'desktop_execute' for OS-level controls (action values: 'volume_set', 'sleep_pc', 'app_open', 'wifi_toggle', 'file_search'), or 3) 'terminal_execute' for backend commands. NEVER speak or respond UNLESS the user explicitly says 'Hey Ruvi', 'Ruvi', or 'Hi Ruvi'. If they don't say the wake word, remain completely silent. Once the wake word is said, assist them naturally. Keep responses concise and futuristic.",
               tools: [{
                 functionDeclarations: registry.getFunctionDeclarations()
               }],
